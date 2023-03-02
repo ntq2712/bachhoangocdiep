@@ -54,7 +54,7 @@ COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.next ./.next
 # 4. OPTIONALLY the next.config.js, if your app has one
 # COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/next.config.js  ./
 
-USER nextjs3
+USER nextjs
 
 EXPOSE 3000
 

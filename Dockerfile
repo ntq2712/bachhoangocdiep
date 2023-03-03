@@ -28,8 +28,8 @@ RUN yarn build
 
 # Remove all the development dependencies since we don't
 # need them to run the actual server.
-# RUN rm -rf node_modules
-# RUN yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
+RUN rm -rf node_modules
+RUN yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
 
 # END OF BUILD_IMAGE
 

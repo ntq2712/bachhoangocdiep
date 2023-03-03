@@ -46,7 +46,7 @@ RUN adduser -S nextjs -u 1001
 # 2. the Next build output and static files
 # 3. the node_modules.
 WORKDIR /app
-# COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/package.json /app/yarn.lock ./
+COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/package.json /app/yarn.lock ./
 # COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/public ./public
 COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.next ./.next

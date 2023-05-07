@@ -5,6 +5,7 @@ import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
 import { ActionMapType, AuthStateType, AuthUserType, JWTContextType } from './types';
+import { string } from 'yup/lib/locale';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ enum Types {
   INITIAL = 'INITIAL',
   LOGIN = 'LOGIN',
   REGISTER = 'REGISTER',
+  VERIFY = 'VERIFY',
   LOGOUT = 'LOGOUT',
 }
 
@@ -31,6 +33,9 @@ type Payload = {
   };
   [Types.REGISTER]: {
     user: AuthUserType;
+  };
+  [Types.VERIFY]: {
+    isAuthenticated: boolean;
   };
   [Types.LOGOUT]: undefined;
 };
@@ -63,8 +68,14 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
   if (action.type === Types.REGISTER) {
     return {
       ...state,
-      isAuthenticated: true,
+      isAuthenticated: false,
       user: action.payload.user,
+    };
+  }
+  if (action.type === Types.VERIFY) {
+    return {
+      ...state,
+      isAuthenticated: true,
     };
   }
   if (action.type === Types.LOGOUT) {
@@ -99,7 +110,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        const response = await axios.get('/api/account/my-account');
+        const response = await axios.get('/v1/users/profile');
 
         const { user } = response.data;
 
@@ -137,14 +148,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
-    const response = await axios.post('/api/account/login', {
+    const response = await axios.post('/v1/auth/login', {
       email,
       password,
     });
-    const { accessToken, user } = response.data;
 
-    setSession(accessToken);
+    const { tokens, user } = response.data;
 
+    setSession(tokens.access.token);
+    localStorage.setItem('refreshToken', tokens.refresh.token);
+      
     dispatch({
       type: Types.LOGIN,
       payload: {
@@ -155,24 +168,45 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // REGISTER
   const register = useCallback(
-    async (email: string, password: string, firstName: string, lastName: string) => {
-      const response = await axios.post('/api/account/register', {
+    async (password: string, firstname: string, lastname: string, email: string) => {
+      const response = await axios.post('/v1/auth/register', {
+        firstname,
+        lastname,
         email,
         password,
-        firstName,
-        lastName,
       });
-      const { accessToken, user } = response.data;
+      const { access, user, refresh } = response.data;
 
-      localStorage.setItem('accessToken', accessToken);
-
+      localStorage.setItem('refreshToken', refresh.token);
+      
+      setSession(access.token);
       dispatch({
         type: Types.REGISTER,
         payload: {
           user,
         },
       });
+
+      return response.data;
     },
+    []
+  );
+
+  //Verify
+  const verify = useCallback(
+    async (code: string) => {
+      const response = await axios.post('/v1/auth/verify-email', {
+        code,
+      });
+      dispatch({
+        type: Types.VERIFY,
+        payload: {
+          isAuthenticated: true,
+        },
+      });
+      return response.data;
+    },
+
     []
   );
 
@@ -195,9 +229,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       loginWithGithub: () => {},
       loginWithTwitter: () => {},
       register,
+      verify,
       logout,
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, login, logout, register]
+    [state.isAuthenticated, state.isInitialized, state.user, login, logout, register, verify]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

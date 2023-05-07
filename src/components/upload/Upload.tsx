@@ -170,11 +170,11 @@ function Placeholder({ sx, ...other }: StackProps) {
 
       <div>
         <Typography gutterBottom variant="h5">
-          Drop or Select file
+        Thả hoặc Chọn ảnh
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Drop files here or click
+        Thả ảnh ở đây hoặc nhấp vào
           <Typography
             variant="body2"
             component="span"
@@ -184,9 +184,9 @@ function Placeholder({ sx, ...other }: StackProps) {
               textDecoration: 'underline',
             }}
           >
-            browse
+            thư mục
           </Typography>
-          thorough your machine
+          trong máy của bạn
         </Typography>
       </div>
     </Stack>

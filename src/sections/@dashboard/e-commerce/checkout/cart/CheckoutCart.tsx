@@ -21,8 +21,8 @@ type Props = {
   onNextStep: VoidFunction;
   onApplyDiscount: (value: number) => void;
   onDeleteCart: (productId: string) => void;
-  onIncreaseQuantity: (productId: string) => void;
-  onDecreaseQuantity: (productId: string) => void;
+  onIncreaseQuantity: (id: string, productId: string,  quantity:number) => void;
+  onDecreaseQuantity: (id: string, productId: string,  quantity:number) => void;
 };
 
 export default function CheckoutCart({
@@ -33,11 +33,11 @@ export default function CheckoutCart({
   onIncreaseQuantity,
   onDecreaseQuantity,
 }: Props) {
-  const { cart, total, discount, subtotal } = checkout;
+  const { Data, TotalPrice, TotalQuantity} = checkout;
 
-  const totalItems = sum(cart.map((item) => item.quantity));
+  // const { Data, discount, shipping, subtotal, total, totalItems } = checkout;
 
-  const isEmptyCart = !cart.length;
+  const isEmptyCart = !Data?.length;
 
   return (
     <Grid container spacing={3}>
@@ -46,9 +46,9 @@ export default function CheckoutCart({
           <CardHeader
             title={
               <Typography variant="h6">
-                Cart
+                Giỏ hàng của bạn
                 <Typography component="span" sx={{ color: 'text.secondary' }}>
-                  &nbsp;({totalItems} item)
+                  &nbsp;({TotalQuantity} sản phẩm)
                 </Typography>
               </Typography>
             }
@@ -57,7 +57,7 @@ export default function CheckoutCart({
 
           {!isEmptyCart ? (
             <CheckoutCartProductList
-              products={cart}
+              products={Data}
               onDelete={onDeleteCart}
               onIncreaseQuantity={onIncreaseQuantity}
               onDecreaseQuantity={onDecreaseQuantity}
@@ -84,9 +84,11 @@ export default function CheckoutCart({
       <Grid item xs={12} md={4}>
         <CheckoutSummary
           enableDiscount
-          total={total}
-          discount={discount}
-          subtotal={subtotal}
+          total={TotalPrice}
+          discount={5}
+          TotalQuantity={TotalQuantity}
+          subtotal={10}
+          shipping={0}
           onApplyDiscount={onApplyDiscount}
         />
         <Button
@@ -94,10 +96,10 @@ export default function CheckoutCart({
           size="large"
           type="submit"
           variant="contained"
-          disabled={!cart.length}
+          disabled={!Data?.length}
           onClick={onNextStep}
         >
-          Check Out
+          Đặt hàng
         </Button>
       </Grid>
     </Grid>

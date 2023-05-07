@@ -31,11 +31,14 @@ export default function ShopProductSearch() {
     try {
       setSearchProducts(value);
       if (value) {
-        const response = await axios.get('/api/products/search', {
-          params: { query: value },
+        // const response = await axios.get('/api/products/search', {
+        //   params: { query: value },
+        // });
+        const response = await axios.get('v1/products', {
+          params: { search: value },
         });
 
-        setSearchResults(response.data.results);
+        setSearchResults(response.data.Products.Data);
       }
     } catch (error) {
       console.error(error);
@@ -59,9 +62,9 @@ export default function ShopProductSearch() {
       popupIcon={null}
       options={searchResults}
       onInputChange={(event, value) => handleChangeSearch(value)}
-      getOptionLabel={(product: IProduct) => product.name}
+      getOptionLabel={(product: IProduct) => product.Name}
       noOptionsText={<SearchNotFound query={searchProducts} />}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      isOptionEqualToValue={(option, value) => option.Id === value.Id}
       componentsProps={{
         popper: {
           sx: {
@@ -93,19 +96,19 @@ export default function ShopProductSearch() {
         />
       )}
       renderOption={(props, product, { inputValue }) => {
-        const { name, cover } = product;
-        const matches = match(name, inputValue);
-        const parts = parse(name, matches);
+        const { Name,  ImageURL, Id} = product;
+        const matches = match(Name, inputValue);
+        const parts = parse(Name, matches);
 
         return (
           <li {...props}>
             <Image
-              alt={cover}
-              src={cover}
+              alt={ImageURL}
+              src={ImageURL}
               sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }}
             />
 
-            <Link underline="none" onClick={() => handleGotoProduct(name)}>
+            <Link underline="none" onClick={() => handleGotoProduct(Id)}>
               {parts.map((part, index) => (
                 <Typography
                   key={index}

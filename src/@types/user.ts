@@ -1,3 +1,4 @@
+import { boolean } from './../_mock/assets/boolean';
 // ----------------------------------------------------------------------
 
 export type IUserSocialLink = {
@@ -98,20 +99,39 @@ export type IUserCard = {
 // ----------------------------------------------------------------------
 
 export type IUserAccountGeneral = {
-  id: string;
-  avatarUrl: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  country: string;
-  state: string;
-  city: string;
-  zipCode: string;
-  company: string;
-  isVerified: boolean;
-  status: string;
-  role: string;
+  Id: string;
+  FirstName: string;
+  LastName: string;
+  FullName: string;
+  DateOfBirth?: string;
+  Gender?: boolean;
+  PhoneNumber: string;
+  Email: string;
+  UserName: string;
+  Password: string;
+  AccumulatedPoints?: number;
+  Avatar?: string;
+  IsAdmin?: true;
+  IsEmailVerified?: true;
+  OTPPhoneVerified?: string;
+  IsPhoneVerified?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  // id: string;
+  // avatarUrl: string;
+  // name: string;
+  // email: string;
+  // phoneNumber: string;
+  // address: string;
+  // country: string;
+  // state: string;
+  // city: string;
+  // zipCode: string;
+  // company: string;
+  // isVerified: boolean;
+  // status: string;
+  // role: string;
 };
 
 export type IUserAccountBillingCreditCard = {

@@ -39,6 +39,7 @@ export default function RHFEditor({ name, helperText, ...other }: Props) {
           id={name}
           value={field.value}
           onChange={field.onChange}
+          placeholder='Nhập mô tả'
           error={!!error}
           helperText={
             (!!error || helperText) && (

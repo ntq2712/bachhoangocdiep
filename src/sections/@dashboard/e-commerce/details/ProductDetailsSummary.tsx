@@ -21,7 +21,7 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
 import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // @types
-import { IProduct, ICheckoutCartItem } from '../../../../@types/product';
+import { IProduct, ICheckoutCartItem, IDataAddCart } from '../../../../@types/product';
 // _mock
 import { _socials } from '../../../../_mock/arrays';
 // components
@@ -40,7 +40,7 @@ interface FormValuesProps extends Omit<ICheckoutCartItem, 'colors'> {
 type Props = {
   product: IProduct;
   cart: ICheckoutCartItem[];
-  onAddCart: (cartItem: ICheckoutCartItem) => void;
+  onAddCart: (cartItem: IDataAddCart) => void;
   onGotoStep: (step: number) => void;
 };
 
@@ -53,38 +53,19 @@ export default function ProductDetailsSummary({
 }: Props) {
   const { push } = useRouter();
 
-  const {
-    id,
-    name,
-    sizes,
-    price,
-    cover,
-    status,
-    colors,
-    available,
-    priceSale,
-    totalRating,
-    totalReview,
-    inventoryType,
-  } = product;
+  const { Id, Name, Price, Quantity, Status, Rate } = product;
 
-  const alreadyProduct = cart.map((item) => item.id).includes(id);
+  const alreadyProduct = cart.map((item: any) => item.Id).includes(Id);
 
   const isMaxQuantity =
-    cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
+    cart.filter((item: any) => item.Id === Id).map((item: any) => item.quantity)[0] >= Quantity;
 
   const defaultValues = {
-    id,
-    name,
-    cover,
-    available,
-    price,
-    colors: colors[0],
-    size: sizes[4],
-    quantity: available < 1 ? 0 : 1,
+    ProductId: Id,
+    Quantity: 1,
   };
 
-  const methods = useForm<FormValuesProps>({
+  const methods = useForm({
     defaultValues,
   });
 
@@ -99,14 +80,10 @@ export default function ProductDetailsSummary({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
-  const onSubmit = async (data: FormValuesProps) => {
+  const onSubmit = async (data: IDataAddCart) => {
     try {
       if (!alreadyProduct) {
-        onAddCart({
-          ...data,
-          colors: [values.colors],
-          subtotal: data.price * data.quantity,
-        });
+        onAddCart(data);
       }
       onGotoStep(0);
       push(PATH_DASHBOARD.eCommerce.checkout);
@@ -117,11 +94,7 @@ export default function ProductDetailsSummary({
 
   const handleAddCart = async () => {
     try {
-      onAddCart({
-        ...values,
-        colors: [values.colors],
-        subtotal: values.price * values.quantity,
-      });
+      onAddCart(values);
     } catch (error) {
       console.error(error);
     }
@@ -139,55 +112,60 @@ export default function ProductDetailsSummary({
         {...other}
       >
         <Stack spacing={2}>
-          <Label
+          {/* <Label
             variant="soft"
             color={inventoryType === 'in_stock' ? 'success' : 'error'}
             sx={{ textTransform: 'uppercase', mr: 'auto' }}
           >
             {sentenceCase(inventoryType || '')}
-          </Label>
+          </Label> */}
 
           <Typography
             variant="overline"
             component="div"
             sx={{
-              color: status === 'sale' ? 'error.main' : 'info.main',
+              color: Status === true ? 'error.main' : 'info.main',
             }}
           >
-            {status}
+            {Status ? 'sale' : ''}
           </Typography>
 
-          <Typography variant="h5">{name}</Typography>
+          <Typography variant="h5">{Name}</Typography>
 
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Rating value={totalRating} precision={0.1} readOnly />
+            <Rating value={Number(Rate) > 1 ? Number(Rate) : 5} precision={0.1} readOnly />
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ({fShortenNumber(totalReview)}
+              ({fShortenNumber(68)}
               reviews)
             </Typography>
           </Stack>
 
           <Typography variant="h4">
-            {priceSale && (
+            {/* {priceSale && (
               <Box
                 component="span"
                 sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 0.5 }}
               >
                 {fCurrency(priceSale)}
               </Box>
-            )}
-
-            {fCurrency(price)}
+            )} */}
+            <Box
+              component="span"
+              sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 0.5 }}
+            >
+              {fCurrency(Price + 10)}
+            </Box>
+            {fCurrency(Price)}
           </Typography>
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="subtitle2">Color</Typography>
+          {/* <Typography variant="subtitle2">Color</Typography> */}
 
-          <Controller
+          {/* <Controller
             name="colors"
             control={control}
             render={({ field }) => (
@@ -203,15 +181,17 @@ export default function ProductDetailsSummary({
                 }}
               />
             )}
-          />
+          /> */}
         </Stack>
 
         <Stack direction="row" justifyContent="space-between">
-          <Typography variant="subtitle2" sx={{ height: 40, lineHeight: '40px', flexGrow: 1 }}>
+          {/* <Typography variant="subtitle2" sx={{ height: 40, lineHeight: '40px', flexGrow: 1 }}>
             Size
+          </Typography> */}
+          <Typography variant="subtitle2" sx={{ height: 40, lineHeight: '40px', flexGrow: 1 }}>
+            Điểmm tích lũy
           </Typography>
-
-          <RHFSelect
+          {/* <RHFSelect
             name="size"
             size="small"
             helperText={
@@ -233,7 +213,17 @@ export default function ProductDetailsSummary({
                 {size}
               </MenuItem>
             ))}
-          </RHFSelect>
+          </RHFSelect> */}
+
+          <Stack spacing={1}>
+            <Typography
+              variant="caption"
+              component="div"
+              sx={{ textAlign: 'left', color: 'text.secondary' }}
+            >
+              {Number(Price) / 100000}
+            </Typography>
+          </Stack>
         </Stack>
 
         <Stack direction="row" justifyContent="space-between">
@@ -244,11 +234,11 @@ export default function ProductDetailsSummary({
           <Stack spacing={1}>
             <IncrementerButton
               name="quantity"
-              quantity={values.quantity}
-              disabledDecrease={values.quantity <= 1}
-              disabledIncrease={values.quantity >= available}
-              onIncrease={() => setValue('quantity', values.quantity + 1)}
-              onDecrease={() => setValue('quantity', values.quantity - 1)}
+              quantity={values.Quantity}
+              disabledDecrease={values.Quantity <= 1}
+              disabledIncrease={values.Quantity >= Quantity}
+              onIncrease={() => setValue('Quantity', values.Quantity + 1)}
+              onDecrease={() => setValue('Quantity', values.Quantity - 1)}
             />
 
             <Typography
@@ -256,7 +246,7 @@ export default function ProductDetailsSummary({
               component="div"
               sx={{ textAlign: 'right', color: 'text.secondary' }}
             >
-              Available: {available}
+              Available: {Quantity}
             </Typography>
           </Stack>
         </Stack>
@@ -274,11 +264,11 @@ export default function ProductDetailsSummary({
             onClick={handleAddCart}
             sx={{ whiteSpace: 'nowrap' }}
           >
-            Add to Cart
+            Thêm vào giỏ
           </Button>
 
           <Button fullWidth size="large" type="submit" variant="contained">
-            Buy Now
+            Mua ngay
           </Button>
         </Stack>
 

@@ -26,53 +26,45 @@ export default function CheckoutCartProduct({
   onDecrease,
   onIncrease,
 }: CheckoutProductListRowProps) {
-  const { name, size, price, colors, cover, quantity, available } = row;
+  const { Product,  SubTotal,  Quantity } = row;
 
   return (
     <TableRow>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Image
           alt="product image"
-          src={cover}
+          src={Product?.ImageURL}
           sx={{ width: 64, height: 64, borderRadius: 1.5, mr: 2 }}
         />
 
         <Stack spacing={0.5}>
           <Typography noWrap variant="subtitle2" sx={{ maxWidth: 240 }}>
-            {name}
+            {Product?.Name}
           </Typography>
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ typography: 'body2', color: 'text.secondary' }}
-          >
-            size: <Label sx={{ ml: 0.5 }}> {size} </Label>
-            <Divider orientation="vertical" sx={{ mx: 1, height: 16 }} />
-            <ColorPreview colors={colors} />
-          </Stack>
+        
         </Stack>
       </TableCell>
 
-      <TableCell>{fCurrency(price)}</TableCell>
+      <TableCell>{fCurrency(Product?.Price)}</TableCell>
 
       <TableCell>
         <Box sx={{ width: 96, textAlign: 'right' }}>
           <IncrementerButton
-            quantity={quantity}
+            quantity={Quantity}
             onDecrease={onDecrease}
             onIncrease={onIncrease}
-            disabledDecrease={quantity <= 1}
-            disabledIncrease={quantity >= available}
+            disabledDecrease={Quantity <= 1}
+            disabledIncrease={Quantity > Product?.Quantity}
           />
 
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            available: {available}
+            Số lượng: {Product?.Quantity}
           </Typography>
         </Box>
       </TableCell>
 
-      <TableCell align="right">{fCurrency(price * quantity)}</TableCell>
+      <TableCell align="right">{fCurrency(SubTotal)}</TableCell>
 
       <TableCell align="right">
         <IconButton onClick={onDelete}>

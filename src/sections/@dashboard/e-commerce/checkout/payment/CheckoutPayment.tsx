@@ -11,6 +11,7 @@ import {
   ICheckoutPaymentOption,
   ICheckoutDeliveryOption,
   IProductCheckoutState,
+  IInitStateProduct,
 } from '../../../../../@types/product';
 // components
 import Iconify from '../../../../../components/iconify';
@@ -64,7 +65,7 @@ const CARDS_OPTIONS: ICheckoutCardOption[] = [
 ];
 
 type Props = {
-  checkout: IProductCheckoutState;
+  checkout: any;
   onNextStep: VoidFunction;
   onBackStep: VoidFunction;
   onReset: VoidFunction;
@@ -85,7 +86,7 @@ export default function CheckoutPayment({
   onGotoStep,
   onApplyShipping,
 }: Props) {
-  const { total, discount, subtotal, shipping, billing } = checkout;
+  const { TotalQuantity, TotalPrice, discount, shipping, Address, totalItems } = checkout;
 
   const PaymentSchema = Yup.object().shape({
     payment: Yup.string().required('Payment is required!'),
@@ -138,13 +139,22 @@ export default function CheckoutPayment({
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutBillingInfo onBackStep={onBackStep} billing={billing} />
+          <CheckoutBillingInfo onBackStep={onBackStep} billing={Address} />
+
+          {/* <CheckoutSummary
+            enableEdit
+            total={TotalQuantity}
+            subtotal={TotalPrice}
+            discount={discount}
+            shipping={shipping}
+            onEdit={() => onGotoStep(0)}
+          /> */}
 
           <CheckoutSummary
-            enableEdit
-            total={total}
-            subtotal={subtotal}
-            discount={discount}
+            total={TotalPrice}
+            discount={5}
+            TotalQuantity={TotalQuantity}
+            subtotal={10}
             shipping={shipping}
             onEdit={() => onGotoStep(0)}
           />
@@ -156,7 +166,7 @@ export default function CheckoutPayment({
             variant="contained"
             loading={isSubmitting}
           >
-            Complete Order
+            Hoàn thành
           </LoadingButton>
         </Grid>
       </Grid>

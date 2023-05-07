@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
@@ -11,7 +11,7 @@ import { Box, Card, Grid, Stack, Typography, InputAdornment } from '@mui/materia
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
-import { IProduct } from '../../../@types/product';
+import { ICategoy, ICategoyGroup, IProduct } from '../../../@types/product';
 // components
 import { CustomFile } from '../../../components/upload';
 import { useSnackbar } from '../../../components/snackbar';
@@ -24,35 +24,20 @@ import FormProvider, {
   RHFRadioGroup,
   RHFAutocomplete,
 } from '../../../components/hook-form';
+import { addProduct, getBran } from 'src/redux/slices/product';
+import {
+  getBranByCategory,
+  getCategoryById,
+  getCategoryGroup,
+  upLoadImage,
+} from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
-
-const GENDER_OPTION = [
-  { label: 'Men', value: 'Men' },
-  { label: 'Women', value: 'Women' },
-  { label: 'Kids', value: 'Kids' },
-];
 
 const CATEGORY_OPTION = [
   { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
   { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
   { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
-];
-
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
 ];
 
 // ----------------------------------------------------------------------
@@ -73,34 +58,47 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const [brans, setBrans] = useState<any>();
+  const [categoryGroups, setCategoryGroups] = useState<ICategoyGroup[]>([]);
+  const [categorys, setCategorys] = useState<ICategoy[]>([]);
+
+  useEffect(() => {
+    getCategoryGroup().then((res) => {
+      if (res?.data?.success == true) {
+        setCategoryGroups(res?.data?.CategoryGroups?.Data);
+      } else {
+        enqueueSnackbar('Không thành công');
+      }
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   getBran().then((res) => {
+  //     setBrans(res?.data?.Brands?.Data);
+  //   });
+  // }, []);
+
   const NewProductSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    images: Yup.array().min(1, 'Images is required'),
-    tags: Yup.array().min(2, 'Must have at least 2 tags'),
-    price: Yup.number().moreThan(0, 'Price should not be $0.00'),
-    description: Yup.string().required('Description is required'),
+    Name: Yup.string().required('Name is required'),
+    Price: Yup.number().moreThan(0, 'Giá phải lớn hơn 0đ'),
   });
 
-  const defaultValues = useMemo(
+  const defaultValues = useMemo<Partial<IProduct>>(
     () => ({
-      name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
-      images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
-      sku: currentProduct?.sku || '',
-      price: currentProduct?.price || 0,
-      priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
-      inStock: true,
-      taxes: true,
-      gender: currentProduct?.gender || GENDER_OPTION[2].value,
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
+      BrandId: '',
+      CategoryId: '',
+      CategoryGroupId: '',
+      Name: '',
+      Description: '',
+      Price: 0,
+      Quantity: 0,
+      Images: [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentProduct]
+    []
   );
 
-  const methods = useForm<FormValuesProps>({
+  const methods = useForm({
     resolver: yupResolver(NewProductSchema),
     defaultValues,
   });
@@ -123,42 +121,46 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentProduct]);
+  }, [isEdit]);
 
-  const onSubmit = async (data: FormValuesProps) => {
+  const onSubmit = (data: Partial<IProduct>) => {
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      push(PATH_DASHBOARD.eCommerce.list);
-      console.log('DATA', data);
+      addProduct(data).then((res) => {
+        if (res?.data?.success == true) {
+          reset();
+          enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+          push(PATH_DASHBOARD.eCommerce.list);
+        }
+      });
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const files = values.images || [];
+  const handleDrop = useCallback((acceptedFiles: File[]) => {
+    const files = values.Images || [];
+    upLoadImage(acceptedFiles).then((res) => {
+      setValue('Images', [...files, ...res?.data?.images], { shouldValidate: true });
+    });
 
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      );
-
-      setValue('images', [...files, ...newFiles], { shouldValidate: true });
-    },
-    [setValue, values.images]
-  );
+    // const newFiles = acceptedFiles.map((file) =>
+    //   Object.assign(file, {
+    //     preview: URL.createObjectURL(file),
+    //   })
+    // );
+  }, []);
 
   const handleRemoveFile = (inputFile: File | string) => {
-    const filtered = values.images && values.images?.filter((file) => file !== inputFile);
-    setValue('images', filtered);
+    const filtered = values.Images && values.Images?.filter((file: any) => file !== inputFile);
+    setValue('Images', filtered);
   };
 
   const handleRemoveAllFiles = () => {
-    setValue('images', []);
+    setValue('Images', []);
   };
 
   return (
@@ -167,25 +169,25 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <RHFTextField name="name" label="Product Name" />
+              <RHFTextField name="Name" label="Tên sản phẩm" />
 
               <Stack spacing={1}>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Description
+                  Mô tả
                 </Typography>
 
-                <RHFEditor simple name="description" />
+                <RHFEditor simple name="Description" />
               </Stack>
 
               <Stack spacing={1}>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Images
+                  Hình ảnh minh họa
                 </Typography>
 
                 <RHFUpload
                   multiple
                   thumbnail
-                  name="images"
+                  name="Images"
                   maxSize={3145728}
                   onDrop={handleDrop}
                   onRemove={handleRemoveFile}
@@ -200,78 +202,106 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         <Grid item xs={12} md={4}>
           <Stack spacing={3}>
             <Card sx={{ p: 3 }}>
-              <RHFSwitch name="inStock" label="In stock" />
+              {/* <RHFSwitch name="inStock" label="In stock" /> */}
 
-              <Stack spacing={3} mt={2}>
-                <RHFTextField name="code" label="Product Code" />
+              {/* <Stack spacing={3} mt={2}> */}
+              {/* <RHFTextField name="code" label="Product Code" />
 
-                <RHFTextField name="sku" label="Product SKU" />
+                <RHFTextField name="sku" label="Product SKU" /> */}
 
-                <Stack spacing={1}>
+              {/* <Stack spacing={1}>
                   <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                     Gender
                   </Typography>
 
                   <RHFRadioGroup row spacing={4} name="gender" options={GENDER_OPTION} />
-                </Stack>
+                </Stack> */}
 
-                <RHFSelect native name="category" label="Category">
+              <Stack spacing={3}>
+                <RHFSelect
+                  sx={{ marginBottom: 2 }}
+                  native
+                  name="CategoryGroupId"
+                  label="Thuộc nhóm danh mục"
+                  onChange={(e) => {
+                    setValue('CategoryGroupId', e.target.value);
+                    getCategoryById(e.target.value).then((res) => {
+                      if (res?.data?.success == true) {
+                        setCategorys(res?.data?.category);
+                      } else {
+                        enqueueSnackbar('Không thành công');
+                      }
+                    });
+                  }}
+                >
                   <option value="" />
-                  {CATEGORY_OPTION.map((category) => (
-                    <optgroup key={category.group} label={category.group}>
-                      {category.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
+                  {categoryGroups?.map((categoryGroup: any) => (
+                    <option key={categoryGroup.Id} value={categoryGroup.Id}>
+                      {categoryGroup.Name}
+                    </option>
+                  ))}
+                </RHFSelect>
+                <RHFSelect
+                  onChange={(e) => {
+                    setValue('CategoryId', e.target.value);
+                    getBranByCategory(e.target.value).then((res) => {
+                      if (res?.data?.success == true) {
+                        setBrans(res?.data?.brands);
+                      } else {
+                        enqueueSnackbar('Không thành công');
+                      }
+                    });
+                  }}
+                  sx={{ marginBottom: 2 }}
+                  native
+                  name="CategoryId"
+                  label="Thuộc danh mục"
+                >
+                  <option value="" />
+                  {categorys?.map((category: any) => (
+                    <option key={category.Id} value={category.Id}>
+                      {category.Name}
+                    </option>
                   ))}
                 </RHFSelect>
 
-                <RHFAutocomplete
-                  name="tags"
-                  label="Tags"
-                  multiple
-                  freeSolo
-                  options={TAGS_OPTION.map((option) => option)}
-                  ChipProps={{ size: 'small' }}
-                />
+                <RHFSelect native name="BrandId" label="Thương hiệu">
+                  <option value="" />
+                  {brans?.map((bran: any) => (
+                    <option key={bran.Id} value={bran.Id}>
+                      {bran.Name}
+                    </option>
+                  ))}
+                </RHFSelect>
               </Stack>
             </Card>
 
             <Card sx={{ p: 3 }}>
               <Stack spacing={3} mb={2}>
                 <RHFTextField
-                  name="price"
-                  label="Regular Price"
-                  placeholder="0.00"
-                  onChange={(event) =>
-                    setValue('price', Number(event.target.value), { shouldValidate: true })
-                  }
+                  name="Quantity"
+                  label="số lượng"
+                  placeholder="0"
+                  onChange={(event) => setValue('Quantity', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                          $
-                        </Box>
-                      </InputAdornment>
-                    ),
                     type: 'number',
                   }}
                 />
 
                 <RHFTextField
-                  name="priceSale"
-                  label="Sale Price"
+                  name="Price"
+                  label="Giá bán"
                   placeholder="0.00"
-                  onChange={(event) => setValue('priceSale', Number(event.target.value))}
+                  onChange={(event) =>
+                    setValue('Price', Number(event.target.value), { shouldValidate: true })
+                  }
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
-                    startAdornment: (
+                    endAdornment: (
                       <InputAdornment position="start">
                         <Box component="span" sx={{ color: 'text.disabled' }}>
-                          $
+                          đ
                         </Box>
                       </InputAdornment>
                     ),
@@ -279,8 +309,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
                   }}
                 />
               </Stack>
-
-              <RHFSwitch name="taxes" label="Price includes taxes" />
             </Card>
 
             <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>

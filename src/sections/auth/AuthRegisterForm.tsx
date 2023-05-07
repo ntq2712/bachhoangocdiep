@@ -11,34 +11,36 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import { PATH_AUTH } from 'src/routes/paths';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
   afterSubmit?: string;
+  password: string;
+  firstname: string;
+  lastname: string;
+  email: string;
 };
 
 export default function AuthRegisterForm() {
   const { register } = useAuthContext();
-
+  const { replace } = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name required'),
-    lastName: Yup.string().required('Last name required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    firstname: Yup.string().required('Vui lòng nhập họ'),
+    lastname: Yup.string().required('Vui lòng nhập tên'),
+    password: Yup.string().required('Vui lòng nhập mật khẩu'),
+    email: Yup.string().required('Vui lòng nhập số điện thoại'),
   });
 
   const defaultValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
     password: '',
+    firstname: '',
+    lastname: '',
+    email: '',
   };
 
   const methods = useForm<FormValuesProps>({
@@ -56,7 +58,10 @@ export default function AuthRegisterForm() {
   const onSubmit = async (data: FormValuesProps) => {
     try {
       if (register) {
-        await register(data.email, data.password, data.firstName, data.lastName);
+        const res: any = await register(data.password, data.firstname, data.lastname, data.email);
+        if (res?.access?.token) {
+          replace(PATH_AUTH.verify);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -72,17 +77,14 @@ export default function AuthRegisterForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2.5}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <RHFTextField name="firstName" label="First name" />
-          <RHFTextField name="lastName" label="Last name" />
+          <RHFTextField name="firstname" label="Họ tên đệm" />
+          <RHFTextField name="lastname" label="Tên" />
         </Stack>
-
-        <RHFTextField name="email" label="Email address" />
-
+        <RHFTextField name="email" label="Email" />
         <RHFTextField
           name="password"
-          label="Password"
+          label="Mật khẩu"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -111,7 +113,7 @@ export default function AuthRegisterForm() {
             },
           }}
         >
-          Create account
+          Tạo tài khoản
         </LoadingButton>
       </Stack>
     </FormProvider>

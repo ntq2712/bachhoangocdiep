@@ -22,7 +22,8 @@ type Props = {
   total: number;
   discount?: number;
   subtotal: number;
-  shipping?: number;
+  shipping: number;
+  TotalQuantity?:number
   onEdit?: VoidFunction;
   enableEdit?: boolean;
   onApplyDiscount?: (discount: number) => void;
@@ -34,17 +35,18 @@ export default function CheckoutSummary({
   onEdit,
   discount,
   subtotal,
+  TotalQuantity,
   shipping,
   onApplyDiscount,
   enableEdit = false,
   enableDiscount = false,
 }: Props) {
-  const displayShipping = shipping !== null ? 'Free' : '-';
+  const displayShipping = shipping === 0 ? 0 : shipping;
 
   return (
     <Card sx={{ mb: 3 }}>
       <CardHeader
-        title="Order Summary"
+        title="Tổng tiền giỏ hàng"
         action={
           enableEdit && (
             <Button size="small" onClick={onEdit} startIcon={<Iconify icon="eva:edit-fill" />}>
@@ -58,16 +60,25 @@ export default function CheckoutSummary({
         <Stack spacing={2}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Sub Total
+              Thành tiền
             </Typography>
-            <Typography variant="subtitle2">{fCurrency(subtotal)}</Typography>
+            <Typography variant="subtitle2">{fCurrency(total)}</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Discount
+              Tổng sản phẩm
             </Typography>
-            <Typography variant="subtitle2">{discount ? fCurrency(-discount) : '-'}</Typography>
+            <Typography variant="subtitle2">
+              {TotalQuantity}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Điểm tích lũy
+            </Typography>
+            <Typography variant="subtitle2">{Math.floor(total / 100000)}</Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
@@ -75,17 +86,18 @@ export default function CheckoutSummary({
               Shipping
             </Typography>
             <Typography variant="subtitle2">
-              {shipping ? fCurrency(shipping) : displayShipping}
+             
+              {shipping}
             </Typography>
           </Stack>
-
+          {/* shipping ? fCurrency(shipping) :  */}
           <Divider />
 
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="subtitle1">Total</Typography>
+            <Typography variant="subtitle1">Tạm tính</Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1" sx={{ color: 'error.main' }}>
-                {fCurrency(total)}
+                {fCurrency(total+shipping)}
               </Typography>
               <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
                 (VAT included if applicable)
@@ -93,7 +105,7 @@ export default function CheckoutSummary({
             </Box>
           </Stack>
 
-          {enableDiscount && onApplyDiscount && (
+          {/* {enableDiscount && onApplyDiscount && (
             <TextField
               fullWidth
               placeholder="Discount codes / Gifts"
@@ -108,7 +120,7 @@ export default function CheckoutSummary({
                 ),
               }}
             />
-          )}
+          )} */}
         </Stack>
       </CardContent>
     </Card>

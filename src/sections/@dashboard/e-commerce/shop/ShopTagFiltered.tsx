@@ -24,11 +24,13 @@ export default function ShopTagFiltered({ isFiltered, onResetFilter }: Props) {
   const values = watch();
 
   const {
-    gender: filterGender,
-    category: filterCategory,
-    colors: filterColors,
+    brand: filterBrand,
+    categorys: filterCategorys,
+    categorygroup: filterCategoryGroup,
     priceRange: filterPriceRange,
-    rating: filterRating,
+    priceMin: filterPriceMin,
+    priceMax: filterPriceMax,
+    rate: filterRating,
   } = values as IProductFilter;
 
   const min = filterPriceRange[0];
@@ -36,18 +38,18 @@ export default function ShopTagFiltered({ isFiltered, onResetFilter }: Props) {
   const max = filterPriceRange[1];
 
   const handleRemoveGender = (value: string) => {
-    const newValue = filterGender.filter((item) => item !== value);
-    setValue('gender', newValue);
+    // const newValue = filterBrand.filter((item) => item !== value);
+    // setValue('gender', newValue);
   };
 
   const handleRemoveCategory = () => {
     setValue('category', 'All');
   };
 
-  const handleRemoveColor = (value: string) => {
-    const newValue = filterColors.filter((item) => item !== value);
-    setValue('colors', newValue);
-  };
+  // const handleRemoveColor = (value: string) => {
+  //   const newValue = filterColors.filter((item) => item !== value);
+  //   setValue('colors', newValue);
+  // };
 
   const handleRemovePrice = () => {
     setValue('priceRange', [0, 200]);
@@ -59,32 +61,46 @@ export default function ShopTagFiltered({ isFiltered, onResetFilter }: Props) {
 
   return (
     <Stack flexGrow={1} direction="row" flexWrap="wrap" alignItems="center">
-      {!!filterGender.length && (
-        <Panel label="Gender:">
-          {filterGender.map((gender) => (
+      {!!filterCategoryGroup.length && (
+        <Panel label="Danh mục:">
+          {filterCategoryGroup.map((CategoryGroup) => (
             <Chip
-              key={gender}
-              label={gender}
+              key={CategoryGroup}
+              label={CategoryGroup.split('&')[1]}
               size="small"
-              onDelete={() => handleRemoveGender(gender)}
+              onDelete={() => handleRemoveGender(CategoryGroup)}
               sx={{ m: 0.5 }}
             />
           ))}
         </Panel>
       )}
 
-      {filterCategory !== 'All' && (
-        <Panel label="Category:">
+      {!!filterCategorys.length && (
+        <Panel label="Loại sản phẩm:">
+          {filterCategorys.map((Category) => (
+            <Chip
+              key={Category}
+              label={Category.split('&')[1]}
+              size="small"
+              onDelete={() => handleRemoveGender(Category)}
+              sx={{ m: 0.5 }}
+            />
+          ))}
+        </Panel>
+      )}
+
+      {filterBrand !== 'All' && (
+        <Panel label="Thương hiệu:">
           <Chip
             size="small"
-            label={filterCategory}
+            label={filterBrand.split('&')[1]}
             onDelete={handleRemoveCategory}
             sx={{ m: 0.5 }}
           />
         </Panel>
       )}
 
-      {!!filterColors.length && (
+      {/* {!!filterColors.length && (
         <Panel label="Colors:">
           {filterColors.map((color) => (
             <Chip
@@ -110,24 +126,24 @@ export default function ShopTagFiltered({ isFiltered, onResetFilter }: Props) {
             />
           ))}
         </Panel>
-      )}
+      )} */}
 
-      {(min !== 0 || max !== 200) && (
+      {(min !== 0 || max !== 800) && (
         <Panel label="Price:">
           <Chip
             size="small"
-            label={`$${min} - ${max}`}
+            label={`${filterPriceMin} - ${filterPriceMax}`}
             onDelete={handleRemovePrice}
             sx={{ m: 0.5 }}
           />
         </Panel>
       )}
-
+      {/* sentenceCase */}
       {!!filterRating && (
-        <Panel label="Rating:">
+        <Panel label="Đánh giá:">
           <Chip
             size="small"
-            label={sentenceCase(filterRating)}
+            label={`Từ ${filterRating} sao`}
             onDelete={handleRemoveRating}
             sx={{ m: 0.5 }}
           />

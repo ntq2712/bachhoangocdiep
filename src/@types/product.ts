@@ -1,3 +1,6 @@
+import { phoneNumber } from './../_mock/assets/phoneNumber';
+import { Image } from '@react-pdf/renderer';
+import { IUserAccountGeneral } from './user';
 // ----------------------------------------------------------------------
 
 export type IProductReview = {
@@ -11,65 +14,95 @@ export type IProductReview = {
   postedAt: Date | string | number;
 };
 
+export type ICategoyGroup = {
+  Id: string;
+  Name: string;
+  Description: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+};
+
+export type ICategoy = {
+  Id: string;
+  Name: string;
+  CategoryGroupId: string;
+  Description: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+};
+
+export type IBrand = {
+  Id: string;
+  Name: string;
+  CategoryGroupId: string;
+  CategoryId: string;
+  Description: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+};
+
 export type IProduct = {
-  id: string;
-  cover: string;
-  images: string[];
-  name: string;
-  price: number;
-  code: string;
-  sku: string;
-  tags: string[];
-  priceSale: number | null;
-  totalRating: number;
-  totalReview: number;
-  ratings: {
-    name: string;
-    starCount: number;
-    reviewCount: number;
-  }[];
-  reviews: IProductReview[];
-  colors: string[];
-  status: string;
-  inventoryType: string;
-  sizes: string[];
-  available: number;
-  description: string;
-  sold: number;
-  createdAt: Date | string | number;
-  category: string;
-  gender: string;
+  Id: string;
+  BrandId: string;
+  CategoryId: string;
+  CategoryGroupId: string;
+  Name: string;
+  Description: string;
+  Price: number;
+  Rate: number;
+  Quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  Images: any[];
+  Status: boolean;
+  ImageURL?: string;
 };
 
 export type IProductFilter = {
-  gender: string[];
-  category: string;
-  colors: string[];
-  priceRange: number[];
-  rating: string;
+  brand: string;
+  categorys: string[];
+  categorygroup: string[];
+  //colors: string[];
+  priceMin: number;
+  priceMax: number;
+  rate?: number;
   sortBy: string;
+  priceRange: number[],
 };
 
 // ----------------------------------------------------------------------
 
 export type ICheckoutCartItem = {
-  id: string;
-  name: string;
-  cover: string;
-  available: number;
-  price: number;
-  colors: string[];
-  size: string;
-  quantity: number;
-  subtotal: number;
+  Id: string;
+  AccountId: string;
+  ProductId: string;
+  Quantity: number;
+  SubTotal: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  Product: IProduct;
 };
 
-export type ICheckoutBillingAddress = {
-  receiver: string;
-  phoneNumber: string;
-  fullAddress: string;
-  addressType: string;
-  isDefault: boolean;
+export type IInitStateProduct = {
+  isLoading: boolean;
+  error: any;
+  products: any;
+  product: any;
+  checkout: {
+    activeStep: number;
+    Data: [];
+    TotalQuantity: number;
+    TotalPrice: number;
+    discount: number;
+    shipping: number;
+    billing: any;
+    totalItems: number;
+  };
 };
 
 export type ICheckoutDeliveryOption = {
@@ -93,14 +126,16 @@ export type ICheckoutCardOption = {
 // ----------------------------------------------------------------------
 
 export type IProductCheckoutState = {
-  activeStep: number;
-  cart: ICheckoutCartItem[];
-  subtotal: number;
-  total: number;
-  discount: number;
-  shipping: number;
-  billing: ICheckoutBillingAddress | null;
-  totalItems: number;
+  TotalPrice: number;
+  TotalQuantity?: number;
+  Data: ICheckoutCartItem[];
+  Pagination?: {
+    TotalCount: number;
+    TotalPages: number;
+    CurrentPage: number;
+    Limit: number;
+  };
+  success?: boolean;
 };
 
 export type IProductState = {
@@ -109,4 +144,46 @@ export type IProductState = {
   products: IProduct[];
   product: IProduct | null;
   checkout: IProductCheckoutState;
+};
+
+export type IDataAddCart = {
+  ProductId: string;
+  Quantity: number;
+};
+
+export type IAddress = {
+  Id?: string;
+  Name: string;
+  IsDefault?: boolean;
+  City: string;
+  District: string;
+  Ward: string;
+  Street: string;
+  ReceiverName: string;
+  ReceiverPhoneNumber: string;
+  CityGHNId?: string | number;
+  DistrictGHNId?: string | number;
+  WardGHNid: string | number;
+};
+
+export type ICheckoutBillingAddress = {
+  receiver: string;
+  phoneNumber: string;
+  fullAddress: string;
+  addressType: string;
+  isDefault: boolean;
+};
+
+export type IReview = {
+  Id: string;
+  AccountId: string;
+  ProductId: string;
+  Content: string;
+  Rate: string | number;
+  Like?: string | number;
+  createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  Account: IUserAccountGeneral;
+  Product: IProduct;
 };

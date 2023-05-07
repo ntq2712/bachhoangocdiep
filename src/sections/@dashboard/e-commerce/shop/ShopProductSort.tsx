@@ -6,29 +6,34 @@ import { Button, MenuItem, Box } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
+import { sortProducts } from 'src/redux/slices/product';
+import { useDispatch } from 'src/redux/store';
 
 // ----------------------------------------------------------------------
-
-const OPTIONS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High - Low' },
-  { value: 'priceAsc', label: 'Price: Low - High' },
-];
-
-function renderLabel(label: string) {
-  return {
-    featured: 'Featured',
-    newest: 'Newest',
-    priceDesc: 'Price: High - Low',
-    priceAsc: 'Price: Low - High',
-  }[label];
-}
 
 // ----------------------------------------------------------------------
 
 export default function ShopProductSort() {
   const { control } = useFormContext();
+
+  const dispatch = useDispatch();
+
+  const OPTIONS = [
+    { value: 'createdAt&asc', label: 'Cũ đến mới' },
+    { value: 'createdAt&desc', label: 'Mới đến cũ' },
+    { value: 'Price&desc', label: 'Giá: cao đến thấp' },
+    { value: 'Price&asc', label: 'Giá: thấp đến cao' },
+  ];
+
+  function renderLabel(label: string) {
+   
+    return {
+      'createdAt&asc': 'Cũ đến mới',
+      'createdAt&desc': 'Mới đến cũ',
+      'Price&desc': 'Giá: cao đến thấp',
+      'Price&asc': 'Giá: thấp đến cao',
+    }[label];
+  }
 
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
 
@@ -68,6 +73,7 @@ export default function ShopProductSort() {
                 selected={option.value === field.value}
                 onClick={() => {
                   handleClosePopover();
+                  dispatch(sortProducts(option.value));
                   field.onChange(option.value);
                 }}
               >

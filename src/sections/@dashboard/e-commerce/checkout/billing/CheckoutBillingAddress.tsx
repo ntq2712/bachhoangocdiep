@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import { Grid, Card, Button, Typography, Stack, Box } from '@mui/material';
 // @types
-import { ICheckoutBillingAddress, IProductCheckoutState } from '../../../../../@types/product';
+import {
+  IAddress,
+  ICheckoutBillingAddress,
+  IProductCheckoutState,
+} from '../../../../../@types/product';
 // _mock
 import { _addressBooks } from '../../../../../_mock/arrays';
 // components
@@ -11,19 +15,48 @@ import Iconify from '../../../../../components/iconify';
 //
 import CheckoutSummary from '../CheckoutSummary';
 import CheckoutBillingNewAddressForm from './CheckoutBillingNewAddressForm';
+import { deleteAddress, getAdress } from 'src/api/ortherEcom';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   checkout: IProductCheckoutState;
   onBackStep: VoidFunction;
-  onCreateBilling: (address: ICheckoutBillingAddress) => void;
+  onCreateBilling: (address: IAddress) => void;
+  onAddBilling: (address: IAddress) => void;
 };
 
-export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateBilling }: Props) {
-  const { total, discount, subtotal } = checkout;
-
+export default function CheckoutBillingAddress({
+  checkout,
+  onBackStep,
+  onCreateBilling,
+  onAddBilling,
+}: Props) {
+  const { TotalPrice, TotalQuantity } = checkout;
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
+  const [onload, setOnload] = useState<boolean>(false);
+  const [listaddress, setListAdress] = useState<IAddress[]>([]);
+
+  useEffect(() => {
+    getAdress().then((res) => {
+      if (res?.data?.success == true) {
+        setListAdress(res?.data?.Data);
+      }
+    })
+  }, [onload]);
+
+  const onDeleteBilling = (Id: any) => {
+    deleteAddress(Id).then((res)=>{
+      if(res?.data?.success == true){
+        setOnload(!onload)
+        enqueueSnackbar('Xóa thành công!');
+      }else{
+        enqueueSnackbar('Đã có lỗi xảy ra!', { variant: 'error' })
+      }
+    }).catch((err)=>enqueueSnackbar('Đã có lỗi xảy ra!', { variant: 'error' }))
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -37,11 +70,12 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          {_addressBooks.map((address, index) => (
+          {listaddress.map((address, index) => (
             <AddressItem
               key={index}
               address={address}
-              onCreateBilling={() => onCreateBilling(address)}
+              onCreateBilling={() => onAddBilling(address)}
+              onDeleteBilling={()=>onDeleteBilling(address.Id)}
             />
           ))}
 
@@ -67,7 +101,13 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} />
+          <CheckoutSummary
+            total={TotalPrice}
+            discount={5}
+            shipping={0}
+            TotalQuantity={TotalQuantity}
+            subtotal={10}
+          />
         </Grid>
       </Grid>
 
@@ -83,12 +123,14 @@ export default function CheckoutBillingAddress({ checkout, onBackStep, onCreateB
 // ----------------------------------------------------------------------
 
 type AddressItemProps = {
-  address: ICheckoutBillingAddress;
+  address: IAddress;
   onCreateBilling: VoidFunction;
+  onDeleteBilling: VoidFunction;
 };
 
-function AddressItem({ address, onCreateBilling }: AddressItemProps) {
-  const { receiver, fullAddress, addressType, phoneNumber, isDefault } = address;
+function AddressItem({ address, onCreateBilling, onDeleteBilling }: AddressItemProps) {
+  const { Name, IsDefault, City, District, Ward, Street, ReceiverPhoneNumber, ReceiverName } =
+    address;
 
   return (
     <Card
@@ -110,35 +152,41 @@ function AddressItem({ address, onCreateBilling }: AddressItemProps) {
         <Stack flexGrow={1} spacing={1}>
           <Stack direction="row" alignItems="center">
             <Typography variant="subtitle1">
-              {receiver}
+              {ReceiverName}
               <Box component="span" sx={{ ml: 0.5, typography: 'body2', color: 'text.secondary' }}>
-                ({addressType})
+                ({Name})
               </Box>
             </Typography>
 
-            {isDefault && (
+            {IsDefault && (
               <Label color="info" sx={{ ml: 1 }}>
                 Default
               </Label>
             )}
           </Stack>
 
-          <Typography variant="body2">{fullAddress}</Typography>
+          <Typography variant="body2">{`${City}, ${District}, ${Ward}, ${Street}`}</Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {phoneNumber}
+            {ReceiverPhoneNumber}
           </Typography>
         </Stack>
 
         <Stack flexDirection="row" flexWrap="wrap" flexShrink={0}>
-          {!isDefault && (
-            <Button variant="outlined" size="small" color="inherit" sx={{ mr: 1 }}>
-              Delete
+          {!IsDefault && (
+            <Button
+              onClick={onDeleteBilling}
+              variant="outlined"
+              size="small"
+              color="inherit"
+              sx={{ mr: 1 }}
+            >
+              Xóa
             </Button>
           )}
 
           <Button variant="outlined" size="small" onClick={onCreateBilling}>
-            Deliver to this Address
+            Gửi đến địa chỉ này
           </Button>
         </Stack>
       </Stack>

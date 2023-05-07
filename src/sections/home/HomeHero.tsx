@@ -145,8 +145,8 @@ function Description() {
     <StyledDescription>
       <m.div variants={varFade().in}>
         <Typography variant="h2" sx={{ textAlign: 'center' }}>
-          Start a <br />
-          new project with
+          Bắt đầu <br />
+          mua sắm với Bách hóa
         </Typography>
       </m.div>
 
@@ -160,7 +160,7 @@ function Description() {
             repeat: Infinity,
           }}
         >
-          Minimal
+         Ngọc Diệp
         </StyledGradientText>
       </m.div>
 
@@ -207,7 +207,7 @@ function Description() {
                 },
               }}
             >
-              Live Preview
+              Mua sắm ngay
             </Button>
 
             <Link
@@ -233,7 +233,7 @@ function Description() {
             href={PATH_FIGMA_PREVIEW}
             sx={{ borderColor: 'text.primary' }}
           >
-            Design Preview
+           Về cửa hàng
           </Button>
         </Stack>
       </m.div>

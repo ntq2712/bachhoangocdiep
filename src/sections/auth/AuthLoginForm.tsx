@@ -30,13 +30,15 @@ export default function AuthLoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string()
+      .required('Tài khoản không được bỏ trống')
+      .email('Email must be a valid email address'),
+    password: Yup.string().required('Mật khẩu không được bỏ trống'),
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: 'admin@gmail.com',
+    password: 'admin2001@gmail.com',
   };
 
   const methods = useForm<FormValuesProps>({
@@ -69,11 +71,11 @@ export default function AuthLoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Tài khoản" />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Mật khẩu"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -95,7 +97,7 @@ export default function AuthLoginForm() {
           color="inherit"
           underline="always"
         >
-          Forgot password?
+          Quên mật khẩu
         </Link>
       </Stack>
 
@@ -115,7 +117,7 @@ export default function AuthLoginForm() {
           },
         }}
       >
-        Login
+        Đăng nhập
       </LoadingButton>
     </FormProvider>
   );

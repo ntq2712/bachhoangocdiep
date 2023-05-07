@@ -126,7 +126,7 @@ export function fileNameByUrl(fileUrl: string) {
 
 // ----------------------------------------------------------------------
 
-export function fileData(file: ExtendFile | string) {
+export function fileData(file: any | string) {
   // Url
   if (typeof file === 'string') {
     return {
@@ -140,10 +140,10 @@ export function fileData(file: ExtendFile | string) {
   // File
   return {
     key: file.preview,
-    name: file.name,
-    size: file.size,
-    path: file.path,
-    type: file.type,
+    name: file.FileName,
+    size: file.FileSize,
+    path: file.OriginalImageUrl,
+    type: file.FileType,
     preview: file.preview,
     lastModified: file.lastModified,
     lastModifiedDate: file.lastModifiedDate,

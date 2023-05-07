@@ -1,14 +1,14 @@
 // @mui
 import { Card, Button, Typography, CardHeader, CardContent } from '@mui/material';
 // @types
-import { ICheckoutBillingAddress } from '../../../../../@types/product';
+import { IAddress, ICheckoutBillingAddress } from '../../../../../@types/product';
 // components
 import Iconify from '../../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  billing: ICheckoutBillingAddress | null;
+  billing: IAddress | null;
   onBackStep: VoidFunction;
 };
 
@@ -25,18 +25,18 @@ export default function CheckoutBillingInfo({ billing, onBackStep }: Props) {
       />
       <CardContent>
         <Typography variant="subtitle2" gutterBottom>
-          {billing?.receiver}&nbsp;
+          {billing?.ReceiverName}&nbsp;
           <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-            ({billing?.addressType})
+            ({billing?.Name})
           </Typography>
         </Typography>
 
         <Typography variant="body2" gutterBottom>
-          {billing?.fullAddress}
+          {billing?.Street}, {billing?.Ward}, {billing?.District}, {billing?.City}
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {billing?.phoneNumber}
+          {billing?.ReceiverPhoneNumber}
         </Typography>
       </CardContent>
     </Card>

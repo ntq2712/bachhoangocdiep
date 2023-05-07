@@ -5,14 +5,14 @@ import { Stack, Button, Rating, Avatar, Pagination, Typography } from '@mui/mate
 import { fDate } from '../../../../utils/formatTime';
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // @types
-import { IProductReview } from '../../../../@types/product';
+import { IProductReview, IReview } from '../../../../@types/product';
 // components
 import Iconify from '../../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  reviews: IProductReview[];
+  reviews: IReview[];
 };
 
 export default function ProductDetailsReviewList({ reviews }: Props) {
@@ -33,7 +33,7 @@ export default function ProductDetailsReviewList({ reviews }: Props) {
         }}
       >
         {reviews.map((review) => (
-          <ReviewItem key={review.id} review={review} />
+          <ReviewItem key={review.Id} review={review} />
         ))}
       </Stack>
 
@@ -47,7 +47,7 @@ export default function ProductDetailsReviewList({ reviews }: Props) {
           mr: { md: 5 },
         }}
       >
-        <Pagination count={10} />
+        {/* <Pagination count={reviews} /> */}
       </Stack>
     </>
   );
@@ -56,11 +56,16 @@ export default function ProductDetailsReviewList({ reviews }: Props) {
 // ----------------------------------------------------------------------
 
 type ReviewItemProps = {
-  review: IProductReview;
+  review: IReview;
 };
 
 function ReviewItem({ review }: ReviewItemProps) {
-  const { name, rating, comment, helpful, postedAt, avatarUrl, isPurchased } = review;
+  const {
+    Content,
+    Rate,
+    createdAt,
+    Account,
+  } = review;
 
   const [isHelpful, setIsHelpful] = useState(false);
 
@@ -85,7 +90,7 @@ function ReviewItem({ review }: ReviewItemProps) {
         }}
       >
         <Avatar
-          src={avatarUrl}
+          src={Account.Avatar}
           sx={{
             width: { md: 64 },
             height: { md: 64 },
@@ -94,19 +99,19 @@ function ReviewItem({ review }: ReviewItemProps) {
 
         <Stack spacing={{ md: 0.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {name}
+            {Account.FullName}
           </Typography>
 
           <Typography variant="caption" sx={{ color: 'text.secondary' }} noWrap>
-            {fDate(postedAt)}
+            {fDate(createdAt)}
           </Typography>
         </Stack>
       </Stack>
 
       <Stack spacing={1} flexGrow={1}>
-        <Rating size="small" value={rating} precision={0.1} readOnly />
+        <Rating size="small" value={Number(Rate)} precision={0.1} readOnly />
 
-        {isPurchased && (
+        {/* {isPurchased && (
           <Typography
             variant="caption"
             sx={{
@@ -118,9 +123,9 @@ function ReviewItem({ review }: ReviewItemProps) {
             <Iconify icon="ic:round-verified" width={16} sx={{ mr: 0.5 }} />
             Verified purchase
           </Typography>
-        )}
+        )} */}
 
-        <Typography variant="body2">{comment}</Typography>
+        <Typography variant="body2">{Content}</Typography>
 
         <Stack
           spacing={1}
@@ -128,7 +133,7 @@ function ReviewItem({ review }: ReviewItemProps) {
           direction={{ xs: 'column', sm: 'row' }}
         >
           {!isHelpful && (
-            <Typography variant="subtitle2">Was this review helpful to you?</Typography>
+            <Typography variant="subtitle2">Nhận xét này có hữu ích cho bạn?</Typography>
           )}
 
           <Button
@@ -137,7 +142,8 @@ function ReviewItem({ review }: ReviewItemProps) {
             startIcon={<Iconify icon={!isHelpful ? 'ic:round-thumb-up' : 'eva:checkmark-fill'} />}
             onClick={() => setIsHelpful(!isHelpful)}
           >
-            {isHelpful ? 'Helpful' : 'Thank'}({fShortenNumber(!isHelpful ? helpful : helpful + 1)})
+            {isHelpful ? 'Helpful' : 'Thank'}
+            {/* ({fShortenNumber(!isHelpful ? helpful : helpful + 1)}) */}
           </Button>
         </Stack>
       </Stack>

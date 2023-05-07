@@ -9,7 +9,6 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { fCurrency } from '../../../../utils/formatNumber';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { addToCart } from '../../../../redux/slices/product';
 // @types
 import { IProduct } from '../../../../@types/product';
 // components
@@ -17,6 +16,8 @@ import Iconify from '../../../../components/iconify';
 import Label from '../../../../components/label';
 import Image from '../../../../components/image';
 import { ColorPreview } from '../../../../components/color-utils';
+import { useSnackbar } from 'notistack';
+import { addToCart, getCarts } from 'src/redux/slices/product';
 
 // ----------------------------------------------------------------------
 
@@ -24,29 +25,35 @@ type Props = {
   product: IProduct;
 };
 
-export default function ShopProductCard({ product }: Props) {
-  const { id, name, cover, price, colors, status, available, sizes, priceSale } = product;
+type typeCart = {
+  ProductId: string;
+  Quantity: number;
+};
 
+export default function ShopProductCard({ product }: Props) {
+  const { Id, Name, Price, Status, ImageURL } = product;
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
+  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(Id));
 
   const handleAddCart = async () => {
-    const newProduct = {
-      id,
-      name,
-      cover,
-      available,
-      price,
-      colors: [colors[0]],
-      size: sizes[0],
-      quantity: 1,
+    const cart: typeCart = {
+      ProductId: Id,
+      Quantity: 1,
     };
-    try {
-      dispatch(addToCart(newProduct));
-    } catch (error) {
-      console.error(error);
-    }
+    addToCart(cart)
+      .then((res) => {
+        if (res?.data?.success == true) {
+          dispatch(getCarts());
+          enqueueSnackbar('Thêm vào giỏ hàng thành công!');
+        } else {
+          enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+        }
+      })
+      .catch(() => {
+        enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+      });
   };
 
   return (
@@ -58,10 +65,10 @@ export default function ShopProductCard({ product }: Props) {
       }}
     >
       <Box sx={{ position: 'relative', p: 1 }}>
-        {status && (
+        {Status && (
           <Label
             variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
+            color={(Status === true && 'error') || 'info'}
             sx={{
               top: 16,
               right: 16,
@@ -70,7 +77,8 @@ export default function ShopProductCard({ product }: Props) {
               textTransform: 'uppercase',
             }}
           >
-            {status}
+          Sale
+            {/* {Status} */}
           </Label>
         )}
 
@@ -95,25 +103,27 @@ export default function ShopProductCard({ product }: Props) {
           <Iconify icon="ic:round-add-shopping-cart" />
         </Fab>
 
-        <Image alt={name} src={cover} ratio="1/1" sx={{ borderRadius: 1.5 }} />
+        <Image alt={Name} src={ImageURL} ratio="1/1" sx={{ borderRadius: 1.5 }} />
       </Box>
 
       <Stack spacing={2.5} sx={{ p: 3 }}>
         <Link component={NextLink} href={linkTo} color="inherit" variant="subtitle2" noWrap>
-          {name}
+          {Name}
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
+          {/* <ColorPreview colors={colors} /> */}
 
           <Stack direction="row" spacing={0.5} sx={{ typography: 'subtitle1' }}>
-            {priceSale && (
+            {/* {priceSale && (
               <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                {fCurrency(priceSale)}
+                {fCurrency(PriceSale)}
               </Box>
-            )}
-
-            <Box component="span">{fCurrency(price)}</Box>
+            )} */}
+            <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
+              {fCurrency(Price + 20)}đ
+            </Box>
+            <Box component="span">{fCurrency(Price)}đ</Box>
           </Stack>
         </Stack>
       </Stack>

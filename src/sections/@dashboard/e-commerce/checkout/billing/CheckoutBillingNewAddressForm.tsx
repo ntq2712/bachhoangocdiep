@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // @types
-import { ICheckoutBillingAddress } from '../../../../../@types/product';
+import { IAddress, ICheckoutBillingAddress } from '../../../../../@types/product';
 // assets
 import { countries } from '../../../../../assets/data';
 import FormProvider, {
@@ -23,10 +23,12 @@ import FormProvider, {
   RHFTextField,
   RHFRadioGroup,
 } from '../../../../../components/hook-form';
+import { useEffect, useState } from 'react';
+import { getDistrict, getProvince, getWard } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
-interface FormValuesProps extends ICheckoutBillingAddress {
+interface FormValuesProps extends IAddress {
   address: string;
   city: string;
   state: string;
@@ -37,72 +39,91 @@ interface FormValuesProps extends ICheckoutBillingAddress {
 type Props = {
   open: boolean;
   onClose: VoidFunction;
-  onCreateBilling: (address: ICheckoutBillingAddress) => void;
+  onCreateBilling: (address: IAddress) => void;
 };
 
 export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateBilling }: Props) {
   const NewAddressSchema = Yup.object().shape({
-    receiver: Yup.string().required('Fullname is required'),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    address: Yup.string().required('Address is required'),
-    city: Yup.string().required('City is required'),
-    state: Yup.string().required('State is required'),
-    country: Yup.string().required('Country is required'),
-    zipCode: Yup.string().required('Zip code is required'),
+    Name: Yup.string().required('Trường này bắt buộc'),
+    ReceiverName: Yup.string().required('Trường này bắt buộc'),
+    City: Yup.string().required('Trường này bắt buộc'),
+    Ward: Yup.string().required('Trường này bắt buộc'),
+    Street: Yup.string().required('Trường này bắt buộc'),
+    District: Yup.string().required('Trường này bắt buộc'),
+    ReceiverPhoneNumber: Yup.string().required('Trường này bắt buộc'),
   });
 
   const defaultValues = {
-    addressType: 'Home',
-    receiver: '',
-    phoneNumber: '',
-    address: '',
-    city: '',
-    state: '',
-    country: '',
-    zipCode: '',
-    isDefault: true,
+    Name: '',
+    IsDefault: true,
+    City: '',
+    District: '',
+    Ward: '',
+    Street: '',
+    ReceiverName: '',
+    ReceiverPhoneNumber: '',
+  
   };
 
-  const methods = useForm<FormValuesProps>({
+  const methods = useForm<IAddress>({
     resolver: yupResolver(NewAddressSchema),
     defaultValues,
   });
 
   const {
     handleSubmit,
+    setValue,
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (data: FormValuesProps) => {
+  const onSubmit = (data: IAddress) => {
+    
+    const body: IAddress = {
+      Name: data?.Name,
+      IsDefault: data?.IsDefault,
+      City: JSON.parse(data?.City).name,
+      District: JSON.parse(data?.District).name,
+      Ward: JSON.parse(data?.Ward).name,
+      Street: data?.Street,
+      ReceiverName: data?.ReceiverName,
+      ReceiverPhoneNumber: data?.ReceiverPhoneNumber,
+      CityGHNId: JSON.parse(data?.City).id | 0,
+      DistrictGHNId: JSON.parse(data?.District).id | 0,
+      WardGHNid: JSON.parse(data?.Ward).id |0
+    };
     try {
-      onCreateBilling({
-        receiver: data.receiver,
-        phoneNumber: data.phoneNumber,
-        fullAddress: `${data.address}, ${data.city}, ${data.state}, ${data.country}, ${data.zipCode}`,
-        addressType: data.addressType,
-        isDefault: data.isDefault,
-      });
+      onCreateBilling(body);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const [provinces, setProvinces] = useState<any>([]);
+  const [districts, setDistricts] = useState<any>([]);
+  const [wards, setWards] = useState<any>([]);
+
+  useEffect(() => {
+    getProvince().then((res) => {
+      if (res?.data?.message == 'Success') {
+        setProvinces(res.data.data);
+      }
+    });
+  }, []);
+
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle>Add new address</DialogTitle>
-
+        <DialogTitle>Thêm địa chỉ mới</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={3}>
             <RHFRadioGroup
               row
-              name="addressType"
+              name="Name"
               options={[
-                { label: 'Home', value: 'Home' },
-                { label: 'Office', value: 'Office' },
+                { label: 'Nhà riêng ', value: 'home' },
+                { label: 'Văn phòng', value: 'office' },
               ]}
             />
-
             <Box
               rowGap={3}
               columnGap={2}
@@ -112,13 +133,9 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="receiver" label="Full Name" />
-
-              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="ReceiverName" label="Tên người nhận" />
+              <RHFTextField name="ReceiverPhoneNumber" label="Số điện thoại" />
             </Box>
-
-            <RHFTextField name="address" label="Address" />
-
             <Box
               rowGap={3}
               columnGap={2}
@@ -128,33 +145,75 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
                 sm: 'repeat(3, 1fr)',
               }}
             >
-              <RHFTextField name="city" label="Town / City" />
-
-              <RHFTextField name="state" label="State" />
-
-              <RHFTextField name="zipCode" label="Zip/Code" />
+              <RHFSelect
+                native
+                onChange={(e) => {
+                  setValue('City', e.target.value);
+                  getDistrict(JSON.parse(e.target.value).id).then((res) => {
+                    if (res?.data?.message == 'Success') {
+                      setDistricts(res.data.data);
+                    }
+                  });
+                }}
+                name="City"
+                label="Tỉnh / Thành phố"
+              >
+                <option value="" />
+                {provinces?.map((province: any) => (
+                  <option
+                    key={province.ProvinceID}
+                    value={JSON.stringify({ id: province.ProvinceID, name: province.ProvinceName })}
+                  >
+                    {province.ProvinceName}
+                  </option>
+                ))}
+              </RHFSelect>
+              <RHFSelect
+                native
+                onChange={(e) => {
+                  setValue('District', e.target.value);
+                  getWard(JSON.parse(e.target.value).id).then((res) => {
+                    if (res?.data?.message == 'Success') {
+                      setWards(res.data.data);
+                    }
+                  });
+                }}
+                name="District"
+                label="Huyện / Quận"
+              >
+                <option value="" />
+                {districts?.map((district: any) => (
+                  <option
+                    key={district.DistrictID}
+                    value={JSON.stringify({ id: district.DistrictID, name: district.DistrictName })}
+                  >
+                    {district.DistrictName}
+                  </option>
+                ))}
+              </RHFSelect>
+              <RHFSelect native name="Ward" label="Xã / Phường">
+                <option value="" />
+                {wards?.map((ward: any) => (
+                  <option
+                    key={ward.WardCode}
+                    value={JSON.stringify({ id: ward.WardCode, name: ward.WardName })}
+                  >
+                    {ward.WardName}
+                  </option>
+                ))}
+              </RHFSelect>
             </Box>
+            <RHFTextField name="Street" label="Số nhà đường / đường" />
 
-            <RHFSelect native name="country" label="Country">
-              <option value="" />
-              {countries.map((country) => (
-                <option key={country.code} value={country.label}>
-                  {country.label}
-                </option>
-              ))}
-            </RHFSelect>
-
-            <RHFCheckbox name="isDefault" label="Use this address as default." sx={{ mt: 3 }} />
+            <RHFCheckbox name="IsDefault" label="Đặt làm địa chỉ mặc định." sx={{ mt: 3 }} />
           </Stack>
         </DialogContent>
-
         <DialogActions>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Deliver to this Address
+            Gửi đến địa chỉ này
           </LoadingButton>
-
           <Button color="inherit" variant="outlined" onClick={onClose}>
-            Cancel
+            Thoát
           </Button>
         </DialogActions>
       </FormProvider>

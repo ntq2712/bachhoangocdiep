@@ -33,12 +33,12 @@ export default function EcommerceProductCreatePage() {
         <CustomBreadcrumbs
           heading="Create a new product"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
+              name: 'Danh sách',
+              href: PATH_DASHBOARD.eCommerce.list,
             },
-            { name: 'New product' },
+            { name: 'Tạo sản phẩm' },
           ]}
         />
         <ProductNewEditForm />

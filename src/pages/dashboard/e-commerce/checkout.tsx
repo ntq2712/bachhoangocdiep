@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // next
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -20,11 +20,14 @@ import {
   createBilling,
   applyShipping,
   applyDiscount,
-  increaseQuantity,
-  decreaseQuantity,
+  getCarts,
+  updateQuantity,
+  updateShipping,
+  // increaseQuantity,
+  // decreaseQuantity,
 } from '../../../redux/slices/product';
 // @types
-import { ICheckoutBillingAddress } from '../../../@types/product';
+import { IAddress, ICheckoutBillingAddress, ICheckoutCartItem } from '../../../@types/product';
 // components
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
@@ -36,10 +39,12 @@ import {
   CheckoutOrderComplete,
   CheckoutBillingAddress,
 } from '../../../sections/@dashboard/e-commerce/checkout';
+import { CalculateFee, addAddress, deleteAddress, deleteToCard } from 'src/api/ortherEcom';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
-const STEPS = ['Cart', 'Billing & address', 'Payment'];
+const STEPS = ['Giỏ hàng', 'Đặt hàng', 'Thanh toán'];
 
 // ----------------------------------------------------------------------
 
@@ -51,20 +56,18 @@ EcommerceCheckoutPage.getLayout = (page: React.ReactElement) => (
 
 export default function EcommerceCheckoutPage() {
   const { replace } = useRouter();
-
+  const { enqueueSnackbar } = useSnackbar();
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
 
   const { checkout } = useSelector((state) => state.product);
 
-  const { cart, billing, activeStep } = checkout;
+  const [activeStep, setActiveStep] = useState<number>(0);
+
+  const { Data, Address } = checkout;
 
   const completed = activeStep === STEPS.length;
-
-  useEffect(() => {
-    dispatch(getCart(cart));
-  }, [dispatch, cart]);
 
   useEffect(() => {
     if (activeStep === 1) {
@@ -73,11 +76,13 @@ export default function EcommerceCheckoutPage() {
   }, [dispatch, activeStep]);
 
   const handleNextStep = () => {
-    dispatch(nextStep());
+    // dispatch(nextStep());
+    setActiveStep(activeStep + 1);
   };
 
   const handleBackStep = () => {
-    dispatch(backStep());
+    // dispatch(backStep());
+    setActiveStep(activeStep - 1);
   };
 
   const handleGotoStep = (step: number) => {
@@ -85,26 +90,85 @@ export default function EcommerceCheckoutPage() {
   };
 
   const handleApplyDiscount = (value: number) => {
-    if (cart.length) {
+    if (Data.length) {
       dispatch(applyDiscount(value));
     }
   };
 
   const handleDeleteCart = (productId: string) => {
-    dispatch(deleteCart(productId));
+    deleteToCard(productId)
+      .then((res) => {
+        if (res?.data?.success == true) {
+          dispatch(getCarts());
+          enqueueSnackbar('Thêm vào giỏ hàng thành công!');
+        } else {
+          enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+        }
+      })
+      .catch(() => {
+        enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+      });
   };
 
-  const handleIncreaseQuantity = (productId: string) => {
-    dispatch(increaseQuantity(productId));
+  const handleIncreaseQuantity = (id: string, productId: string, quantity: number) => {
+    updateQuantity(id, productId, quantity + 1)
+      .then((res) => {
+        if (res?.data?.success == true) {
+          dispatch(getCarts());
+          enqueueSnackbar('Cập nhật giỏ hàng thành công!');
+        } else {
+          enqueueSnackbar('Cập nhật giỏ hàng không thành công!');
+        }
+      })
+      .catch(() => {
+        enqueueSnackbar('Cập nhật giỏ hàng không thành công!');
+      });
   };
 
-  const handleDecreaseQuantity = (productId: string) => {
-    dispatch(decreaseQuantity(productId));
+  const handleDecreaseQuantity = (id: string, productId: string, quantity: number) => {
+    updateQuantity(id, productId, quantity - 1)
+      .then((res) => {
+        if (res?.data?.success == true) {
+          dispatch(getCarts());
+          enqueueSnackbar('Cập nhật giỏ hàng thành công!');
+        } else {
+          enqueueSnackbar('Cập nhật giỏ hàng không thành công!');
+        }
+      })
+      .catch(() => {
+        enqueueSnackbar('Cập nhật giỏ hàng không thành công!');
+      });
   };
 
-  const handleCreateBilling = (address: ICheckoutBillingAddress) => {
+  const handleCreateBilling = (address: IAddress) => {
+    addAddress(address)
+      .then((res) => {
+        if (res?.data?.success == true) {
+          CalculateFee(Number(address.DistrictGHNId), Number(address.WardGHNid)).then((res) => {
+            if (res.data.message == 'Success') {
+              dispatch(updateShipping(res.data.data.total));
+            }
+          });
+          dispatch(createBilling(address));
+          setActiveStep(activeStep + 1);
+          enqueueSnackbar('Thêm địa chỉ thành công!');
+        } else {
+          enqueueSnackbar('Đã có lỗi xảy ra!', { variant: 'error' });
+        }
+      })
+      .catch((err) => enqueueSnackbar('Đã có lỗi xảy ra!', { variant: 'error' }));
+
+    // // dispatch(nextStep());
+  };
+
+  const handleAddBilling = (address: IAddress) => {
+    CalculateFee(Number(address.DistrictGHNId),Number(address.WardGHNid)).then((res) => {
+      if (res.data.message == 'Success') {
+        dispatch(updateShipping(res.data.data.total));
+      }
+    });
     dispatch(createBilling(address));
-    dispatch(nextStep());
+    setActiveStep(activeStep + 1);
   };
 
   const handleApplyShipping = (value: number) => {
@@ -126,7 +190,7 @@ export default function EcommerceCheckoutPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Checkout"
+          heading="Giỏ hàng"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
@@ -162,9 +226,10 @@ export default function EcommerceCheckoutPage() {
                 checkout={checkout}
                 onBackStep={handleBackStep}
                 onCreateBilling={handleCreateBilling}
+                onAddBilling={handleAddBilling}
               />
             )}
-            {activeStep === 2 && billing && (
+            {activeStep === 2 && Address && (
               <CheckoutPayment
                 checkout={checkout}
                 onNextStep={handleNextStep}

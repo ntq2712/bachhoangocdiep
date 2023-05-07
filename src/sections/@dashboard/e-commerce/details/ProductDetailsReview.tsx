@@ -1,25 +1,33 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import sumBy from 'lodash/sumBy';
 // @mui
 import { Divider, Typography, Rating, Button, LinearProgress, Stack, Box } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // @types
-import { IProduct } from '../../../../@types/product';
+import { IProduct, IReview } from '../../../../@types/product';
 // components
 import Iconify from '../../../../components/iconify';
 //
 import ProductDetailsReviewList from './ProductDetailsReviewList';
 import ProductDetailsReviewNewDialog from './ProductDetailsNewReviewForm';
+import { getReviwByProduct } from 'src/api/ortherEcom';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  product: IProduct;
+type rating = {
+  name: string;
+  starCount: string | number;
+  reviewCount: string | number;
 };
 
-export default function ProductDetailsReview({ product }: Props) {
-  const { totalRating, totalReview, ratings } = product;
+type Props = {
+  reviews: IReview[];
+};
+
+export default function ProductDetailsReview({ reviews }: Props) {
+  // const { totalRating, totalReview, ratings } = product;
 
   const [openReview, setOpenReview] = useState(false);
 
@@ -31,7 +39,52 @@ export default function ProductDetailsReview({ product }: Props) {
     setOpenReview(false);
   };
 
-  const total = sumBy(ratings, (star) => star.starCount);
+  const calculate = (): number => {
+    let totalRating: number = 0;
+    reviews?.map((e) => {
+      totalRating = totalRating + Number(e.Rate);
+    });
+    return Math.round((totalRating / reviews.length) * 10) / 10;
+  };
+  // const total = sumBy(ratings, (star) => star.starCount);
+  // const calculateRatings = useCallback(() => {
+  //   let onestart: rating = {
+  //     name: '0 Star',
+  //     starCount: 0,
+  //     reviewCount: 0,
+  //   };
+  //   let twostart: rating = {
+  //     name: '0 Star',
+  //     starCount: 0,
+  //     reviewCount: 0,
+  //   };
+  //   let threestart: rating = {
+  //     name: '0 Star',
+  //     starCount: 0,
+  //     reviewCount: 0,
+  //   };
+  //   let fourstart: rating = {
+  //     name: '0 Star',
+  //     starCount: 0,
+  //     reviewCount: 0,
+  //   };
+  //   let fivestart: rating = {
+  //     name: '0 Star',
+  //     starCount: 0,
+  //     reviewCount: 0,
+  //   };
+  //   reviews?.map((e) => {
+  //     switch (Math.round(Number(e.Rate))) {
+  //       case 1:
+  //         onestart.starCount = Number(onestart.starCount) + Number(e.Rate);
+  //         onestart.starCount = Number(onestart.starCount) + 1;
+  //       case 2:
+  //         twostart.starCount = Number(twostart.starCount) + Number(e.Rate);
+  //         twostart.starCount = Number(twostart.starCount) + 1;
+
+  //     }
+  //   });
+  // }, []);
 
   return (
     <>
@@ -40,6 +93,10 @@ export default function ProductDetailsReview({ product }: Props) {
         gridTemplateColumns={{
           xs: 'repeat(1, 1fr)',
           md: 'repeat(3, 1fr)',
+        }}
+        sx={{
+          paddingTop: 2,
+          paddingBottom: 2
         }}
       >
         <Stack
@@ -52,15 +109,15 @@ export default function ProductDetailsReview({ product }: Props) {
           }}
         >
           <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-            Average rating
+          Xếp hạng trung bình
           </Typography>
 
-          <Typography variant="h2">{totalRating}/5</Typography>
+          <Typography variant="h2">{calculate()}/5</Typography>
 
-          <Rating readOnly value={totalRating} precision={0.1} />
+          <Rating readOnly value={calculate()} precision={0.1} />
 
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(totalReview)} reviews)
+            ({fShortenNumber(reviews.length)} đánh giá)
           </Typography>
         </Stack>
 
@@ -73,12 +130,12 @@ export default function ProductDetailsReview({ product }: Props) {
             borderRight: (theme) => ({ md: `dashed 1px ${theme.palette.divider}` }),
           }}
         >
-          {ratings
+          {/* {ratings
             .slice(0)
             .reverse()
             .map((rating) => (
               <ProgressItem key={rating.name} star={rating} total={total} />
-            ))}
+            ))} */}
         </Stack>
 
         <Stack
@@ -96,14 +153,14 @@ export default function ProductDetailsReview({ product }: Props) {
             variant="outlined"
             startIcon={<Iconify icon="eva:edit-fill" />}
           >
-            Write your review
+            Viết đánh giá
           </Button>
         </Stack>
       </Box>
 
       <Divider />
 
-      <ProductDetailsReviewList reviews={product.reviews} />
+      <ProductDetailsReviewList reviews={reviews} />
 
       <ProductDetailsReviewNewDialog open={openReview} onClose={handleCloseReview} />
     </>

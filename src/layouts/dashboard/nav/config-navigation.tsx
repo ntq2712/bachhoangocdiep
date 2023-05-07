@@ -78,8 +78,11 @@ const navConfig = [
         children: [
           { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
           { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
-          { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'create', path: PATH_DASHBOARD.eCommerce.new },
+          { title: 'Danh sách sản phẩm', path: PATH_DASHBOARD.eCommerce.list },
+          { title: 'Nhóm danh mục', path: PATH_DASHBOARD.eCommerce.listCategoryGroup },
+          { title: 'Danh mục', path: PATH_DASHBOARD.eCommerce.listCategory },
+          { title: 'Thương hiệu', path: PATH_DASHBOARD.eCommerce.listBrand },
+          { title: 'Tạo sản phẩm mới', path: PATH_DASHBOARD.eCommerce.new },
           { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
           { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
         ],

@@ -3,30 +3,31 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
+import { Box, Card, Container, Divider, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { Box, Tab, Tabs, Card, Grid, Divider, Container, Typography, Stack } from '@mui/material';
 // redux
+import { addToCart, getCarts, getProduct, gotoStep } from '../../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getProduct, addToCart, gotoStep } from '../../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // @types
-import { ICheckoutCartItem } from '../../../../@types/product';
 // layouts
 import DashboardLayout from '../../../../layouts/dashboard';
 // components
+import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 import Iconify from '../../../../components/iconify';
 import Markdown from '../../../../components/markdown';
-import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../../components/settings';
 import { SkeletonProductDetails } from '../../../../components/skeleton';
 // sections
-import {
-  ProductDetailsSummary,
-  ProductDetailsReview,
-  ProductDetailsCarousel,
-} from '../../../../sections/@dashboard/e-commerce/details';
+import { useSnackbar } from 'notistack';
 import CartWidget from '../../../../sections/@dashboard/e-commerce/CartWidget';
+import {
+  ProductDetailsCarousel,
+  ProductDetailsReview,
+  ProductDetailsSummary,
+} from '../../../../sections/@dashboard/e-commerce/details';
+import { IDataAddCart } from 'src/@types/product';
 
 // ----------------------------------------------------------------------
 
@@ -58,14 +59,14 @@ EcommerceProductDetailsPage.getLayout = (page: React.ReactElement) => (
 
 export default function EcommerceProductDetailsPage() {
   const { themeStretch } = useSettingsContext();
-
+  const { enqueueSnackbar } = useSnackbar();
   const {
     query: { name },
   } = useRouter();
 
   const dispatch = useDispatch();
 
-  const { product, isLoading, checkout } = useSelector((state) => state.product);
+  const { product, isLoading, checkout, reviews } = useSelector((state) => state.product);
 
   const [currentTab, setCurrentTab] = useState('description');
 
@@ -75,8 +76,19 @@ export default function EcommerceProductDetailsPage() {
     }
   }, [dispatch, name]);
 
-  const handleAddCart = (newProduct: ICheckoutCartItem) => {
-    dispatch(addToCart(newProduct));
+  const handleAddCart = (cart: IDataAddCart) => {
+    addToCart(cart)
+      .then((res) => {
+        if (res?.data?.success == true) {
+          dispatch(getCarts());
+          enqueueSnackbar('Thêm vào giỏ hàng thành công!');
+        } else {
+          enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+        }
+      })
+      .catch(() => {
+        enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+      });
   };
 
   const handleGotoStep = (step: number) => {
@@ -87,24 +99,25 @@ export default function EcommerceProductDetailsPage() {
     {
       value: 'description',
       label: 'description',
-      component: product ? <Markdown children={product?.description} /> : null,
+      component: product ? <Markdown children={product?.Description} /> : null,
     },
+    //`Reviews (${product ? product.reviews.length : ''})`
     {
       value: 'reviews',
-      label: `Reviews (${product ? product.reviews.length : ''})`,
-      component: product ? <ProductDetailsReview product={product} /> : null,
+      label: 'Reviews',
+      component: product ? <ProductDetailsReview reviews={reviews} /> : null,
     },
   ];
 
   return (
     <>
       <Head>
-        <title>{`Ecommerce: ${product?.name || ''} | Minimal UI`}</title>
+        <title>{`Sản phẩm: ${product?.Name || ''} | Minimal UI`}</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Product Details"
+          heading="Thông tin sản phẩm"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
@@ -115,17 +128,17 @@ export default function EcommerceProductDetailsPage() {
               name: 'Shop',
               href: PATH_DASHBOARD.eCommerce.shop,
             },
-            { name: product?.name },
+            { name: product?.Name },
           ]}
         />
 
-        <CartWidget totalItems={checkout.totalItems} />
+        <CartWidget totalItems={checkout.TotalQuantity} />
 
         {product && (
           <>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6} lg={7}>
-                <ProductDetailsCarousel product={product} />
+                <ProductDetailsCarousel productId={name} />
               </Grid>
 
               <Grid item xs={12} md={6} lg={5}>

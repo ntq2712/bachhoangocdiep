@@ -12,21 +12,21 @@ import {
   IconButton,
 } from '@mui/material';
 // utils
-import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
+import { fDate } from '../../../utils/formatTime';
+import { fCurrency } from '../../../utils/formatNumber';
 // @types
-import { IProduct } from '../../../../@types/product';
+import { ICategoyGroup, IProduct } from '../../../@types/product';
 // components
-import Label from '../../../../components/label';
-import Image from '../../../../components/image';
-import Iconify from '../../../../components/iconify';
-import MenuPopover from '../../../../components/menu-popover';
-import ConfirmDialog from '../../../../components/confirm-dialog';
+import Label from '../../../components/label';
+import Image from '../../../components/image';
+import Iconify from '../../../components/iconify';
+import MenuPopover from '../../../components/menu-popover';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IProduct;
+  row: ICategoyGroup;
   selected: boolean;
   onEditRow: VoidFunction;
   onViewRow: VoidFunction;
@@ -34,19 +34,7 @@ type Props = {
   onDeleteRow: VoidFunction;
 };
 
-// BrandId: string;
-// CategoryId: string;
-// CategoryGroupId: string;
-// Name: string;
-// Description: string;
-// Price: number;
-// Rate: number;
-// Quantity: number;
-// createdAt: string;
-// updatedAt: string;
-// deletedAt: string;
-
-export default function ProductTableRow({
+export default function CategoryGroupTableRow({
   row,
   selected,
   onSelectRow,
@@ -54,7 +42,7 @@ export default function ProductTableRow({
   onEditRow,
   onViewRow,
 }: Props) {
-  const { Name, ImageURL, createdAt, Quantity, Price } = row;
+  const { Name, Description, createdAt, updatedAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -84,15 +72,7 @@ export default function ProductTableRow({
         </TableCell>
 
         <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Image
-              disabledEffect
-              visibleByDefault
-              alt={Name}
-              src={ImageURL}
-              sx={{ borderRadius: 1.5, width: 48, height: 48 }}
-            />
-
+          <Stack direction="row" alignItems="left" spacing={2}>
             <Link
               noWrap
               color="inherit"
@@ -107,22 +87,9 @@ export default function ProductTableRow({
 
         <TableCell>{fDate(createdAt)}</TableCell>
 
-        <TableCell align="center">
-          <Label
-            variant="soft"
-            color={
-              (Quantity === 0 && 'error') ||
-              (Quantity < 10  && 'warning') ||
-              'success'
-            }
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {Quantity}
-            {/* {inventoryType ? sentenceCase(inventoryType) : ''} */}
-          </Label>
-        </TableCell>
+        <TableCell align="left">{fDate(updatedAt)}</TableCell>
 
-        <TableCell align="right">{fCurrency(Price)}</TableCell>
+        <TableCell align="left">{Description}</TableCell>
 
         <TableCell align="right">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>

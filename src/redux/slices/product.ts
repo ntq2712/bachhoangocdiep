@@ -4,23 +4,45 @@ import uniqBy from 'lodash/uniqBy';
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
-import { IProductState, ICheckoutCartItem } from '../../@types/product';
+import {
+  IProductState,
+  ICheckoutCartItem,
+  IProduct,
+  IProductCheckoutState,
+  IInitStateProduct,
+  IDataAddCart,
+} from '../../@types/product';
+import { addToCard } from 'src/api/ortherEcom';
+import { string } from 'yup';
 
 // ----------------------------------------------------------------------
 
-const initialState: IProductState = {
+const initialState: any = {
   isLoading: false,
   error: null,
   products: [],
   product: null,
+  reviews: [],
+  filter: {
+    brand: null, //filter[Brand][eq]=abc123&filter[Brand][eq]=bcd456
+    categorygroup: [],
+    category: [],
+    priceMin: null, //filter[Price][gte]=5&filter[Price][lte]=6
+    priceMax: null, //filter[Price][gte]=5&filter[Price][lte]=6
+    rate: null, //filter[Rate][eq]=5
+    sortBy: null,
+  },
+
+  //filter[Brand][eq]=${abc123}&filter[Brand][eq]=${bcd456&}filter[Price][gte]=${5}&filter[Price][lte]=${6}&filter[Price][gte]=${5}&filter[Price][lte]=${6}&filter[Rate][eq]=${5}
+
   checkout: {
-    activeStep: 0,
-    cart: [],
-    subtotal: 0,
-    total: 0,
+    activeStep: 0, //0 1 2
+    Data: [],
+    TotalQuantity: 0,
+    TotalPrice: 0,
     discount: 0,
     shipping: 0,
-    billing: null,
+    Address: null,
     totalItems: 0,
   },
 };
@@ -45,6 +67,10 @@ const slice = createSlice({
       state.isLoading = false;
       state.products = action.payload;
     },
+    //GET REVIEWS
+    getReviewSuccess(state, action) {
+      state.reviews = action.payload;
+    },
 
     // GET PRODUCT
     getProductSuccess(state, action) {
@@ -54,48 +80,50 @@ const slice = createSlice({
 
     // CHECKOUT
     getCart(state, action) {
-      const cart: ICheckoutCartItem[] = action.payload;
-
-      const totalItems = sum(cart.map((product) => product.quantity));
-      const subtotal = sum(cart.map((product) => product.price * product.quantity));
-      state.checkout.cart = cart;
-      state.checkout.discount = state.checkout.discount || 0;
-      state.checkout.shipping = state.checkout.shipping || 0;
+      const CHECKOUT: IProductCheckoutState = action.payload;
+      state.checkout.Data = CHECKOUT.Data;
       state.checkout.billing = state.checkout.billing || null;
-      state.checkout.subtotal = subtotal;
-      state.checkout.total = subtotal - state.checkout.discount;
-      state.checkout.totalItems = totalItems;
+      state.checkout.TotalPrice = CHECKOUT.TotalPrice;
+      state.checkout.TotalQuantity = CHECKOUT.TotalQuantity;
     },
 
-    addToCart(state, action) {
-      const newProduct = action.payload;
-      const isEmptyCart = !state.checkout.cart.length;
-
-      if (isEmptyCart) {
-        state.checkout.cart = [...state.checkout.cart, newProduct];
-      } else {
-        state.checkout.cart = state.checkout.cart.map((product) => {
-          const isExisted = product.id === newProduct.id;
-
-          if (isExisted) {
-            return {
-              ...product,
-              colors: uniq([...product.colors, ...newProduct.colors]),
-              quantity: product.quantity + 1,
-            };
-          }
-
-          return product;
-        });
-      }
-      state.checkout.cart = uniqBy([...state.checkout.cart, newProduct], 'id');
-      state.checkout.totalItems = sum(state.checkout.cart.map((product) => product.quantity));
+    setFilterSort(state, action) {
+      state.filter.sortBy = action.payload;
     },
+
+    setFilterBrand(state, action) {
+      state.filter.brand = action.payload;
+    },
+
+    // addToCart(state, action) {
+    //   const cart = action.payload;
+
+    //   addToCard(cart).then
+    //   // const isEmptyCart = !state.checkout.cart.length;
+
+    //   // if (isEmptyCart) {
+    //   //   state.checkout.Data = [...state.checkout.Data, newProduct];
+    //   // } else {
+    //   //   state.checkout.Data = state.checkout.Data.map((item:any) => {
+    //   //     const isExisted = item.ProductId === newProduct.Id;
+
+    //   //     if (isExisted) {
+    //   //       return {
+    //   //         ...item,
+    //   //         quantity: item.Quantity + 1,
+    //   //       };
+    //   //     }
+
+    //   //     return item;
+    //   //   });
+    //   // }
+    //   // state.checkout.cart = uniqBy([...state.checkout.cart, newProduct], 'id');
+    //   // state.checkout.totalItems = sum(state.checkout.cart.map((product) => product.quantity));
+    // },
 
     deleteCart(state, action) {
-      const updateCart = state.checkout.cart.filter((product) => product.id !== action.payload);
-
-      state.checkout.cart = updateCart;
+      // const updateCart = state.checkout.cart.filter((product) => product.Id !== action.payload);
+      // state.checkout.cart = updateCart;
     },
 
     resetCart(state) {
@@ -122,39 +150,43 @@ const slice = createSlice({
       state.checkout.activeStep = step;
     },
 
-    increaseQuantity(state, action) {
-      const productId = action.payload;
+    // increaseQuantity(state, action) {
+    //   const productId = action.payload;
 
-      const updateCart = state.checkout.cart.map((product) => {
-        if (product.id === productId) {
-          return {
-            ...product,
-            quantity: product.quantity + 1,
-          };
-        }
-        return product;
-      });
+    //   const updateCart = state.checkout.cart.map((product) => {
+    //     if (product.Id === productId) {
+    //       return {
+    //         ...product,
+    //         quantity: product.quantity + 1,
+    //       };
+    //     }
+    //     return product;
+    //   });
 
-      state.checkout.cart = updateCart;
-    },
+    //   state.checkout.cart = updateCart;
+    // },
 
-    decreaseQuantity(state, action) {
-      const productId = action.payload;
-      const updateCart = state.checkout.cart.map((product) => {
-        if (product.id === productId) {
-          return {
-            ...product,
-            quantity: product.quantity - 1,
-          };
-        }
-        return product;
-      });
+    // decreaseQuantity(state, action) {
+    //   const productId = action.payload;
+    //   const updateCart = state.checkout.cart.map((product) => {
+    //     if (product.Id === productId) {
+    //       return {
+    //         ...product,
+    //         quantity: product.quantity - 1,
+    //       };
+    //     }
+    //     return product;
+    //   });
 
-      state.checkout.cart = updateCart;
-    },
+    //   state.checkout.cart = updateCart;
+    // },
 
     createBilling(state, action) {
-      state.checkout.billing = action.payload;
+      state.checkout.Address = action.payload;
+    },
+
+    updateShipping(state, action) {
+      state.checkout.shipping = Number(action.payload);
     },
 
     applyDiscount(state, action) {
@@ -177,7 +209,7 @@ export default slice.reducer;
 // Actions
 export const {
   getCart,
-  addToCart,
+  // addToCart,
   resetCart,
   gotoStep,
   backStep,
@@ -186,8 +218,10 @@ export const {
   createBilling,
   applyShipping,
   applyDiscount,
-  increaseQuantity,
-  decreaseQuantity,
+  updateShipping,
+  setFilterSort,
+  // increaseQuantity,
+  // decreaseQuantity,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -196,27 +230,127 @@ export function getProducts() {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products');
-      dispatch(slice.actions.getProductsSuccess(response.data.products));
+      const response = await axios.get('/v1/products');
+      dispatch(slice.actions.getProductsSuccess(response.data.Products.Data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
-// ----------------------------------------------------------------------
-
-export function getProduct(name: string) {
+export function sortProducts(value: string) {
+  const query = value.split('&');
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
-      dispatch(slice.actions.getProductSuccess(response.data.product));
+      const response = await axios.get('v1/products', {
+        params: { sort: query[0], order: query[1] },
+      }); //v1/products?sort=craete&order=desc
+      dispatch(slice.actions.getProductsSuccess(response.data.Products.Data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+type filter = {
+  brand?: string; //filter[Brand][eq]=abc123&filter[Brand][eq]=bcd456
+  categorygroup?: string[];
+  category?: string[];
+  priceMin?: number; //filter[Price][gte]=5&filter[Price][lte]=6
+  priceMax?: number; //filter[Price][gte]=5&filter[Price][lte]=6
+  rate?: number; //filter[Rate][eq]=5
+  sortBy?: string;
+};
+
+export function sortProductsByFilter(value: filter) {
+  const mapCategory = value.category?.map((a) => `filter[CategoryId][eq]=${a}`).join('&');
+  const mapCategorygroup = value.categorygroup
+    ?.map((a) => `filter[CategoryGroupId][eq]=${a}`)
+    .join('&');
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(
+        `v1/products?${value.brand ? 'filter[BrandId][eq]=' + value.brand : ''}&${
+          mapCategory ?? ''
+        }&${mapCategorygroup ?? ''}&${
+          value.priceMin ? 'filter[Price][gte]=' + value.priceMin : ''
+        }&${
+          value.priceMax ? 'filter[Price][lte]=' + value.priceMax : ''
+        }&${
+          value.rate ? 'filter[Rate][eq]=' + value.rate : ''
+        }`
+      ); //v1/products?sort=craete&order=desc
+      dispatch(slice.actions.getProductsSuccess(response.data.Products.Data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getCarts() {
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/v1/carts');
+      dispatch(slice.actions.getCart(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+//cart
+export function addToCart(data: any) {
+  return axios.post('/v1/carts', data);
+}
+
+export function updateQuantity(id: string, productId: string, quantity: number) {
+  const body: IDataAddCart = {
+    ProductId: productId,
+    Quantity: quantity,
+  };
+  return axios.patch(`/v1/carts/${id}`, body);
+}
+
+//bran
+export function getBran() {
+  return axios.get('/v1/brands');
+}
+//Category Group
+export function getCategoryGroup() {
+  return axios.get('v1/categoryGroups');
+}
+
+// ----------------------------------------------------------------------
+
+export function getProduct(ProductId: string) {
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/v1/products/${ProductId}`);
+      await dispatch(slice.actions.getProductSuccess(response.data.product));
+      const responseReview = await axios.get(`/v1/reviews/product/${ProductId}`);
+      dispatch(slice.actions.getReviewSuccess(responseReview.data.review));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+//new product
+export function addProduct(data: Partial<IProduct>) {
+  // const body = {
+  //   Brandid: data?.BrandId,
+  //   CategoryId: data?.CategoryId,
+  //   CategoryGroupId: data?.CategoryGroupId,
+  //   Name: data?.Name,
+  //   Price: data?.Price,
+  //   Quantity: data?.Quantity,
+  //   Images: data?.Images,
+
+  // };
+  return axios.post('/v1/products', data);
 }

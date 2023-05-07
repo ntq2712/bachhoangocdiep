@@ -21,6 +21,7 @@ VerifyCodePage.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</
 // ----------------------------------------------------------------------
 
 export default function VerifyCodePage() {
+
   return (
     <>
       <Head>
@@ -42,10 +43,10 @@ export default function VerifyCodePage() {
 
       <Typography variant="body2" sx={{ my: 3 }}>
         Don’t have a code? &nbsp;
-        <Link variant="subtitle2">Resend code</Link>
+        <Link variant="subtitle2">Gửi lại</Link>
       </Typography>
 
-      <Link
+      {/* <Link
         component={NextLink}
         href={PATH_AUTH.login}
         color="inherit"
@@ -58,7 +59,7 @@ export default function VerifyCodePage() {
       >
         <Iconify icon="eva:chevron-left-fill" width={16} />
         Return to sign in
-      </Link>
+      </Link> */}
     </>
   );
 }

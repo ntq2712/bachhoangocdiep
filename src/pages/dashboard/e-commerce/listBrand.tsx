@@ -1,57 +1,61 @@
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // next
 import Head from 'next/head';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 // @mui
 import {
-  Card,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
+    Button,
+    Card,
+    Container,
+    IconButton,
+    Modal,
+    Table,
+    TableBody,
+    TableContainer,
+    Tooltip,
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
+import { useDispatch } from '../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
-import { IProduct } from '../../../@types/product';
+import { IBrand, ICategoy, ICategoyGroup } from '../../../@types/product';
 // layouts
 import DashboardLayout from '../../../layouts/dashboard';
 // components
-import { useSettingsContext } from '../../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../../components/table';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../../components/confirm-dialog';
+import { useSettingsContext } from '../../../components/settings';
+import {
+    TableEmptyRows,
+    TableHeadCustom,
+    TableNoData,
+    TablePaginationCustom,
+    TableSelectedAction,
+    TableSkeleton,
+    emptyRows,
+    getComparator,
+    useTable,
+} from '../../../components/table';
 // sections
-import { ProductTableRow, ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
+import { Box } from '@mui/system';
+import { getBran, getCategory } from 'src/api/ortherEcom';
+import CategoryEditForm from 'src/sections/@dashboard/e-commerce/CategoryEditForm';
+import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
+import { ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
+import BrandEditForm from 'src/sections/@dashboard/e-commerce/BrandEditForm';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Tên sản phẩm', align: 'left' },
+  { id: 'Name', label: 'Tên thương hiệu', align: 'left' },
   { id: 'createdAt', label: 'Ngày tạo', align: 'left' },
-  { id: 'inventoryType', label: 'Số lượng', align: 'center', width: 180 },
-  { id: 'price', label: 'Đơn giá', align: 'right' },
+  { id: 'updatedAt', label: 'Ngày sửa', align: 'left' },
+  { id: 'Description', label: 'Mô tả', align: 'left', width: 180 },
   { id: '' },
 ];
 
@@ -61,15 +65,28 @@ const STATUS_OPTIONS = [
   { value: 'out_of_stock', label: 'Out of stock' },
 ];
 
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 1000,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
+
 // ----------------------------------------------------------------------
 
-EcommerceProductListPage.getLayout = (page: React.ReactElement) => (
+ListBrand.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceProductListPage() {
+export default function ListBrand() {
   const {
     dense,
     page,
@@ -97,25 +114,38 @@ export default function EcommerceProductListPage() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  const [tableData, setTableData] = useState<IBrand[]>([]);
 
-  const [tableData, setTableData] = useState<IProduct[]>([]);
-
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState<string>('');
 
   const [filterStatus, setFilterStatus] = useState<string[]>([]);
 
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (products.length) {
-      setTableData(products);
-    }
-  }, [products]);
+    setIsLoading(true);
+    getBran()
+      .then((res) => {
+        if (res?.data?.success == true) {
+          setTableData(res?.data?.Brands?.Data);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      })
+      .catch(() => setIsLoading(false));
+  }, []);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -198,32 +228,39 @@ export default function EcommerceProductListPage() {
   return (
     <>
       <Head>
-        <title> Danh sách sản phẩm</title>
+        <title> Thương hiệu</title>
       </Head>
-
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style }}>
+          <BrandEditForm handleClose={handleClose} />
+        </Box>
+      </Modal>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Danh sách sản phẩm"
+          heading="Thương hiệu"
           links={[
-            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'E-Commerce',
               href: PATH_DASHBOARD.eCommerce.root,
             },
-            { name: 'Danh sách' },
+            { name: 'List' },
           ]}
           action={
             <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.eCommerce.new}
+              onClick={() => handleOpen()}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New Product
+              Tạo thương hiệu mới 
             </Button>
           }
         />
-
         <Card>
           <ProductTableToolbar
             filterName={filterName}
@@ -271,21 +308,19 @@ export default function EcommerceProductListPage() {
                     )
                   }
                 />
-
                 <TableBody>
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
-                 
                       row ? (
-                        <ProductTableRow
+                        <CategoryGroupTableRow
                           key={row.Id}
                           row={row}
                           selected={selected.includes(row.Id)}
                           onSelectRow={() => onSelectRow(row.Id)}
                           onDeleteRow={() => handleDeleteRow(row.Id)}
                           onEditRow={() => handleEditRow(row.Name)}
-                          onViewRow={() => handleViewRow(row.Id)}
+                          onViewRow={() => handleViewRow(row.Name)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -296,13 +331,11 @@ export default function EcommerceProductListPage() {
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-
           <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
@@ -350,7 +383,7 @@ function applyFilter({
   filterName,
   filterStatus,
 }: {
-  inputData: IProduct[];
+  inputData: ICategoyGroup[];
   comparator: (a: any, b: any) => number;
   filterName: string;
   filterStatus: string[];

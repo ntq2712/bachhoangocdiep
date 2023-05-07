@@ -10,6 +10,7 @@ import { IProduct } from '../../../../@types/product';
 import Image from '../../../../components/image';
 import Lightbox from '../../../../components/lightbox';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
+import { getImages } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -70,11 +71,7 @@ const StyledThumbnailsContainer = styled('div', {
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  product: IProduct;
-};
-
-export default function ProductDetailsCarousel({ product }: Props) {
+export default function ProductDetailsCarousel({ productId }: any) {
   const theme = useTheme();
 
   const carousel1 = useRef<Carousel | null>(null);
@@ -85,14 +82,24 @@ export default function ProductDetailsCarousel({ product }: Props) {
 
   const [nav2, setNav2] = useState<Carousel>();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(1);
 
   const [selectedImage, setSelectedImage] = useState<number>(-1);
 
-  const imagesLightbox = product.images.map((img) => ({ src: img }));
+  const [images, setImages] = useState<any>([]);
+
+  const imagesLightbox = images?.map((img:any) => ({ src: img.OriginalImageUrl }));
+
+  useEffect(()=>{
+    getImages(productId).then((res)=>{
+      if(res?.data?.success==true){
+        setImages(res?.data?.image);
+      }
+    })
+  },[])
 
   const handleOpenLightbox = (imageUrl: string) => {
-    const imageIndex = imagesLightbox.findIndex((image) => image.src === imageUrl);
+    const imageIndex = imagesLightbox.findIndex((image:any) => image.src === imageUrl);
     setSelectedImage(imageIndex);
   };
 
@@ -118,7 +125,7 @@ export default function ProductDetailsCarousel({ product }: Props) {
     focusOnSelect: true,
     variableWidth: true,
     centerPadding: '0px',
-    slidesToShow: product.images.length > 3 ? 3 : product.images.length,
+    slidesToShow: images.length > 3 ? 3 : images.length,
   };
 
   useEffect(() => {
@@ -145,11 +152,11 @@ export default function ProductDetailsCarousel({ product }: Props) {
   const renderLargeImg = (
     <Box sx={{ mb: 3, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
       <Carousel {...carouselSettings1} asNavFor={nav2} ref={carousel1}>
-        {product.images.map((img) => (
+        {images.map((img:any) => (
           <Image
-            key={img}
+            key={img.Id}
             alt="product"
-            src={img}
+            src={img.OriginalImageUrl}
             ratio="1/1"
             onClick={() => handleOpenLightbox(img)}
             sx={{ cursor: 'zoom-in' }}
@@ -159,7 +166,7 @@ export default function ProductDetailsCarousel({ product }: Props) {
 
       <CarouselArrowIndex
         index={currentIndex}
-        total={product.images.length}
+        total={images.length}
         onNext={handleNext}
         onPrevious={handlePrev}
       />
@@ -167,14 +174,14 @@ export default function ProductDetailsCarousel({ product }: Props) {
   );
 
   const renderThumbnails = (
-    <StyledThumbnailsContainer length={product.images.length}>
+    <StyledThumbnailsContainer length={images.length}>
       <Carousel {...carouselSettings2} asNavFor={nav1} ref={carousel2}>
-        {product.images.map((img, index) => (
+        {images.map((img:any, index:number) => (
           <Image
-            key={img}
+            key={img.Id}
             disabledEffect
             alt="thumbnail"
-            src={img}
+            src={img.OriginalImageUrl}
             sx={{
               width: THUMB_SIZE,
               height: THUMB_SIZE,

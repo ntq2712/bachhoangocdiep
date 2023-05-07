@@ -5,17 +5,19 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, FormHelperText } from '@mui/material';
+import { Stack, FormHelperText, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFCodes } from '../../components/hook-form';
+import { useAuthContext } from 'src/auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 type FormValuesProps = {
+  afterSubmit?: string;
   code1: string;
   code2: string;
   code3: string;
@@ -25,8 +27,8 @@ type FormValuesProps = {
 };
 
 export default function AuthVerifyCodeForm() {
-  const { push } = useRouter();
-
+  const { replace } = useRouter();
+  const { verify } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
 
   const VerifyCodeSchema = Yup.object().shape({
@@ -45,6 +47,7 @@ export default function AuthVerifyCodeForm() {
     code4: '',
     code5: '',
     code6: '',
+    afterSubmit: '',
   };
 
   const methods = useForm({
@@ -55,23 +58,35 @@ export default function AuthVerifyCodeForm() {
 
   const {
     handleSubmit,
+    reset,
+    setError,
     formState: { isSubmitting, errors },
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('DATA', Object.values(data).join(''));
-      enqueueSnackbar('Verify success!');
-      push(PATH_DASHBOARD.root);
+      if (verify) {
+        const res: any = await verify(
+          `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`
+        );
+        if (res?.IsVerified) {
+          replace(PATH_DASHBOARD.general.app);
+        }
+      }
     } catch (error) {
       console.error(error);
+      reset();
+      setError('afterSubmit', {
+        ...error,
+        message: error.message || error,
+      });
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
+        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
         <RHFCodes keyName="code" inputs={['code1', 'code2', 'code3', 'code4', 'code5', 'code6']} />
 
         {(!!errors.code1 ||
@@ -93,7 +108,7 @@ export default function AuthVerifyCodeForm() {
           loading={isSubmitting}
           sx={{ mt: 3 }}
         >
-          Verify
+          Xác nhận
         </LoadingButton>
       </Stack>
     </FormProvider>

@@ -14,22 +14,22 @@ import AuthRegisterForm from './AuthRegisterForm';
 
 export default function Register() {
   return (
-    <LoginLayout title="Manage the job more effectively with Minimal">
+    <LoginLayout title="Mua càng nhiều lời càng nhiều với bách hóa Ngọc Diệp">
       <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-        <Typography variant="h4">Get started absolutely free.</Typography>
+        <Typography variant="h4">Đăng ký tài khoản mua hàng</Typography>
 
         <Stack direction="row" spacing={0.5}>
-          <Typography variant="body2"> Already have an account? </Typography>
+          <Typography variant="body2"> Bạn đã có tài khoản? </Typography>
 
           <Link component={NextLink} href={PATH_AUTH.login} variant="subtitle2">
-            Sign in
+            Đăng nhập
           </Link>
         </Stack>
       </Stack>
 
       <AuthRegisterForm />
 
-      <Typography
+      {/* <Typography
         component="div"
         sx={{ color: 'text.secondary', mt: 3, typography: 'caption', textAlign: 'center' }}
       >
@@ -42,9 +42,9 @@ export default function Register() {
           Privacy Policy
         </Link>
         .
-      </Typography>
+      </Typography> */}
 
-      <AuthWithSocial />
+      {/* <AuthWithSocial /> */}
     </LoginLayout>
   );
 }

@@ -24,6 +24,8 @@ import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
 import { ColorMultiPicker } from '../../../../components/color-utils';
 import { RHFMultiCheckbox, RHFRadioGroup, RHFSlider } from '../../../../components/hook-form';
+import { useCallback, useEffect, useState } from 'react';
+import { getBran, getCategory, getCategoryGroup } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +42,7 @@ export const FILTER_CATEGORY_OPTIONS = [
   { label: 'Accessories', value: 'Accessories' },
 ];
 
-export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
+export const FILTER_RATING_OPTIONS = [4, 3, 2, 1];
 
 export const FILTER_COLOR_OPTIONS = [
   '#00AB55',
@@ -72,10 +74,46 @@ export default function ShopFilterDrawer({
 }: Props) {
   const { control } = useFormContext();
 
-  const marksLabel = [...Array(21)].map((_, index) => {
-    const value = index * 10;
+  const [categorys, setCategorys] = useState<any>([])
+  const [brands, setBrands] = useState<any>([])
+  const [categoryGroups, setCategoryGroups] = useState<any>([])
 
-    const firstValue = index === 0 ? `$${value}` : `${value}`;
+  useEffect(() => {
+    getCategory().then((res)=>{
+      if(res.data.success == true){
+        const tam:any = []
+        res?.data?.Categories?.Data?.map((e:any)=>{
+         tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
+        })
+        setCategorys(tam)
+      }
+    })
+    getBran().then((res)=>{
+      if(res.data.success == true){
+        const tam:any = []
+        res?.data?.Brands?.Data?.map((e:any)=>{
+         tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
+        })
+        setBrands(tam)
+      }
+    })
+    getCategoryGroup().then((res)=>{
+      if(res.data.success == true){
+        const tam:any = []
+        res?.data?.CategoryGroups?.Data?.map((e:any)=>{
+         tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
+        })
+        setCategoryGroups(tam)
+      }
+    })
+  }, []);
+
+  const applyFilter = useCallback(() => {}, []);
+
+  const marksLabel = [...Array(21)].map((_, index) => {
+    const value = index * 50;
+
+    const firstValue = index === 0 ? `${value}k` : `${value}k`;
 
     return {
       value,
@@ -96,7 +134,7 @@ export default function ShopFilterDrawer({
         endIcon={<Iconify icon="ic:round-filter-list" />}
         onClick={onOpen}
       >
-        Filters
+        Bộ lọc
       </Button>
 
       <Drawer
@@ -116,7 +154,7 @@ export default function ShopFilterDrawer({
           justifyContent="space-between"
           sx={{ pl: 2, pr: 1, py: 2 }}
         >
-          <Typography variant="subtitle1">Filters</Typography>
+          <Typography variant="subtitle1">Bộ lọc</Typography>
 
           <IconButton onClick={onClose}>
             <Iconify icon="eva:close-fill" />
@@ -128,16 +166,21 @@ export default function ShopFilterDrawer({
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 2.5 }}>
             <Stack spacing={1}>
-              <Typography variant="subtitle1"> Gender </Typography>
-              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
+              <Typography variant="subtitle1"> Danh mục </Typography>
+              <RHFMultiCheckbox name="categorygroup" options={categoryGroups} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1"> Category </Typography>
-              <RHFRadioGroup name="category" options={FILTER_CATEGORY_OPTIONS} />
+              <Typography variant="subtitle1"> Loại sản phẩm </Typography>
+              <RHFMultiCheckbox name="categorys" options={categorys} sx={{ width: 1 }} />
+            </Stack>
+            
+            <Stack spacing={1}>
+              <Typography variant="subtitle1"> Thương hiệu </Typography>
+              <RHFRadioGroup name="brand" options={brands} />
             </Stack>
 
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
               <Typography variant="subtitle1"> Color </Typography>
 
               <Controller
@@ -152,11 +195,11 @@ export default function ShopFilterDrawer({
                   />
                 )}
               />
-            </Stack>
+            </Stack> */}
 
             <Stack spacing={1} sx={{ pb: 2 }}>
               <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
-                Price
+                Giá
               </Typography>
 
               <Stack direction="row" spacing={2}>
@@ -166,21 +209,21 @@ export default function ShopFilterDrawer({
 
               <RHFSlider
                 name="priceRange"
-                step={10}
+                step={50}
                 min={0}
-                max={200}
+                max={1000}
                 marks={marksLabel}
-                getAriaValueText={(value) => `$${value}`}
-                valueLabelFormat={(value) => `$${value}`}
+                getAriaValueText={(value) => `${value}k`}
+                valueLabelFormat={(value) => `${value}k`}
                 sx={{ alignSelf: 'center', width: `calc(100% - 20px)` }}
               />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Rating</Typography>
+              <Typography variant="subtitle1">Đánh giá</Typography>
 
               <Controller
-                name="rating"
+                name="rate"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup {...field}>
@@ -199,12 +242,12 @@ export default function ShopFilterDrawer({
                             }}
                           />
                         }
-                        label="& Up"
+                        label="& trở lên"
                         sx={{
                           my: 0.5,
                           borderRadius: 1,
                           '&:hover': { opacity: 0.48 },
-                          ...(field.value.includes(item) && {
+                          ...(field?.value?.includes(item) && {
                             bgcolor: 'action.selected',
                           }),
                         }}
@@ -293,7 +336,7 @@ function InputRange({ type }: InputRangeProps) {
                 fontWeight: 'fontWeightBold',
               }}
             >
-              {`${type} ($)`}
+              {`${type} (k)`}
             </Typography>
 
             <Input
@@ -308,9 +351,9 @@ function InputRange({ type }: InputRangeProps) {
               }
               onBlur={() => handleBlurInputRange(field.value)}
               inputProps={{
-                step: 10,
+                step: 50,
                 min: 0,
-                max: 200,
+                max: 800,
                 type: 'number',
                 'aria-labelledby': 'input-slider',
               }}

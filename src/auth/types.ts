@@ -27,7 +27,13 @@ export type JWTContextType = {
   isInitialized: boolean;
   user: AuthUserType;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
+  register: (
+    password: string,
+    firstname: string,
+    lastname: string,
+    email: string
+  ) => Promise<void>;
+  verify:(code:string)=>Promise<void>;
   logout: () => void;
   loginWithGoogle?: () => void;
   loginWithGithub?: () => void;
@@ -40,7 +46,7 @@ export type FirebaseContextType = {
   isInitialized: boolean;
   user: AuthUserType;
   login: (email: string, password: string) => void;
-  register: (email: string, password: string, firstName: string, lastName: string) => void;
+  register: (password: string, firstname: string, lastname: string, phonenumber: string) => void;
   logout: () => void;
   loginWithGoogle?: () => void;
   loginWithGithub?: () => void;
@@ -53,7 +59,7 @@ export type AWSCognitoContextType = {
   isInitialized: boolean;
   user: AuthUserType;
   login: (email: string, password: string) => void;
-  register: (email: string, password: string, firstName: string, lastName: string) => void;
+  register: (password: string, firstName: string, lastName: string) => void;
   logout: () => void;
   loginWithGoogle?: () => void;
   loginWithGithub?: () => void;
@@ -71,10 +77,10 @@ export type Auth0ContextType = {
   // Remove below when you choose to authenticate with Auth0.
   login: (email?: string, password?: string) => Promise<void>;
   register?: (
-    email: string,
     password: string,
-    firstName: string,
-    lastName: string
+    firstname: string,
+    lastname: string,
+    phonenumber: string
   ) => Promise<void>;
   loginWithGoogle?: () => void;
   loginWithGithub?: () => void;

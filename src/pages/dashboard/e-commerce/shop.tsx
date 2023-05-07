@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { Container, Typography, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getProducts } from '../../../redux/slices/product';
+import { getCarts, getProducts, sortProductsByFilter } from '../../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
@@ -42,17 +42,24 @@ export default function EcommerceShopPage() {
 
   const dispatch = useDispatch();
 
-  const { products, checkout } = useSelector((state) => state.product);
+  const { products, checkout, filter } = useSelector((state) => state.product);
 
   const [openFilter, setOpenFilter] = useState(false);
 
   const defaultValues = {
-    gender: [],
-    category: 'All',
-    colors: [],
+    // gender: [],
+    // category: 'All',
+    // colors: [],
     priceRange: [0, 200],
-    rating: '',
-    sortBy: 'featured',
+    // rating: '',
+    // sortBy: 'featured',
+    brand: 'All',
+    categorys: [],
+    categorygroup: [],
+    // priceMin: 0,
+    // priceMax: 800,
+    rate: undefined,
+    sortBy: '',
   };
 
   const methods = useForm<IProductFilter>({
@@ -66,19 +73,22 @@ export default function EcommerceShopPage() {
   } = methods;
 
   const isDefault =
-    (!dirtyFields.gender &&
-      !dirtyFields.category &&
-      !dirtyFields.colors &&
+    !dirtyFields.categorygroup &&
+    (!dirtyFields.categorys &&
+      !dirtyFields.rate &&
+      !dirtyFields.brand &&
       !dirtyFields.priceRange &&
-      !dirtyFields.rating) ||
+      !dirtyFields.priceMax) ||
     false;
 
   const values = watch();
 
-  const dataFiltered = applyFilter(products, values);
+  // const dataFiltered = applyFilter(products, values);
 
   useEffect(() => {
-    dispatch(getProducts());
+    //dispatch(getProducts());
+    dispatch(sortProductsByFilter(filter));
+    dispatch(getCarts());
   }, [dispatch]);
 
   const handleResetFilter = () => {
@@ -139,7 +149,7 @@ export default function EcommerceShopPage() {
             {!isDefault && (
               <>
                 <Typography variant="body2" gutterBottom>
-                  <strong>{dataFiltered.length}</strong>
+                  <strong>{products.length}</strong>
                   &nbsp;Products found
                 </Typography>
 
@@ -148,9 +158,9 @@ export default function EcommerceShopPage() {
             )}
           </Stack>
 
-          <ShopProductList products={dataFiltered} loading={!products.length && isDefault} />
+          <ShopProductList products={products} loading={!products.length && isDefault} />
 
-          <CartWidget totalItems={checkout.totalItems} />
+          <CartWidget totalItems={checkout.TotalQuantity} />
         </Container>
       </FormProvider>
     </>
@@ -159,58 +169,58 @@ export default function EcommerceShopPage() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter(products: IProduct[], filters: IProductFilter) {
-  const { gender, category, colors, priceRange, rating, sortBy } = filters;
+// function applyFilter(products: IProduct[], filters: any) {
+//   // const { category, priceRange, rating, sortBy } = filters;
 
-  const min = priceRange[0];
+//   // const min = priceRange[0];
 
-  const max = priceRange[1];
+//   // const max = priceRange[1];
 
-  // SORT BY
-  if (sortBy === 'featured') {
-    products = orderBy(products, ['sold'], ['desc']);
-  }
+//   // // SORT BY
+//   // if (sortBy === 'featured') {
+//   //   products = orderBy(products, ['sold'], ['desc']);
+//   // }
 
-  if (sortBy === 'newest') {
-    products = orderBy(products, ['createdAt'], ['desc']);
-  }
+//   // if (sortBy === 'newest') {
+//   //   products = orderBy(products, ['createdAt'], ['desc']);
+//   // }
 
-  if (sortBy === 'priceDesc') {
-    products = orderBy(products, ['price'], ['desc']);
-  }
+//   // if (sortBy === 'priceDesc') {
+//   //   products = orderBy(products, ['price'], ['desc']);
+//   // }
 
-  if (sortBy === 'priceAsc') {
-    products = orderBy(products, ['price'], ['asc']);
-  }
+//   // if (sortBy === 'priceAsc') {
+//   //   products = orderBy(products, ['price'], ['asc']);
+//   // }
 
-  // FILTER PRODUCTS
-  if (gender.length) {
-    products = products.filter((product) => gender.includes(product.gender));
-  }
+//   // // FILTER PRODUCTS
+//   // // if (gender.length) {
+//   // //   products = products.filter((product) => gender.includes(product.gender));
+//   // // }
 
-  if (category !== 'All') {
-    products = products.filter((product) => product.category === category);
-  }
+//   // // if (category !== 'All') {
+//   // //   products = products.filter((product) => product.category === category);
+//   // // }
 
-  if (colors.length) {
-    products = products.filter((product) => product.colors.some((color) => colors.includes(color)));
-  }
+//   // // if (colors.length) {
+//   // //   products = products.filter((product) => product.colors.some((color) => colors.includes(color)));
+//   // // }
 
-  if (min !== 0 || max !== 200) {
-    products = products.filter((product) => product.price >= min && product.price <= max);
-  }
+//   // // if (min !== 0 || max !== 200) {
+//   // //   products = products.filter((product) => product.price >= min && product.price <= max);
+//   // // }
 
-  if (rating) {
-    products = products.filter((product) => {
-      const convertRating = (value: string) => {
-        if (value === 'up4Star') return 4;
-        if (value === 'up3Star') return 3;
-        if (value === 'up2Star') return 2;
-        return 1;
-      };
-      return product.totalRating > convertRating(rating);
-    });
-  }
+//   // if (rating) {
+//   //   products = products.filter((product) => {
+//   //     const convertRating = (value: string) => {
+//   //       if (value === 'up4Star') return 4;
+//   //       if (value === 'up3Star') return 3;
+//   //       if (value === 'up2Star') return 2;
+//   //       return 1;
+//   //     };
+//   //     return product.Price > convertRating(rating);
+//   //   });
+//   // }
 
-  return products;
-}
+//   return products;
+// }

@@ -197,8 +197,9 @@ const slice = createSlice({
 
     applyShipping(state, action) {
       const shipping = action.payload;
-      state.checkout.shipping = shipping;
-      state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
+      state.checkout.shipping =  shipping;
+      state.checkout.TotalQuantity = state.checkout.TotalQuantity + shipping;
+      // state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
   },
 });
@@ -353,4 +354,18 @@ export function addProduct(data: Partial<IProduct>) {
 
   // };
   return axios.post('/v1/products', data);
+}
+
+export function updateProduct(data: Partial<IProduct>, id?:string) {
+  // const body = {
+  //   Brandid: data?.BrandId,
+  //   CategoryId: data?.CategoryId,
+  //   CategoryGroupId: data?.CategoryGroupId,
+  //   Name: data?.Name,
+  //   Price: data?.Price,
+  //   Quantity: data?.Quantity,
+  //   Images: data?.Images,
+
+  // };
+  return axios.patch(`/v1/products/${id}`, data);
 }

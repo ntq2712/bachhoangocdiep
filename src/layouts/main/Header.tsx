@@ -1,6 +1,6 @@
 // @mui
+import { AppBar, Box, BoxProps, Button, Container, Link, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Box, Button, AppBar, Toolbar, Container, Link, BoxProps } from '@mui/material';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 import useResponsive from '../../hooks/useResponsive';
@@ -9,23 +9,67 @@ import { bgBlur } from '../../utils/cssStyles';
 // config
 import { HEADER } from '../../config-global';
 // routes
-import { PATH_DOCS, PATH_MINIMAL_ON_STORE } from '../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD, PATH_DOCS } from '../../routes/paths';
 // components
-import Logo from '../../components/logo';
 import Label from '../../components/label';
+import Logo from '../../components/logo';
 //
-import NavMobile from './nav/mobile';
+import { useLayoutEffect, useState } from 'react';
 import navConfig from './nav/config-navigation';
 import NavDesktop from './nav/desktop';
-
+import NavMobile from './nav/mobile';
+import Iconify from 'src/components/iconify/Iconify';
+import { getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
+import { NavItemProps } from './nav/types';
+import { ShopProductSearch } from 'src/sections/@dashboard/e-commerce/shop';
+import NextLink from 'next/link';
 // ----------------------------------------------------------------------
 
 export default function Header() {
   const theme = useTheme();
 
+  const [datanav, setDatenav] = useState<NavItemProps[]>([]);
+
   const isDesktop = useResponsive('up', 'md');
 
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
+
+  useLayoutEffect(() => {
+    const tam: any = [];
+    getCategoryGroup().then((res) => {
+      if (res.data.success == true) {
+        res.data.CategoryGroups.Data.map((e: any) => {
+          const tem: any = [];
+          getCategoryById(e.Id).then((resp) => {
+            if (resp.data.success == true) {
+              resp.data.category.map((i: any) => {
+                tem.push({
+                  id: i.Id,
+                  title: i.Name,
+                  icon: <Iconify icon="eva:home-fill" />,
+                  path: PATH_DASHBOARD.eCommerce.shop,
+                });
+              });
+            }
+          });
+          tam.push({
+            id: e.Id,
+            title: e.Name,
+            icon: <Iconify icon="eva:home-fill" />,
+            path: PATH_DASHBOARD.eCommerce.shop,
+            children: [
+              {
+                subheader: 'Loại sản phẩm',
+                items: tem,
+              },
+            ],
+          });
+        });
+      }
+
+      setDatenav(tam);
+    });
+  }, []);
 
   return (
     <AppBar color="transparent" sx={{ boxShadow: 0 }}>
@@ -49,9 +93,7 @@ export default function Header() {
         }}
       >
         <Container sx={{ height: 1, display: 'flex', alignItems: 'center' }}>
-          <Logo />
-
-          <Link
+          {/* <Link
             href={PATH_DOCS.changelog}
             target="_blank"
             rel="noopener"
@@ -59,16 +101,19 @@ export default function Header() {
             sx={{ ml: 1 }}
           >
             <Label color="info"> v4.2.0 </Label>
-          </Link>
-
+          </Link> */}
+          <Logo sx={{ mr: 5 }} />
+          <ShopProductSearch />
           <Box sx={{ flexGrow: 1 }} />
 
-          {isDesktop && <NavDesktop isOffset={isOffset} data={navConfig} />}
+          {isDesktop && <NavDesktop isOffset={isOffset} data={datanav} />}
 
-          <Button variant="contained" target="_blank" rel="noopener" href={PATH_MINIMAL_ON_STORE}>
-            Purchase Now
+          <Button variant="contained" rel="noopener" href={PATH_AUTH.login}>
+            Đăng nhập
           </Button>
-
+          <Link component={NextLink} href={PATH_DASHBOARD.eCommerce.checkout}>
+            <Iconify icon="eva:shopping-cart-fill" width={24} color={'#333'} sx={{ml: 5, mr: -10}}/>
+          </Link>
           {!isDesktop && <NavMobile isOffset={isOffset} data={navConfig} />}
         </Container>
       </Toolbar>

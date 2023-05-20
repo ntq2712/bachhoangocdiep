@@ -37,11 +37,11 @@ export default function AccountBillingPaymentMethod({ cards }: Props) {
               color: 'text.secondary',
             }}
           >
-            Payment Method
+            PHƯƠNG THỨC THANH TOÁN
           </Typography>
 
           <Button size="small" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen}>
-            New card
+            Thẻ mới
           </Button>
         </Stack>
 

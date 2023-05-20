@@ -24,11 +24,12 @@ import FormProvider, {
   RHFRadioGroup,
   RHFAutocomplete,
 } from '../../../components/hook-form';
-import { addProduct, getBran } from 'src/redux/slices/product';
+import { addProduct, getBran, updateProduct } from 'src/redux/slices/product';
 import {
   getBranByCategory,
   getCategoryById,
   getCategoryGroup,
+  getImages,
   upLoadImage,
 } from 'src/api/ortherEcom';
 
@@ -61,7 +62,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
   const [brans, setBrans] = useState<any>();
   const [categoryGroups, setCategoryGroups] = useState<ICategoyGroup[]>([]);
   const [categorys, setCategorys] = useState<ICategoy[]>([]);
-
+  const [images, setimages] = useState<any>([]);
   useEffect(() => {
     getCategoryGroup().then((res) => {
       if (res?.data?.success == true) {
@@ -70,13 +71,30 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         enqueueSnackbar('Không thành công');
       }
     });
+    if (!!currentProduct) {
+      getCategoryById(currentProduct.CategoryGroupId).then((res) => {
+        if (res?.data?.success == true) {
+          setCategorys(res?.data?.category);
+        } else {
+          enqueueSnackbar('Không thành công');
+        }
+      });
+      getBranByCategory(currentProduct.CategoryId).then((res) => {
+        if (res?.data?.success == true) {
+          setBrans(res?.data?.brands);
+        } else {
+          enqueueSnackbar('Không thành công');
+        }
+      });
+      getImages(currentProduct.Id).then((res) => {
+        if (res?.data?.success == true) {
+          setimages(res?.data?.image);
+        } else {
+          enqueueSnackbar('Không thành công');
+        }
+      });
+    }
   }, []);
-
-  // useEffect(() => {
-  //   getBran().then((res) => {
-  //     setBrans(res?.data?.Brands?.Data);
-  //   });
-  // }, []);
 
   const NewProductSchema = Yup.object().shape({
     Name: Yup.string().required('Name is required'),
@@ -85,17 +103,17 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
   const defaultValues = useMemo<Partial<IProduct>>(
     () => ({
-      BrandId: '',
-      CategoryId: '',
-      CategoryGroupId: '',
-      Name: '',
-      Description: '',
-      Price: 0,
-      Quantity: 0,
-      Images: [],
+      BrandId: currentProduct?.BrandId || '',
+      CategoryId: currentProduct?.CategoryId || '',
+      CategoryGroupId: currentProduct?.CategoryGroupId || '',
+      Name: currentProduct?.Name || '',
+      Description: currentProduct?.Description || '',
+      Price: currentProduct?.Price || 0,
+      Quantity: currentProduct?.Quantity || 0,
+      IsBestSeller:currentProduct?.IsBestSeller || false,
+      Images: images || [],
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [images]
   );
 
   const methods = useForm({
@@ -107,6 +125,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
     reset,
     watch,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -121,18 +140,27 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit]);
+  }, [isEdit, images]);
 
   const onSubmit = (data: Partial<IProduct>) => {
-
     try {
-      addProduct(data).then((res) => {
-        if (res?.data?.success == true) {
-          reset();
-          enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-          push(PATH_DASHBOARD.eCommerce.list);
-        }
-      });
+      if (isEdit) {
+        updateProduct(data, currentProduct?.Id).then((res) => {
+          if (res?.data?.success == true) {
+            reset();
+            enqueueSnackbar('Update success!');
+            push(PATH_DASHBOARD.eCommerce.list);
+          }
+        });
+      } else {
+        addProduct(data).then((res) => {
+          if (res?.data?.success == true) {
+            reset();
+            enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+            push(PATH_DASHBOARD.eCommerce.list);
+          }
+        });
+      }
       // await new Promise((resolve) => setTimeout(resolve, 500));
       // reset();
       // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
@@ -142,9 +170,13 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
   };
 
   const handleDrop = useCallback((acceptedFiles: File[]) => {
-    const files = values.Images || [];
+    const files = getValues('Images') || [];
+    
     upLoadImage(acceptedFiles).then((res) => {
-      setValue('Images', [...files, ...res?.data?.images], { shouldValidate: true });
+      if (res.data.success == true) {
+        console.log('Data: ', res?.data?.images);
+        setValue('Images', [...files, ...res?.data?.images]);
+      }
     });
 
     // const newFiles = acceptedFiles.map((file) =>
@@ -155,7 +187,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
   }, []);
 
   const handleRemoveFile = (inputFile: File | string) => {
-    const filtered = values.Images && values.Images?.filter((file: any) => file !== inputFile);
+    const files = getValues('Images') || [];
+    const filtered = files && files?.filter((file: any) => file !== inputFile);
     setValue('Images', filtered);
   };
 
@@ -201,8 +234,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
         <Grid item xs={12} md={4}>
           <Stack spacing={3}>
+          <RHFSwitch name="IsBestSeller" label="Best seller" />
             <Card sx={{ p: 3 }}>
-              {/* <RHFSwitch name="inStock" label="In stock" /> */}
+              
 
               {/* <Stack spacing={3} mt={2}> */}
               {/* <RHFTextField name="code" label="Product Code" />

@@ -17,7 +17,7 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title> About us | Minimal UI</title>
+        <title> Về chúng tôi | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <AboutHero />

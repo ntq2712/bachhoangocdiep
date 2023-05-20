@@ -11,6 +11,7 @@ import { IUserAccountChangePassword } from '../../../../@types/user';
 import Iconify from '../../../../components/iconify';
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../../components/hook-form';
+import { changePasswork } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -46,9 +47,15 @@ export default function AccountChangePassword() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar('Update success!');
+      changePasswork(data).then((res)=>{
+        if(res.data.success == true){
+          reset();
+          enqueueSnackbar(res.data.message);
+        }else{
+          enqueueSnackbar(res.data.detail, { variant: 'error' });
+        }
+      }).catch((err)=> console.log(err))
+     
       console.log('DATA', data);
     } catch (error) {
       console.error(error);

@@ -99,7 +99,7 @@ export const _socials = [
     name: 'FaceBook',
     icon: 'eva:facebook-fill',
     color: '#1877F2',
-    path: 'https://www.facebook.com/caitlyn.kerluke',
+    path: 'https://www.facebook.com/trongqui2712',
   },
   {
     value: 'instagram',
@@ -116,9 +116,9 @@ export const _socials = [
     path: 'https://www.linkedin.com/caitlyn.kerluke',
   },
   {
-    value: 'twitter',
-    name: 'Twitter',
-    icon: 'eva:twitter-fill',
+    value: 'tiktok',
+    name: 'Tiktok',
+    icon: 'ph:tiktok-logo-fill',
     color: '#00AAEC',
     path: 'https://www.twitter.com/caitlyn.kerluke',
   },

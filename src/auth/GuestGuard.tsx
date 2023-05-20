@@ -21,7 +21,7 @@ export default function GuestGuard({ children }: GuestGuardProps) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      push(PATH_DASHBOARD.root);
+      push(PATH_DASHBOARD.eCommerce.shop);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);

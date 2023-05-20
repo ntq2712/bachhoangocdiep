@@ -4,7 +4,7 @@ import NextLink from 'next/link';
 // @mui
 import { Box, Card, Link, Stack, Fab } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // redux
@@ -18,6 +18,12 @@ import Image from '../../../../components/image';
 import { ColorPreview } from '../../../../components/color-utils';
 import { useSnackbar } from 'notistack';
 import { addToCart, getCarts } from 'src/redux/slices/product';
+import { useAuthContext } from 'src/auth/useAuthContext';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Login from '../../../../pages/auth/login';
+import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
+import LoginPage from '../../../../pages/auth/login';
 
 // ----------------------------------------------------------------------
 
@@ -31,29 +37,54 @@ type typeCart = {
 };
 
 export default function ShopProductCard({ product }: Props) {
-  const { Id, Name, Price, Status, ImageURL } = product;
+  const { Id, Name, Price, Status, ImageURL, Rate } = product;
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { isAuthenticated, isInitialized } = useAuthContext();
+
+  const { pathname, push } = useRouter();
+  const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (requestedLocation && pathname !== requestedLocation) {
+      push(requestedLocation);
+    }
+    if (isAuthenticated) {
+      setRequestedLocation(null);
+    }
+  }, [isAuthenticated, pathname, push, requestedLocation]);
 
   const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(Id));
 
   const handleAddCart = async () => {
-    const cart: typeCart = {
-      ProductId: Id,
-      Quantity: 1,
-    };
-    addToCart(cart)
-      .then((res) => {
-        if (res?.data?.success == true) {
-          dispatch(getCarts());
-          enqueueSnackbar('Thêm vào giỏ hàng thành công!');
-        } else {
+    if (!isInitialized) {
+     
+      return <LoadingScreen />;
+    }
+    if (!isAuthenticated) {
+      
+      if (pathname !== requestedLocation) {
+        setRequestedLocation(pathname);
+      }
+      push(PATH_AUTH.login)
+    } else {
+      const cart: typeCart = {
+        ProductId: Id,
+        Quantity: 1,
+      };
+      addToCart(cart)
+        .then((res) => {
+          if (res?.data?.success == true) {
+            dispatch(getCarts());
+            enqueueSnackbar('Thêm vào giỏ hàng thành công!');
+          } else {
+            enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+          }
+        })
+        .catch(() => {
           enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
-        }
-      })
-      .catch(() => {
-        enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
-      });
+        });
+    }
   };
 
   return (
@@ -77,11 +108,10 @@ export default function ShopProductCard({ product }: Props) {
               textTransform: 'uppercase',
             }}
           >
-          Sale
+            Sale
             {/* {Status} */}
           </Label>
         )}
-
         <Fab
           color="warning"
           size="medium"
@@ -120,9 +150,9 @@ export default function ShopProductCard({ product }: Props) {
                 {fCurrency(PriceSale)}
               </Box>
             )} */}
-            <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
+            {/* <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
               {fCurrency(Price + 20)}đ
-            </Box>
+            </Box> */}
             <Box component="span">{fCurrency(Price)}đ</Box>
           </Stack>
         </Stack>

@@ -36,10 +36,11 @@ export default function EcommerceProductEditPage() {
   } = useRouter();
 
   const currentProduct = useSelector((state) =>
-    state.product.products.find((product) => paramCase(product.name) === name)
+    state.product.products.find((product:any) => paramCase(product.Id) === name)
   );
 
   useEffect(() => {
+    console.log("name: ", currentProduct)
     dispatch(getProducts());
   }, [dispatch]);
 

@@ -30,9 +30,10 @@ const LINKS = [
     ],
   },
   {
-    headline: 'Contact',
+    headline: 'Liên hệ',
     children: [
       { name: 'support@minimals.cc', href: '#' },
+      { name: 'Số điện thoại: 0397516328', href: '#' },
       { name: 'Los Angeles, 359  Hidden Valley Road', href: '#' },
     ],
   },
@@ -69,102 +70,140 @@ export default function Footer() {
 
   const mainFooter = (
     <Box
-      component="footer"
+      // component="footer"
       sx={{
         position: 'relative',
-        bgcolor: 'background.default',
+        // bgcolor: 'background.default',
+
+        pt: 10,
+        pr: 10,
+        pl: 10,
       }}
     >
       <Divider />
 
-      <Container sx={{ pt: 10 }}>
-        <Grid
-          container
-          justifyContent={{
+      <Grid
+        container
+        xs={20}
+        justifyContent={{
+          xs: 'center',
+          md: 'space-between',
+        }}
+        sx={{
+          textAlign: {
             xs: 'center',
-            md: 'space-between',
-          }}
-          sx={{
-            textAlign: {
-              xs: 'center',
-              md: 'left',
-            },
-          }}
-        >
-          <Grid item xs={12} sx={{ mb: 3 }}>
-            <Logo sx={{ mx: { xs: 'auto', md: 'inherit' } }} />
-          </Grid>
-
-          <Grid item xs={8} md={3}>
-            <Typography variant="body2" sx={{ pr: { md: 5 } }}>
-              The starting point for your next project with Minimal UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
-            </Typography>
-
-            <Stack
-              spacing={1}
-              direction="row"
-              justifyContent={{ xs: 'center', md: 'flex-start' }}
-              sx={{
-                mt: 5,
-                mb: { xs: 5, md: 0 },
-              }}
-            >
-              {_socials.map((social) => (
-                <IconButton key={social.name}>
-                  <Iconify icon={social.icon} />
-                </IconButton>
-              ))}
-            </Stack>
-          </Grid>
-
-          <Grid item xs={12} md={7}>
-            <Stack
-              spacing={5}
-              justifyContent="space-between"
-              direction={{ xs: 'column', md: 'row' }}
-            >
-              {LINKS.map((list) => (
-                <Stack
-                  key={list.headline}
-                  spacing={2}
-                  alignItems={{ xs: 'center', md: 'flex-start' }}
-                >
-                  <Typography component="div" variant="overline">
-                    {list.headline}
-                  </Typography>
-
-                  {list.children.map((link) => (
-                    <Link
-                      key={link.name}
-                      component={NextLink}
-                      href={link.href}
-                      color="inherit"
-                      variant="body2"
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </Stack>
-              ))}
-            </Stack>
-          </Grid>
+            md: 'left',
+          },
+        }}
+      >
+        <Grid item xs={20} sx={{ mb: 3 }}>
+          <Logo sx={{ mx: { xs: 'auto', md: 'inherit' } }} />
         </Grid>
 
-        <Typography
-          variant="caption"
-          component="div"
-          sx={{
-            mt: 10,
-            pb: 5,
-            textAlign: { xs: 'center', md: 'left' },
-          }}
-        >
-          © 2021. All rights reserved
-        </Typography>
-      </Container>
+        <Grid item xs={8} md={3}>
+          <Typography variant="body1" sx={{ pr: { md: 5 } }}>
+            Bách hóa Ngọc Diệp chuyên cung cấp sỉ và lẻ sữa bột và hàng tạp hóa, luôn đặt uy tín và
+            chất lượng lên hàng đầu
+          </Typography>
+          <Stack
+            spacing={1}
+            direction="row"
+            sx={{
+              mt: 5,
+            
+              alignItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant="h6">Số điện thoại:</Typography>
+            <Typography variant="body2">0397516328</Typography>
+          </Stack>
+          <Stack
+            spacing={1}
+            direction="row"
+            sx={{
+              mt: 2,
+            
+              alignItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant="h6">Gmail:</Typography>
+            <Typography variant="body2">trongqui2712@gmail.com</Typography>
+          </Stack>
+          <Stack
+            spacing={1}
+            direction="row"
+            sx={{
+              mt: 2,
+            
+              alignItems: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Typography variant="h6">Địa chỉ:</Typography>
+            <Typography variant="body2">đường 30/4, phường 5, thị xã Cai Lậy, tỉnh Tiền Giang</Typography>
+          </Stack>
+
+          <Stack
+            spacing={1}
+            direction="row"
+            justifyContent={{ xs: 'center', md: 'flex-start' }}
+            sx={{
+              mt: 5,
+              mb: { xs: 5, md: 0 },
+            }}
+          >
+            {_socials.map((social) => (
+              <IconButton key={social.name} href={social.path}  target="_blank">
+                <Iconify icon={social.icon} />
+              </IconButton>
+            ))}
+          </Stack>
+        </Grid>
+
+        <Grid item xs={12} md={7}>
+          <Stack spacing={5} justifyContent="space-between" direction={{ xs: 'column', md: 'row' }}>
+            {LINKS.map((list) => (
+              <Stack
+                key={list.headline}
+                spacing={2}
+                alignItems={{ xs: 'center', md: 'flex-start' }}
+              >
+                <Typography component="div" variant="overline">
+                  {list.headline}
+                </Typography>
+
+                {list.children.map((link) => (
+                  <Link
+                    key={link.name}
+                    component={NextLink}
+                    href={link.href}
+                    color="inherit"
+                    variant="body2"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </Stack>
+            ))}
+          </Stack>
+        </Grid>
+      </Grid>
+
+      <Typography
+        variant="caption"
+        component="div"
+        sx={{
+          mt: 10,
+          pb: 5,
+          textAlign: { xs: 'center', md: 'left' },
+        }}
+      >
+        © 2021. All rights reserved
+      </Typography>
     </Box>
   );
 
-  return isHome ? simpleFooter : mainFooter;
+  return !isHome ? simpleFooter : mainFooter;
 }

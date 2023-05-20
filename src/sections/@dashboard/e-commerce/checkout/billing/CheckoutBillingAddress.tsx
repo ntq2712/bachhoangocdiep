@@ -86,7 +86,7 @@ export default function CheckoutBillingAddress({
               onClick={onBackStep}
               startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
             >
-              Back
+              Trở về
             </Button>
 
             <Button
@@ -95,7 +95,7 @@ export default function CheckoutBillingAddress({
               onClick={handleOpen}
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              Add new address
+              Thêm địa chỉ mới
             </Button>
           </Stack>
         </Grid>

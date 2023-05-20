@@ -85,9 +85,9 @@ export default function CategoryGroupTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{fDate(createdAt)}</TableCell>
+        <TableCell>{fDate(createdAt ? createdAt : '')}</TableCell>
 
-        <TableCell align="left">{fDate(updatedAt)}</TableCell>
+        <TableCell align="left">{fDate(createdAt ? createdAt : '')}</TableCell>
 
         <TableCell align="left">{Description}</TableCell>
 

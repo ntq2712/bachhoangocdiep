@@ -15,7 +15,7 @@ import { MotionViewport, varFade } from '../../components/animate';
 
 const TESTIMONIALS = [
   {
-    name: 'Jenny Wilson',
+    name: 'Nguyễn Thị Ngọc Diệp',
     rating: 5,
     dateCreate: new Date(),
     content: `Excellent Work! Thanks a lot!`,

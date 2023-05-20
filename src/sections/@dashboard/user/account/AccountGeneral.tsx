@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,6 +21,10 @@ import FormProvider, {
   RHFTextField,
   RHFUploadAvatar,
 } from '../../../../components/hook-form';
+import { IUserAccountGeneral } from 'src/@types/user';
+import { upLoadImage, updateProfile } from 'src/api/ortherEcom';
+import { CalendarToolbar } from '../../calendar';
+import { fDate } from 'src/utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -38,39 +42,28 @@ type FormValuesProps = {
   isPublic: boolean;
 };
 
-export default function AccountGeneral() {
+export default function AccountGeneral({user}:any) {
   const { enqueueSnackbar } = useSnackbar();
-
-  const { user } = useAuthContext();
+  
+  useEffect(()=>{
+console.log(user)
+  },[])
 
   const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    photoURL: Yup.string().required('Avatar is required').nullable(true),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    country: Yup.string().required('Country is required'),
-    address: Yup.string().required('Address is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    zipCode: Yup.string().required('Zip code is required'),
-    about: Yup.string().required('About is required'),
+    FirstName: Yup.string().required('Name is required'),
+    LastName: Yup.string().required('Avatar is required'),
+    PhoneNumber: Yup.string().required('Phone number is required'),
   });
 
   const defaultValues = {
-    displayName: user?.displayName || '',
-    email: user?.email || '',
-    photoURL: user?.photoURL || null,
-    phoneNumber: user?.phoneNumber || '',
-    country: user?.country || '',
-    address: user?.address || '',
-    state: user?.state || '',
-    city: user?.city || '',
-    zipCode: user?.zipCode || '',
-    about: user?.about || '',
-    isPublic: user?.isPublic || false,
+    FirstName: user?.FirstName || '',
+    LastName: user?.FullName || '',
+    DateOfBirth: fDate(user?.DateOfBirth) || '',
+    PhoneNumber: user?.PhoneNumber || '',
+    Avatar: user?.Avatar || '',
   };
 
-  const methods = useForm<FormValuesProps>({
+  const methods = useForm({
     resolver: yupResolver(UpdateUserSchema),
     defaultValues,
   });
@@ -81,10 +74,12 @@ export default function AccountGeneral() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (data: FormValuesProps) => {
+  const onSubmit = async (data: Partial<IUserAccountGeneral>) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
+      updateProfile(data).then(() => {
+        enqueueSnackbar('Update success!');
+      });
+
       console.log('DATA', data);
     } catch (error) {
       console.error(error);
@@ -93,15 +88,19 @@ export default function AccountGeneral() {
 
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
+      upLoadImage(acceptedFiles).then((res) => {
+        if (res.data.success == true) {
+          setValue('Avatar', res?.data?.images[0]?.OriginalImageUrl, { shouldValidate: true });
+        }
       });
+      // const file = acceptedFiles[0];
+      // const newFile = Object.assign(file, {
+      //   preview: URL.createObjectURL(file),
+      // });
 
-      if (file) {
-        setValue('photoURL', newFile, { shouldValidate: true });
-      }
+      // if (file) {
+      //   //setValue('photoURL', newFile, { shouldValidate: true });
+      // }
     },
     [setValue]
   );
@@ -112,7 +111,7 @@ export default function AccountGeneral() {
         <Grid item xs={12} md={4}>
           <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
-              name="photoURL"
+              name="Avatar"
               maxSize={3145728}
               onDrop={handleDrop}
               helperText={
@@ -152,15 +151,17 @@ export default function AccountGeneral() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="displayName" label="Name" />
+              <RHFTextField name="FirstName" label="Họ" />
 
-              <RHFTextField name="email" label="Email Address" />
+              <RHFTextField name="LastName" label="Tên" />
 
-              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="PhoneNumber" label="Số điện thoại" />
 
-              <RHFTextField name="address" label="Address" />
+              <RHFTextField name="DateOfBirth" label="Ngày sinh" />
 
-              <RHFSelect native name="country" label="Country" placeholder="Country">
+              {/* <RHFTextField name="address" label="Address" /> */}
+
+              {/* <RHFSelect native name="country" label="Country" placeholder="Country">
                 <option value="" />
                 {countries.map((country) => (
                   <option key={country.code} value={country.label}>
@@ -173,14 +174,14 @@ export default function AccountGeneral() {
 
               <RHFTextField name="city" label="City" />
 
-              <RHFTextField name="zipCode" label="Zip/Code" />
+              <RHFTextField name="zipCode" label="Zip/Code" /> */}
             </Box>
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
               <RHFTextField name="about" multiline rows={4} label="About" />
 
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save Changes
+                Lưu hồ sơ
               </LoadingButton>
             </Stack>
           </Card>

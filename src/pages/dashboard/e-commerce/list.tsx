@@ -276,7 +276,6 @@ export default function EcommerceProductListPage() {
                   {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
-                 
                       row ? (
                         <ProductTableRow
                           key={row.Id}
@@ -284,7 +283,7 @@ export default function EcommerceProductListPage() {
                           selected={selected.includes(row.Id)}
                           onSelectRow={() => onSelectRow(row.Id)}
                           onDeleteRow={() => handleDeleteRow(row.Id)}
-                          onEditRow={() => handleEditRow(row.Name)}
+                          onEditRow={() => handleEditRow(row.Id)}
                           onViewRow={() => handleViewRow(row.Id)}
                         />
                       ) : (

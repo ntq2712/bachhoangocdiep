@@ -14,6 +14,9 @@ import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 // sections
 import InvoiceDetails from '../../../../sections/@dashboard/invoice/details';
+import { useEffect, useState } from 'react';
+import { IInvoice } from 'src/@types/invoice';
+import { getOderById } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +33,17 @@ export default function InvoiceDetailsPage() {
     query: { id },
   } = useRouter();
 
-  const currentInvoice = _invoices.find((invoice) => invoice.id === id);
+  // const currentInvoice = _invoices.find((invoice) => invoice.id === id);
+  const [currentInvoice, setCurrentInvoice] = useState<IInvoice>()
+
+  useEffect(()=>{
+    console.log(id)
+    getOderById(id).then((res)=>{
+      if(res?.data?.success == true){
+        setCurrentInvoice(res.data.order)
+      }
+    })
+  },[id])
 
   return (
     <>
@@ -47,7 +60,7 @@ export default function InvoiceDetailsPage() {
               name: 'Invoices',
               href: PATH_DASHBOARD.invoice.root,
             },
-            { name: `INV-${currentInvoice?.invoiceNumber}` },
+            { name: `INV-${currentInvoice?.ReceiverPhoneNumber}` },
           ]}
         />
 

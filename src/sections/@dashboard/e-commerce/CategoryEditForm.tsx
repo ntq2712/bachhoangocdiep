@@ -46,7 +46,8 @@ export default function CategoryEditForm({ isEdit, currentProduct, handleClose }
   }, []);
 
   const NewProductSchema = Yup.object().shape({
-    Name: Yup.string().required('Nhập tên nhóm danh mục'),
+    Name: Yup.string().required('Nhập tên danh mục'),
+    CategoryGroupId: Yup.string().required('Nhập tên nhóm danh mục'),
   });
 
   const defaultValues = useMemo<Partial<ICategoy>>(

@@ -55,10 +55,10 @@ export default function ProductDetailsSummary({
 
   const { Id, Name, Price, Quantity, Status, Rate } = product;
 
-  const alreadyProduct = cart.map((item: any) => item.Id).includes(Id);
+  //const alreadyProduct = cart?.map((item: any) => item.Id).includes(Id);
 
   const isMaxQuantity =
-    cart.filter((item: any) => item.Id === Id).map((item: any) => item.quantity)[0] >= Quantity;
+    cart?.filter((item: any) => item.Id === Id).map((item: any) => item.quantity)[0] >= Quantity;
 
   const defaultValues = {
     ProductId: Id,
@@ -82,9 +82,7 @@ export default function ProductDetailsSummary({
 
   const onSubmit = async (data: IDataAddCart) => {
     try {
-      if (!alreadyProduct) {
-        onAddCart(data);
-      }
+      onAddCart(data)
       onGotoStep(0);
       push(PATH_DASHBOARD.eCommerce.checkout);
     } catch (error) {

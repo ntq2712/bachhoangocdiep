@@ -111,14 +111,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setSession(accessToken);
 
         const response = await axios.get('/v1/users/profile');
+        
+        const { profile } = response.data;
 
-        const { user } = response.data;
+        console.log("profile: ", response.data.profile)
 
         dispatch({
           type: Types.INITIAL,
           payload: {
             isAuthenticated: true,
-            user,
+            user : profile,
           },
         });
       } else {
@@ -153,29 +155,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
       password,
     });
 
-    const { tokens, user } = response.data;
-
+    const { tokens, profile } = response.data;
+   
     setSession(tokens.access.token);
     localStorage.setItem('refreshToken', tokens.refresh.token);
       
     dispatch({
       type: Types.LOGIN,
       payload: {
-        user,
+        user: profile,
       },
     });
   }, []);
 
   // REGISTER
   const register = useCallback(
-    async (password: string, firstname: string, lastname: string, email: string) => {
+    async (password: string, firstname: string, lastname: string, email: string, phonenumber:string) => {
       const response = await axios.post('/v1/auth/register', {
         firstname,
         lastname,
         email,
         password,
+        phonenumber
       });
-      const { access, user, refresh } = response.data;
+      const { access, profile, refresh } = response.data;
 
       localStorage.setItem('refreshToken', refresh.token);
       
@@ -183,7 +186,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       dispatch({
         type: Types.REGISTER,
         payload: {
-          user,
+          user: profile,
         },
       });
 
@@ -195,7 +198,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   //Verify
   const verify = useCallback(
     async (code: string) => {
-      const response = await axios.post('/v1/auth/verify-email', {
+      const response = await axios.post('/v1/auth/verify-register', {
         code,
       });
       dispatch({
@@ -231,6 +234,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       register,
       verify,
       logout,
+      initialize
     }),
     [state.isAuthenticated, state.isInitialized, state.user, login, logout, register, verify]
   );

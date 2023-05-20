@@ -15,19 +15,19 @@ type Props = {
 };
 
 export default function InvoicePDF({ invoice }: Props) {
-  const {
-    items,
-    taxes,
-    status,
-    dueDate,
-    discount,
-    invoiceTo,
-    createDate,
-    totalPrice,
-    invoiceFrom,
-    invoiceNumber,
-    subTotalPrice,
-  } = invoice;
+  // const {
+  //   items,
+  //   taxes,
+  //   status,
+  //   dueDate,
+  //   discount,
+  //   invoiceTo,
+  //   createDate,
+  //   totalPrice,
+  //   invoiceFrom,
+  //   invoiceNumber,
+  //   subTotalPrice,
+  // } = invoice;
 
   return (
     <Document>
@@ -35,13 +35,13 @@ export default function InvoicePDF({ invoice }: Props) {
         <View style={[styles.gridContainer, styles.mb40]}>
           <Image source="/logo/logo_full.jpg" style={{ height: 32 }} />
           <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
-            <Text style={styles.h3}>{status}</Text>
-            <Text> {`INV-${invoiceNumber}`} </Text>
+            <Text style={styles.h3}>{invoice?.Status}</Text>
+            <Text> {`INV-${invoice?.ReceiverPhoneNumber}`} </Text>
           </View>
         </View>
 
         <View style={[styles.gridContainer, styles.mb40]}>
-          <View style={styles.col6}>
+          {/* <View style={styles.col6}>
             <Text style={[styles.overline, styles.mb8]}>Invoice from</Text>
             <Text style={styles.body1}>{invoiceFrom.name}</Text>
             <Text style={styles.body1}>{invoiceFrom.address}</Text>
@@ -53,17 +53,17 @@ export default function InvoicePDF({ invoice }: Props) {
             <Text style={styles.body1}>{invoiceTo.name}</Text>
             <Text style={styles.body1}>{invoiceTo.address}</Text>
             <Text style={styles.body1}>{invoiceTo.phone}</Text>
-          </View>
+          </View> */}
         </View>
 
         <View style={[styles.gridContainer, styles.mb40]}>
           <View style={styles.col6}>
             <Text style={[styles.overline, styles.mb8]}>Date create</Text>
-            <Text style={styles.body1}>{fDate(createDate)}</Text>
+            <Text style={styles.body1}>{fDate(invoice?.createdAt)}</Text>
           </View>
           <View style={styles.col6}>
             <Text style={[styles.overline, styles.mb8]}>Due date</Text>
-            <Text style={styles.body1}>{fDate(dueDate)}</Text>
+            <Text style={styles.body1}>{invoice?.DeliveryDate}</Text>
           </View>
         </View>
 
@@ -94,7 +94,7 @@ export default function InvoicePDF({ invoice }: Props) {
             </View>
           </View>
 
-          <View style={styles.tableBody}>
+          {/* <View style={styles.tableBody}>
             {items.map((item, index) => (
               <View style={styles.tableRow} key={item.id}>
                 <View style={styles.tableCell_1}>
@@ -167,7 +167,7 @@ export default function InvoicePDF({ invoice }: Props) {
                 <Text style={styles.h4}>{fCurrency(totalPrice)}</Text>
               </View>
             </View>
-          </View>
+          </View> */}
         </View>
 
         <View style={[styles.gridContainer, styles.footer]}>

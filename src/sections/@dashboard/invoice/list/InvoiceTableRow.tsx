@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Link,
@@ -43,7 +43,7 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }: Props) {
-  const { sent, invoiceNumber, createDate, dueDate, status, invoiceTo, totalPrice } = row;
+  const {PaidType, ReceiverPhoneNumber, createdAt, Status, ReceiverName, TotalAmount, DeliveryDate, SubAmount } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -65,6 +65,10 @@ export default function InvoiceTableRow({
     setOpenPopover(null);
   };
 
+  useEffect(() => {
+    console.log('row: ', row);
+  }, []);
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -74,11 +78,11 @@ export default function InvoiceTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <CustomAvatar name={invoiceTo.name} />
+            <CustomAvatar name={ReceiverName} />
 
             <div>
               <Typography variant="subtitle2" noWrap>
-                {invoiceTo.name}
+                {ReceiverName}
               </Typography>
 
               <Link
@@ -87,33 +91,34 @@ export default function InvoiceTableRow({
                 onClick={onViewRow}
                 sx={{ color: 'text.disabled', cursor: 'pointer' }}
               >
-                {`INV-${invoiceNumber}`}
+                {`INV-${ReceiverPhoneNumber}`}
               </Link>
             </div>
           </Stack>
         </TableCell>
 
-        <TableCell align="left">{fDate(createDate)}</TableCell>
+        <TableCell align="left">{fDate(createdAt)}</TableCell>
 
-        <TableCell align="left">{fDate(dueDate)}</TableCell>
+        <TableCell align="left">{fDate(DeliveryDate ? DeliveryDate : '')}</TableCell>
 
-        <TableCell align="center">{fCurrency(totalPrice)}</TableCell>
+        <TableCell align="center">{TotalAmount}</TableCell>
 
         <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
-          {sent}
+          {PaidType == 'cash' ? 'Tiền mặt' : 'Chuyển khoản'}
         </TableCell>
 
         <TableCell align="left">
           <Label
             variant="soft"
             color={
-              (status === 'paid' && 'success') ||
-              (status === 'unpaid' && 'warning') ||
-              (status === 'overdue' && 'error') ||
+              (Status === 'Hoàn thành' && 'success') ||
+              (Status === 'Đang chờ duyệt' && 'warning') ||
+              (Status === 'Hủy' && 'error') ||
+              (Status === 'Đã duyệt' && 'info') ||
               'default'
             }
           >
-            {status}
+            {Status}
           </Label>
         </TableCell>
 

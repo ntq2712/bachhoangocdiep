@@ -28,18 +28,20 @@ import {
   ShopProductSearch,
 } from '../../../sections/@dashboard/e-commerce/shop';
 import CartWidget from '../../../sections/@dashboard/e-commerce/CartWidget';
+import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
+import { useAuthContext } from 'src/auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 EcommerceShopPage.getLayout = (page: React.ReactElement) => (
-  <DashboardLayout>{page}</DashboardLayout>
+  <DashboardLayoutNoneLogin>{page}</DashboardLayoutNoneLogin>
 );
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceShopPage() {
   const { themeStretch } = useSettingsContext();
-
+  const { isAuthenticated, isInitialized } = useAuthContext();
   const dispatch = useDispatch();
 
   const { products, checkout, filter } = useSelector((state) => state.product);
@@ -73,8 +75,8 @@ export default function EcommerceShopPage() {
   } = methods;
 
   const isDefault =
-    !dirtyFields.categorygroup &&
-    (!dirtyFields.categorys &&
+    (!dirtyFields.categorygroup &&
+      !dirtyFields.categorys &&
       !dirtyFields.rate &&
       !dirtyFields.brand &&
       !dirtyFields.priceRange &&
@@ -88,7 +90,9 @@ export default function EcommerceShopPage() {
   useEffect(() => {
     //dispatch(getProducts());
     dispatch(sortProductsByFilter(filter));
-    dispatch(getCarts());
+    if (isAuthenticated) {
+      dispatch(getCarts());
+    }
   }, [dispatch]);
 
   const handleResetFilter = () => {
@@ -111,9 +115,8 @@ export default function EcommerceShopPage() {
 
       <FormProvider methods={methods}>
         <Container maxWidth={themeStretch ? false : 'lg'}>
-          <CustomBreadcrumbs
+          {/* <CustomBreadcrumbs
             heading="Shop"
-            links={[
               { name: 'Dashboard', href: PATH_DASHBOARD.root },
               {
                 name: 'E-Commerce',
@@ -121,7 +124,7 @@ export default function EcommerceShopPage() {
               },
               { name: 'Shop' },
             ]}
-          />
+          /> */}
 
           <Stack
             spacing={2}

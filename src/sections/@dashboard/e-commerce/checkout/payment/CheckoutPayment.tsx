@@ -21,39 +21,29 @@ import CheckoutSummary from '../CheckoutSummary';
 import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
+import { newOder } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
-const DELIVERY_OPTIONS: ICheckoutDeliveryOption[] = [
-  {
-    value: 0,
-    title: 'Standard delivery (Free)',
-    description: 'Delivered on Monday, August 12',
-  },
-  {
-    value: 2,
-    title: 'Fast delivery ($2,00)',
-    description: 'Delivered on Monday, August 5',
-  },
-];
-
 const PAYMENT_OPTIONS: ICheckoutPaymentOption[] = [
   {
-    value: 'paypal',
-    title: 'Pay with Paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
-    icons: ['/assets/icons/payments/ic_paypal.svg'],
-  },
-  {
-    value: 'credit_card',
-    title: 'Credit / Debit Card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
+    value: 'transfer',
+    title: 'Thanh toán qua chuyển khoảng',
+    description:
+      'Nhân viên cửa hàng sẻ liên hệ với bạn qua số điện thoại đặt hàng và tiến hành thành toán.',
+    // icons: ['/assets/icons/payments/ic_paypal.svg'],
     icons: ['/assets/icons/payments/ic_mastercard.svg', '/assets/icons/payments/ic_visa.svg'],
   },
+  // {
+  //   value: 'credit_card',
+  //   title: 'Credit / Debit Card',
+  //   description: 'We support Mastercard, Visa, Discover and Stripe.',
+  //   icons: ['/assets/icons/payments/ic_mastercard.svg', '/assets/icons/payments/ic_visa.svg'],
+  // },
   {
     value: 'cash',
-    title: 'Cash on CheckoutDelivery',
-    description: 'Pay with cash when your order is delivered.',
+    title: 'Tiền mặt khi thanh toán Giao hàng',
+    description: 'Thanh toán bằng tiền mặt khi đơn đặt hàng của bạn được giao.',
     icons: [],
   },
 ];
@@ -74,8 +64,11 @@ type Props = {
 };
 
 type FormValuesProps = {
-  delivery: number;
-  payment: string;
+  shippingcost: number;
+  paidtype: string;
+  Data: any;
+  Address: any;
+  totalprice: number
 };
 
 export default function CheckoutPayment({
@@ -86,16 +79,32 @@ export default function CheckoutPayment({
   onGotoStep,
   onApplyShipping,
 }: Props) {
-  const { TotalQuantity, TotalPrice, discount, shipping, Address, totalItems } = checkout;
+  const { TotalQuantity, TotalPrice, discount, shipping, Address, totalItems, Data } = checkout;
 
   const PaymentSchema = Yup.object().shape({
-    payment: Yup.string().required('Payment is required!'),
+    paidtype: Yup.string().required('Payment is required!'),
   });
 
   const defaultValues = {
-    delivery: shipping,
-    payment: '',
+    shippingcost: shipping,
+    paidtype: '',
+    Data: Data,
+    Address: Address,
+    totalprice: TotalPrice
   };
+
+  const DELIVERY_OPTIONS: ICheckoutDeliveryOption[] = [
+    {
+      value: shipping,
+      title: `Giao hàng tiêu chuẩn`,
+      description: 'Giao vào tất cả các ngày trong tuần',
+    },
+    {
+      value: shipping * 1.5,
+      title: `Giao hàng nhanh`,
+      description: 'Giao vào tất cả các ngày trong tuần',
+    },
+  ];
 
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(PaymentSchema),
@@ -107,10 +116,17 @@ export default function CheckoutPayment({
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: any) => {
     try {
-      onNextStep();
-      onReset();
+      console.log('Data: ', data);
+      newOder(data).then((res) => {
+        if (res.data.success) {
+          onNextStep();
+          onReset();
+        }else{
+
+        }
+      });
     } catch (error) {
       console.error(error);
     }
@@ -120,7 +136,7 @@ export default function CheckoutPayment({
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <CheckoutDelivery onApplyShipping={onApplyShipping} deliveryOptions={DELIVERY_OPTIONS} />
+          {/* <CheckoutDelivery onApplyShipping={onApplyShipping} deliveryOptions={DELIVERY_OPTIONS} /> */}
 
           <CheckoutPaymentMethods
             cardOptions={CARDS_OPTIONS}

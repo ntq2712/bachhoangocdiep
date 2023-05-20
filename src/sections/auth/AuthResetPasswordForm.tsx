@@ -10,6 +10,7 @@ import { LoadingButton } from '@mui/lab';
 import { PATH_AUTH } from '../../routes/paths';
 // components
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import { forgotPassword } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -36,9 +37,14 @@ export default function AuthResetPasswordForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      sessionStorage.setItem('email-recovery', data.email);
-      push(PATH_AUTH.newPassword);
+      forgotPassword(data).then((res) => {
+        if(res.data.success){
+          sessionStorage.setItem('email-recovery', data.email);
+          push(PATH_AUTH.newPassword);
+        }else{
+          console.log('llll')
+        }
+      });
     } catch (error) {
       console.error(error);
     }

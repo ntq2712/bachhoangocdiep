@@ -22,6 +22,7 @@ type FormValuesProps = {
   firstname: string;
   lastname: string;
   email: string;
+  phonenumber:string
 };
 
 export default function AuthRegisterForm() {
@@ -41,6 +42,7 @@ export default function AuthRegisterForm() {
     firstname: '',
     lastname: '',
     email: '',
+    phonenumber: ''
   };
 
   const methods = useForm<FormValuesProps>({
@@ -58,7 +60,7 @@ export default function AuthRegisterForm() {
   const onSubmit = async (data: FormValuesProps) => {
     try {
       if (register) {
-        const res: any = await register(data.password, data.firstname, data.lastname, data.email);
+        const res: any = await register(data.password, data.firstname, data.lastname, data.email, data.phonenumber);
         if (res?.access?.token) {
           replace(PATH_AUTH.verify);
         }
@@ -82,6 +84,7 @@ export default function AuthRegisterForm() {
           <RHFTextField name="lastname" label="Tên" />
         </Stack>
         <RHFTextField name="email" label="Email" />
+        <RHFTextField name="phonenumber" label="Số điện thoại" />
         <RHFTextField
           name="password"
           label="Mật khẩu"

@@ -28,6 +28,7 @@ import {
   ProductDetailsSummary,
 } from '../../../../sections/@dashboard/e-commerce/details';
 import { IDataAddCart } from 'src/@types/product';
+import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +53,7 @@ const SUMMARY = [
 // ----------------------------------------------------------------------
 
 EcommerceProductDetailsPage.getLayout = (page: React.ReactElement) => (
-  <DashboardLayout>{page}</DashboardLayout>
+  <DashboardLayoutNoneLogin>{page}</DashboardLayoutNoneLogin>
 );
 
 // ----------------------------------------------------------------------
@@ -117,22 +118,18 @@ export default function EcommerceProductDetailsPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Thông tin sản phẩm"
+          // heading="Thông tin sản phẩm"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: "/" },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            {
-              name: 'Shop',
+              name: 'Cửa hàng',
               href: PATH_DASHBOARD.eCommerce.shop,
             },
             { name: product?.Name },
           ]}
         />
 
-        <CartWidget totalItems={checkout.TotalQuantity} />
+        <CartWidget totalItems={checkout?.TotalQuantity} />
 
         {product && (
           <>
@@ -144,7 +141,7 @@ export default function EcommerceProductDetailsPage() {
               <Grid item xs={12} md={6} lg={5}>
                 <ProductDetailsSummary
                   product={product}
-                  cart={checkout.cart}
+                  cart={checkout?.cart}
                   onAddCart={handleAddCart}
                   onGotoStep={handleGotoStep}
                 />

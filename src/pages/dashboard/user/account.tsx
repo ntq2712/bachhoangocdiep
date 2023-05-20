@@ -21,6 +21,7 @@ import {
   AccountNotifications,
   AccountChangePassword,
 } from '../../../sections/@dashboard/user/account';
+import { useAuthContext } from 'src/auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +32,8 @@ UserAccountPage.getLayout = (page: React.ReactElement) => <DashboardLayout>{page
 export default function UserAccountPage() {
   const { themeStretch } = useSettingsContext();
 
+  const { user } = useAuthContext();
+
   const [currentTab, setCurrentTab] = useState('general');
 
   const TABS = [
@@ -38,7 +41,7 @@ export default function UserAccountPage() {
       value: 'general',
       label: 'General',
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <AccountGeneral />,
+      component: <AccountGeneral user={user?.general}/>,
     },
     {
       value: 'billing',
@@ -47,7 +50,7 @@ export default function UserAccountPage() {
       component: (
         <AccountBilling
           cards={_userPayment}
-          addressBook={_userAddressBook}
+          addressBook={[user?.address]}
           invoices={_userInvoices}
         />
       ),

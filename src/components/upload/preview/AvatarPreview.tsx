@@ -15,6 +15,7 @@ export default function AvatarPreview({ file }: Props) {
   }
 
   const imgUrl = typeof file === 'string' ? file : file.preview;
+  console.log("file: ", file)
 
   return (
     <Image

@@ -14,6 +14,8 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFCodes } from '../../components/hook-form';
+import { useAuthContext } from 'src/auth/useAuthContext';
+import { resetPassword } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -79,19 +81,21 @@ export default function AuthNewPasswordForm() {
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
+    const resetData = {
+      email: data.email,
+      code: `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`,
+      newpassword: data.password,
+    };
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('DATA:', {
-        email: data.email,
-        code: `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`,
-        password: data.password,
+      resetPassword(resetData).then((res) => {
+        if (res.data.success) {
+          sessionStorage.removeItem('email-recovery');
+
+          enqueueSnackbar(res.data.message);
+
+          push(PATH_DASHBOARD.root);
+        }
       });
-
-      sessionStorage.removeItem('email-recovery');
-
-      enqueueSnackbar('Change password success!');
-
-      push(PATH_DASHBOARD.root);
     } catch (error) {
       console.error(error);
     }

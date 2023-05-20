@@ -46,17 +46,14 @@ export default function InvoiceDetails({ invoice }: Props) {
   }
 
   const {
-    items,
-    taxes,
-    status,
-    dueDate,
-    discount,
-    invoiceTo,
-    createDate,
-    totalPrice,
-    invoiceFrom,
-    invoiceNumber,
-    subTotalPrice,
+    PaidType,
+    ReceiverPhoneNumber,
+    createdAt,
+    Status,
+    ReceiverName,
+    TotalAmount,
+    DeliveryDate,
+    SubAmount,
   } = invoice;
 
   return (
@@ -84,7 +81,7 @@ export default function InvoiceDetails({ invoice }: Props) {
                 {status}
               </Label>
 
-              <Typography variant="h6">{`INV-${invoiceNumber}`}</Typography>
+              <Typography variant="h6">{`INV-${invoice?.ReceiverPhoneNumber}`}</Typography>
             </Box>
           </Grid>
 
@@ -93,11 +90,11 @@ export default function InvoiceDetails({ invoice }: Props) {
               Invoice from
             </Typography>
 
-            <Typography variant="body2">{invoiceFrom.name}</Typography>
+            <Typography variant="body2">{invoice?.ReceiverName}</Typography>
 
-            <Typography variant="body2">{invoiceFrom.address}</Typography>
+            <Typography variant="body2">{invoice?.FullAddress}</Typography>
 
-            <Typography variant="body2">Phone: {invoiceFrom.phone}</Typography>
+            <Typography variant="body2">Phone: {invoice?.ReceiverPhoneNumber}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -105,11 +102,11 @@ export default function InvoiceDetails({ invoice }: Props) {
               Invoice to
             </Typography>
 
-            <Typography variant="body2">{invoiceTo.name}</Typography>
+            <Typography variant="body2">{invoice?.ReceiverName}</Typography>
 
-            <Typography variant="body2">{invoiceTo.address}</Typography>
+            <Typography variant="body2">{invoice?.FullAddress}</Typography>
 
-            <Typography variant="body2">Phone: {invoiceTo.phone}</Typography>
+            <Typography variant="body2">Phone: {invoice?.ReceiverPhoneNumber}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -117,7 +114,7 @@ export default function InvoiceDetails({ invoice }: Props) {
               date create
             </Typography>
 
-            <Typography variant="body2">{fDate(createDate)}</Typography>
+            <Typography variant="body2">{fDate(invoice?.createdAt)}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -125,7 +122,7 @@ export default function InvoiceDetails({ invoice }: Props) {
               Due date
             </Typography>
 
-            <Typography variant="body2">{fDate(dueDate)}</Typography>
+            <Typography variant="body2">{invoice?.DeliveryDate ? invoice?.DeliveryDate  : 'Chưa hoàn thành'}</Typography>
           </Grid>
         </Grid>
 
@@ -151,7 +148,7 @@ export default function InvoiceDetails({ invoice }: Props) {
                 </TableRow>
               </TableHead>
 
-              <TableBody>
+              {/* <TableBody>
                 {items.map((row, index) => (
                   <TableRow
                     key={index}
@@ -232,7 +229,7 @@ export default function InvoiceDetails({ invoice }: Props) {
                     {fCurrency(totalPrice)}
                   </TableCell>
                 </StyledRowResult>
-              </TableBody>
+              </TableBody> */}
             </Table>
           </Scrollbar>
         </TableContainer>

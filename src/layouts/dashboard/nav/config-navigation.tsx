@@ -87,6 +87,16 @@ const navConfig = [
           { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
         ],
       },
+      // Sự kiện
+      {
+        title: 'Sự kiện & Ảnh nỗi bật',
+        path: PATH_DASHBOARD.eCommerce.root,
+        icon: ICONS.cart,
+        children: [
+          { title: 'Sự kiện', path: PATH_DASHBOARD.banner.event },
+          { title: 'Ảnh nỗi bật', path: PATH_DASHBOARD.banner.highlight },
+        ],
+      },
 
       // INVOICE
       {

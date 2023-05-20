@@ -49,11 +49,11 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions, ..
   return (
     <>
       <Card {...other}>
-        <CardHeader title="Payment options" />
+        <CardHeader title="Phương thức thanh toán" />
 
         <CardContent>
           <Controller
-            name="payment"
+            name="paidtype"
             control={control}
             render={({ field, fieldState: { error } }) => (
               <>

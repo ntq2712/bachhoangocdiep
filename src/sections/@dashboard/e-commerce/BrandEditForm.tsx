@@ -116,7 +116,7 @@ export default function BrandEditForm({ isEdit, currentProduct, handleClose }: P
       <Grid item xs={12} md={8} sx={{ justifyContent: 'center' }}>
         <Card sx={{ p: 3 }}>
           <Stack spacing={3}>
-            <RHFTextField name="Name" label="Tên nhóm danh mục" />
+            <RHFTextField name="Name" label="Tên thương hiệu" />
             <RHFSelect
               sx={{ marginBottom: 2 }}
               native

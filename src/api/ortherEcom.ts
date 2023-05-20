@@ -1,10 +1,16 @@
+
 // utils
-import { IAddress, IBrand, ICategoy, ICategoyGroup } from 'src/@types/product';
+import { IAddress, IBanner, IBrand, ICategoy, ICategoyGroup } from 'src/@types/product';
 import axios from '../utils/axios';
 import Axios from 'axios';
 import { log } from 'console';
+import { IUserAccountGeneral } from 'src/@types/user';
 
-//bran
+//PRODUCT
+export function getProductsBestSeller() {
+  return axios.get('/v1/products?filter[IsBestSeller][eq]=true')
+}
+//BRAND
 export function getBran() {
   return axios.get('/v1/brands');
 }
@@ -22,10 +28,32 @@ export function newBrand(data: Partial<IBrand>) {
   };
   return axios.post('v1/brands', body);
 }
+//change passwork
+export function changePasswork(data: any) {
+  return axios.post('v1/auth/change-password', data);
+}
+export function forgotPassword(data: any) {
+  return axios.post('v1/auth/forgot-password', data);
+}
+export function resetPassword(data: any) {
+  return axios.post('v1/auth/reset-password', data);
+}
+//banner
+export function newBanner(data: Partial<IBanner>) {
+  return axios.post('v1/banners', data);
+}
+
+export function getBanner(type: string) {
+  return axios.get(`v1/banners?filter[Type][eq]=${type}`);
+}
+export function getBannerById(id: string) {
+  return axios.get(`v1/banners/${id}`);
+}
 //Category Group
 export function getCategoryGroup() {
   return axios.get('v1/categoryGroups');
 }
+
 export function newCategoryGroup(data: Partial<ICategoyGroup>) {
   const body = {
     Name: data?.Name,
@@ -50,6 +78,17 @@ export function newCategory(data: Partial<ICategoy>) {
     Description: data.Description,
   };
   return axios.post('v1/categories', body);
+}
+
+export function updateProfile(data: Partial<IUserAccountGeneral>) {
+  const body = {
+    Firstname: data.FirstName,
+    Lastname: data.LastName,
+    Dateofbirth: data.DateOfBirth,
+    Avatar: data.Avatar,
+    Phonenumber: data.PhoneNumber,
+  };
+  return axios.patch('v1/users/profile', body);
 }
 //reviews
 export function newReview(data: any) {
@@ -146,7 +185,7 @@ export function getWard(id: any) {
   );
 }
 
-export function CalculateFee(districtid: number, wardid:number) {
+export function CalculateFee(districtid: number, wardid: number) {
   const body = {
     from_district_id: 2055,
     service_id: 53320,
@@ -178,6 +217,21 @@ export function addAddress(data: IAddress) {
   return axios.post('v1/addresses', data);
 }
 
+export function updateAddress(data: IAddress, id:string) {
+  return axios.patch(`v1/addresses/${id}`, data);
+}
+
 export function deleteAddress(id: string | null | undefined) {
   return axios.delete(`v1/addresses/${id}`);
+}
+
+//oder
+export function newOder(data: any) {
+  return axios.post('v1/orders', data);
+}
+export function getOder() {
+  return axios.get('v1/orders')
+}
+export function getOderById(id: any) {
+  return axios.get(`v1/orders/${id}`)
 }

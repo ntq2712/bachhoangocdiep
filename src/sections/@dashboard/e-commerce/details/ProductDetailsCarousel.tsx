@@ -158,8 +158,8 @@ export default function ProductDetailsCarousel({ productId }: any) {
             alt="product"
             src={img.OriginalImageUrl}
             ratio="1/1"
-            onClick={() => handleOpenLightbox(img)}
-            sx={{ cursor: 'zoom-in' }}
+            onClick={() => handleOpenLightbox(img.OriginalImageUrl)}
+            sx={{ cursor: 'zoom-in', minWidth: 539 }}
           />
         ))}
       </Carousel>

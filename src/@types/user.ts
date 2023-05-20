@@ -147,14 +147,22 @@ export type IUserAccountBillingInvoice = {
 };
 
 export type IUserAccountBillingAddress = {
-  id: string;
-  name: string;
-  phone: string;
-  country: string;
-  state: string;
-  city: string;
-  street: string;
-  zipCode: string;
+  Id: string;
+  AccountId: string;
+  Name: string;
+  IsDefault: true;
+  City: string;
+  CityGHNId?: string | number;
+  District: string;
+  DistrictGHNId?: string | number;
+  Ward: string;
+  WardGHNId?: string | number;
+  Street?: string;
+  ReceiverName: string;
+  ReceiverPhoneNumber: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type IUserAccountChangePassword = {

@@ -54,7 +54,7 @@ export default function ProductTableRow({
   onEditRow,
   onViewRow,
 }: Props) {
-  const { Name, ImageURL, createdAt, Quantity, Price } = row;
+  const {Id, Name, ImageURL, createdAt, Quantity, Price } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -145,7 +145,7 @@ export default function ProductTableRow({
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="eva:trash-2-outline" />
-          Delete
+          Xóa
         </MenuItem>
 
         <MenuItem
@@ -155,7 +155,7 @@ export default function ProductTableRow({
           }}
         >
           <Iconify icon="eva:edit-fill" />
-          Edit
+          Sửa
         </MenuItem>
       </MenuPopover>
 

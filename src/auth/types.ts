@@ -31,13 +31,15 @@ export type JWTContextType = {
     password: string,
     firstname: string,
     lastname: string,
-    email: string
+    email: string,
+    phonenumber:string
   ) => Promise<void>;
   verify:(code:string)=>Promise<void>;
   logout: () => void;
   loginWithGoogle?: () => void;
   loginWithGithub?: () => void;
   loginWithTwitter?: () => void;
+  initialize: ()=> void;
 };
 
 export type FirebaseContextType = {

@@ -9,16 +9,19 @@ import { bgGradient } from '../../../../utils/cssStyles';
 import Image from '../../../../components/image';
 import { MotionContainer, varFade } from '../../../../components/animate';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
+import { ICarousels } from 'src/pages/components/extra/carousel';
+import Link from 'src/theme/overrides/Link';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  data: {
-    id: string;
-    title: string;
-    image: string;
-    description: string;
-  }[];
+  // data: {
+  //   id: string;
+  //   title: string;
+  //   image: string;
+  //   description: string;
+  // }[];
+  data: ICarousels[];
 };
 
 export default function CarouselAnimation({ data }: Props) {
@@ -68,11 +71,12 @@ export default function CarouselAnimation({ data }: Props) {
 // ----------------------------------------------------------------------
 
 type CarouselItemProps = {
-  item: {
-    title: string;
-    description: string;
-    image: string;
-  };
+  item: ICarousels;
+  // item: {
+  //   title: string;
+  //   description: string;
+  //   image: string;
+  // };
   isActive: boolean;
 };
 
@@ -126,7 +130,7 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
 
         <m.div variants={varFade().inRight}>
           <Button variant="contained" sx={{ mt: 3 }}>
-            View More
+            <a target='_blank' href='https://www.facebook.com/trongqui2712'>Xem thêm</a>
           </Button>
         </m.div>
       </CardContent>

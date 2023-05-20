@@ -19,6 +19,10 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
+import EcommerceShopPage from './dashboard/e-commerce/shop';
+import HomeBestSeller from 'src/sections/home/HomeBestSeller';
+import HomeSale from 'src/sections/home/HomeSale';
+import DemoCarouselsPage from './components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
@@ -56,7 +60,7 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title> The starting point for your next project | Minimal UI</title>
+        <title> Bách hóa ngọc diệp | cửa hàng</title>
       </Head>
 
       {progress}
@@ -68,11 +72,15 @@ export default function HomePage() {
           overflow: 'hidden',
           position: 'relative',
           bgcolor: 'background.default',
+          pt: 3
         }}
       >
-        <HomeMinimal />
+        <DemoCarouselsPage/>
+        {/* <HomeBestSeller />
+        <HomeSale/> */}
+        {/* <HomeMinimal /> */}
 
-        <HomeHugePackElements />
+        {/* <HomeHugePackElements />
 
         <HomeForDesigner />
 
@@ -86,7 +94,7 @@ export default function HomePage() {
 
         <HomeLookingFor />
 
-        <HomeAdvertisement />
+        <HomeAdvertisement /> */}
       </Box>
     </>
   );

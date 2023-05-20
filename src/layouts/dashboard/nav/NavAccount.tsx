@@ -31,15 +31,15 @@ export default function NavAccount() {
   return (
     <Link component={NextLink} href={PATH_DASHBOARD.user.account} underline="none" color="inherit">
       <StyledRoot>
-        <CustomAvatar src={user?.photoURL} alt={user?.displayName} name={user?.displayName} />
+        <CustomAvatar src={user?.general?.Avatar} alt={user?.general?.FullName} name={user?.general?.FullName} />
 
         <Box sx={{ ml: 2, minWidth: 0 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.general?.FullName}
           </Typography>
 
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            {user?.role}
+            {user?.general?.Gender ? 'Admin' : 'Khách hàng'}
           </Typography>
         </Box>
       </StyledRoot>

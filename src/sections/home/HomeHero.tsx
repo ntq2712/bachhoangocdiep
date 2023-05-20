@@ -145,8 +145,8 @@ function Description() {
     <StyledDescription>
       <m.div variants={varFade().in}>
         <Typography variant="h2" sx={{ textAlign: 'center' }}>
-          Bắt đầu <br />
-          mua sắm với Bách hóa
+          {/* Bắt đầu <br /> */}
+          Bách hóa
         </Typography>
       </m.div>
 
@@ -286,7 +286,7 @@ function Content() {
           animate={{ y: ['0%', '100%'] }}
           transition={transition}
           alt={`hero_${isLight ? 'light' : 'dark'}_1`}
-          src={`/assets/images/home/hero_${isLight ? 'light' : 'dark'}_1.png`}
+          src={`/assets/images/home/home_${isLight ? 'light' : 'dark'}_1.png`}
           sx={{ position: 'absolute' }}
         />
         <Box
@@ -294,7 +294,7 @@ function Content() {
           animate={{ y: ['-100%', '0%'] }}
           transition={transition}
           alt={`hero_${isLight ? 'light' : 'dark'}_1`}
-          src={`/assets/images/home/hero_${isLight ? 'light' : 'dark'}_1.png`}
+          src={`/assets/images/home/home_${isLight ? 'light' : 'dark'}_1.png`}
           sx={{ position: 'absolute' }}
         />
       </Stack>
@@ -309,7 +309,7 @@ function Content() {
           animate={{ y: ['100%', '0%'] }}
           transition={transition}
           alt={`hero_${isLight ? 'light' : 'dark'}_2`}
-          src={`/assets/images/home/hero_${isLight ? 'light' : 'dark'}_2.png`}
+          src={`/assets/images/home/home_${isLight ? 'light' : 'dark'}_2.png`}
           sx={{ position: 'absolute' }}
         />
         <Box
@@ -317,7 +317,7 @@ function Content() {
           animate={{ y: ['0%', '-100%'] }}
           transition={transition}
           alt={`hero_${isLight ? 'light' : 'dark'}_2`}
-          src={`/assets/images/home/hero_${isLight ? 'light' : 'dark'}_2.png`}
+          src={`/assets/images/home/home_${isLight ? 'light' : 'dark'}_2.png`}
           sx={{ position: 'absolute' }}
         />
       </Stack>

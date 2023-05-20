@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import sumBy from 'lodash/sumBy';
 // next
 import Head from 'next/head';
@@ -50,6 +50,7 @@ import {
 // sections
 import InvoiceAnalytic from '../../../sections/@dashboard/invoice/InvoiceAnalytic';
 import { InvoiceTableRow, InvoiceTableToolbar } from '../../../sections/@dashboard/invoice/list';
+import { getOder } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -63,12 +64,12 @@ const SERVICE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'invoiceNumber', label: 'Client', align: 'left' },
-  { id: 'createDate', label: 'Create', align: 'left' },
-  { id: 'dueDate', label: 'Due', align: 'left' },
-  { id: 'price', label: 'Amount', align: 'center', width: 140 },
-  { id: 'sent', label: 'Sent', align: 'center', width: 140 },
-  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'invoiceNumber', label: 'Người nhận', align: 'left' },
+  { id: 'createDate', label: 'Ngày đặt', align: 'left' },
+  { id: 'dueDate', label: 'Ngày giao', align: 'left' },
+  { id: 'price', label: 'Tổng tiền', align: 'center', width: 140 },
+  { id: 'sent', label: 'Thanh toán', align: 'center', width: 140 },
+  { id: 'status', label: 'Trạng thái', align: 'left' },
   { id: '' },
 ];
 
@@ -104,7 +105,7 @@ export default function InvoiceListPage() {
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'createDate' });
 
-  const [tableData, setTableData] = useState(_invoices);
+  const [tableData, setTableData] = useState<IInvoice[]>([]);
 
   const [filterName, setFilterName] = useState('');
 
@@ -145,12 +146,24 @@ export default function InvoiceListPage() {
     (!dataFiltered.length && !!filterEndDate) ||
     (!dataFiltered.length && !!filterStartDate);
 
+  useEffect(() => {
+    getOder()
+      .then((res) => {
+        if (res?.data?.success) {
+          setTableData(res?.data?.Orders?.Data);
+        } else {
+          console.log(res?.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const getLengthByStatus = (status: string) =>
-    tableData.filter((item) => item.status === status).length;
+    tableData.filter((item) => item.Status === status).length;
 
   const getTotalPriceByStatus = (status: string) =>
     sumBy(
-      tableData.filter((item) => item.status === status),
+      tableData.filter((item) => item.Status === status),
       'totalPrice'
     );
 
@@ -158,11 +171,27 @@ export default function InvoiceListPage() {
     (getLengthByStatus(status) / tableData.length) * 100;
 
   const TABS = [
-    { value: 'all', label: 'All', color: 'info', count: tableData.length },
-    { value: 'paid', label: 'Paid', color: 'success', count: getLengthByStatus('paid') },
-    { value: 'unpaid', label: 'Unpaid', color: 'warning', count: getLengthByStatus('unpaid') },
-    { value: 'overdue', label: 'Overdue', color: 'error', count: getLengthByStatus('overdue') },
-    { value: 'draft', label: 'Draft', color: 'default', count: getLengthByStatus('draft') },
+    { value: 'all', label: 'Tất cả', color: 'info', count: tableData.length },
+    {
+      value: 'Đang chờ duyệt',
+      label: 'Đang chờ duyệt',
+      color: 'warning',
+      count: getLengthByStatus('Đang chờ duyệt'),
+    },
+    {
+      value: 'Đã duyệt',
+      label: 'Đã duyệt',
+      color: 'default',
+      count: getLengthByStatus('Đã duyệt'),
+    },
+    {
+      value: 'Hoàn thành',
+      label: 'Hoàn thành',
+      color: 'success',
+      count: getLengthByStatus('Hoàn thành'),
+    },
+
+    { value: 'Hủy', label: 'Hủy', color: 'error', count: getLengthByStatus('Hủy') },
   ] as const;
 
   const handleOpenConfirm = () => {
@@ -189,7 +218,7 @@ export default function InvoiceListPage() {
   };
 
   const handleDeleteRow = (id: string) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    const deleteRow = tableData.filter((row) => row.Id !== id);
     setSelected([]);
     setTableData(deleteRow);
 
@@ -201,7 +230,7 @@ export default function InvoiceListPage() {
   };
 
   const handleDeleteRows = (selectedRows: string[]) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.Id));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -275,7 +304,7 @@ export default function InvoiceListPage() {
               sx={{ py: 2 }}
             >
               <InvoiceAnalytic
-                title="Total"
+                title="Tổng cộng"
                 total={tableData.length}
                 percent={100}
                 price={sumBy(tableData, 'totalPrice')}
@@ -284,37 +313,37 @@ export default function InvoiceListPage() {
               />
 
               <InvoiceAnalytic
-                title="Paid"
-                total={getLengthByStatus('paid')}
-                percent={getPercentByStatus('paid')}
-                price={getTotalPriceByStatus('paid')}
+                title="Hoàn thành"
+                total={getLengthByStatus('Hoàn thành')}
+                percent={getPercentByStatus('Hoàn thành')}
+                price={getTotalPriceByStatus('Hoàn thành')}
                 icon="eva:checkmark-circle-2-fill"
                 color={theme.palette.success.main}
               />
 
               <InvoiceAnalytic
-                title="Unpaid"
-                total={getLengthByStatus('unpaid')}
-                percent={getPercentByStatus('unpaid')}
-                price={getTotalPriceByStatus('unpaid')}
+                title="Đang chờ duyệt"
+                total={getLengthByStatus('Đang chờ duyệt')}
+                percent={getPercentByStatus('Đang chờ duyệt')}
+                price={getTotalPriceByStatus('Đang chờ duyệt')}
                 icon="eva:clock-fill"
                 color={theme.palette.warning.main}
               />
 
               <InvoiceAnalytic
-                title="Overdue"
-                total={getLengthByStatus('overdue')}
-                percent={getPercentByStatus('overdue')}
-                price={getTotalPriceByStatus('overdue')}
+                title="Hủy"
+                total={getLengthByStatus('Hủy')}
+                percent={getPercentByStatus('Hủy')}
+                price={getTotalPriceByStatus('Hủy')}
                 icon="eva:bell-fill"
                 color={theme.palette.error.main}
               />
 
               <InvoiceAnalytic
-                title="Draft"
-                total={getLengthByStatus('draft')}
-                percent={getPercentByStatus('draft')}
-                price={getTotalPriceByStatus('draft')}
+                title="Đã duyệt"
+                total={getLengthByStatus('Đã duyệt')}
+                percent={getPercentByStatus('Đã duyệt')}
+                price={getTotalPriceByStatus('Đã duyệt')}
                 icon="eva:file-fill"
                 color={theme.palette.text.secondary}
               />
@@ -373,7 +402,7 @@ export default function InvoiceListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData.map((row) => row.Id)
                 )
               }
               action={
@@ -417,7 +446,7 @@ export default function InvoiceListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row.Id)
                     )
                   }
                 />
@@ -427,13 +456,13 @@ export default function InvoiceListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <InvoiceTableRow
-                        key={row.id}
+                        key={row.Id}
                         row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onViewRow={() => handleViewRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
+                        selected={selected.includes(row.Id)}
+                        onSelectRow={() => onSelectRow(row.Id)}
+                        onViewRow={() => handleViewRow(row.Id)}
+                        onEditRow={() => handleEditRow(row.Id)}
+                        onDeleteRow={() => handleDeleteRow(row.Id)}
                       />
                     ))}
 
@@ -467,7 +496,7 @@ export default function InvoiceListPage() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
+            Bạn có chắc chắn muốn xóa <strong> {selected.length} </strong> đơn hàng?
           </>
         }
         action={
@@ -479,7 +508,7 @@ export default function InvoiceListPage() {
               handleCloseConfirm();
             }}
           >
-            Delete
+            Xóa
           </Button>
         }
       />
@@ -519,26 +548,26 @@ function applyFilter({
   if (filterName) {
     inputData = inputData.filter(
       (invoice) =>
-        invoice.invoiceNumber.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-        invoice.invoiceTo.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+        // invoice.invoiceNumber.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+        invoice.ReceiverName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus !== 'all') {
-    inputData = inputData.filter((invoice) => invoice.status === filterStatus);
+    inputData = inputData.filter((invoice) => invoice.Status === filterStatus);
   }
 
-  if (filterService !== 'all') {
-    inputData = inputData.filter((invoice) =>
-      invoice.items.some((c) => c.service === filterService)
-    );
-  }
+  // if (filterService !== 'all') {
+  //   inputData = inputData.filter((invoice) =>
+  //     invoice.items.some((c) => c.service === filterService)
+  //   );
+  // }
 
   if (filterStartDate && filterEndDate) {
     inputData = inputData.filter(
       (invoice) =>
-        fTimestamp(invoice.createDate) >= fTimestamp(filterStartDate) &&
-        fTimestamp(invoice.createDate) <= fTimestamp(filterEndDate)
+        fTimestamp(new Date(invoice.createdAt).toLocaleDateString()) >= fTimestamp(filterStartDate) &&
+        fTimestamp(new Date(invoice.createdAt).toLocaleDateString()) <= fTimestamp(filterEndDate)
     );
   }
 

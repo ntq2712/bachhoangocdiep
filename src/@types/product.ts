@@ -17,10 +17,10 @@ export type IProductReview = {
 export type ICategoyGroup = {
   Id: string;
   Name: string;
-  Description: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
+  Description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type ICategoy = {
@@ -31,6 +31,19 @@ export type ICategoy = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
+};
+
+export type IBanner = {
+  Id: string;
+  Title: string;
+  Description: string;
+  RedirectUrl: string;
+  Images: any;
+  ImageURL?: string;
+  Type: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type IBrand = {
@@ -54,6 +67,7 @@ export type IProduct = {
   Price: number;
   Rate: number;
   Quantity: number;
+  IsBestSeller: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -71,7 +85,7 @@ export type IProductFilter = {
   priceMax: number;
   rate?: number;
   sortBy: string;
-  priceRange: number[],
+  priceRange: number[];
 };
 
 // ----------------------------------------------------------------------

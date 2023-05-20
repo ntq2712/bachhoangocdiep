@@ -11,6 +11,8 @@ import { UploadProps } from './types';
 import RejectionFiles from './errors/RejectionFiles';
 import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
+import { useEffect } from 'react';
+import { log } from 'console';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +54,7 @@ export default function Upload({
     multiple,
     disabled,
     ...other,
-  });
+  });  
 
   const hasFile = !!file && !multiple;
 
@@ -170,11 +172,11 @@ function Placeholder({ sx, ...other }: StackProps) {
 
       <div>
         <Typography gutterBottom variant="h5">
-        Thả hoặc Chọn ảnh
+          Thả hoặc Chọn ảnh
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Thả ảnh ở đây hoặc nhấp vào
+          Thả ảnh ở đây hoặc nhấp vào
           <Typography
             variant="body2"
             component="span"

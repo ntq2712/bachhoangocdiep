@@ -7,18 +7,14 @@ import { bgGradient } from '../../../../utils/cssStyles';
 // components
 import Image from '../../../../components/image';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
 const THUMB_SIZE = 64;
 
 type Props = {
-  data: {
-    id: string;
-    title: string;
-    image: string;
-    description: string;
-  }[];
+  data: ICarousels[]
 };
 
 type StyledThumbnailsContainerProps = {
@@ -137,7 +133,7 @@ export default function CarouselThumbnail({ data }: Props) {
     >
       <Carousel {...carouselSettings1} asNavFor={nav2} ref={carousel1}>
         {data.map((item) => (
-          <Image key={item.id} alt={item.title} src={item.image} ratio="16/9" />
+          <Image sx={{minWidth: 1082}} key={item.id} alt={item.title} src={item.image} ratio="16/9" />
         ))}
       </Carousel>
 

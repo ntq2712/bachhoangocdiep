@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import { Box, Paper, Link, CardContent } from '@mui/material';
@@ -9,16 +9,19 @@ import Image from '../../../../components/image';
 import Iconify from '../../../../components/iconify';
 import TextMaxLine from '../../../../components/text-max-line';
 import Carousel, { CarouselArrows } from '../../../../components/carousel';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  data: {
-    id: string;
-    title: string;
-    image: string;
-    description: string;
-  }[];
+  // data: {
+  //   id: string;
+  //   title: string;
+  //   image: string;
+  //   description: string;
+  // }[];
+  data: ICarousels[];
 };
 
 export default function CarouselCenterMode({ data }: Props) {
@@ -27,9 +30,9 @@ export default function CarouselCenterMode({ data }: Props) {
   const theme = useTheme();
 
   const carouselSettings = {
-    slidesToShow: 3,
+    slidesToShow: data?.length > 3 ? 3 : data.length,
     centerMode: true,
-    centerPadding: '60px',
+    centerPadding:'60px',
     rtl: Boolean(theme.direction === 'rtl'),
     responsive: [
       {
@@ -88,7 +91,7 @@ type CarouselItemProps = {
   image: string;
 };
 
-function CarouselItem({ item }: { item: CarouselItemProps }) {
+function CarouselItem({ item }: { item: ICarousels }) {
   const theme = useTheme();
 
   const { image, title } = item;
@@ -99,9 +102,10 @@ function CarouselItem({ item }: { item: CarouselItemProps }) {
         borderRadius: 2,
         overflow: 'hidden',
         position: 'relative',
+        maxWidth: 300
       }}
     >
-      <Image alt={title} src={image} ratio="3/4" />
+      <Image alt={title} src={image} ratio="3/4" sx={{maxHeight: 100}}/>
       <CardContent
         sx={{
           bottom: 0,
@@ -124,6 +128,7 @@ function CarouselItem({ item }: { item: CarouselItemProps }) {
         <Link
           color="inherit"
           variant="overline"
+          href={PATH_DASHBOARD.eCommerce.shop}
           sx={{
             opacity: 0.72,
             alignItems: 'center',
@@ -132,7 +137,7 @@ function CarouselItem({ item }: { item: CarouselItemProps }) {
             '&:hover': { opacity: 1 },
           }}
         >
-          learn More
+          Xem thêm
           <Iconify icon="eva:arrow-forward-fill" width={16} sx={{ ml: 1 }} />
         </Link>
       </CardContent>

@@ -30,11 +30,11 @@ export default function CheckoutDelivery({ deliveryOptions, onApplyShipping, ...
 
   return (
     <Card {...other}>
-      <CardHeader title="Delivery options" />
+      <CardHeader title="Tùy chọn giao hàng" />
 
       <CardContent>
         <Controller
-          name="delivery"
+          name="shippingcost"
           control={control}
           render={({ field }) => (
             <RadioGroup

@@ -15,7 +15,7 @@ import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 // sections
 import InvoiceDetails from '../../../../sections/@dashboard/invoice/details';
 import { useEffect, useState } from 'react';
-import { IInvoice } from 'src/@types/invoice';
+import { IInvoice, IInvoiceDetaill } from 'src/@types/invoice';
 import { getOderById } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
@@ -33,14 +33,12 @@ export default function InvoiceDetailsPage() {
     query: { id },
   } = useRouter();
 
-  // const currentInvoice = _invoices.find((invoice) => invoice.id === id);
-  const [currentInvoice, setCurrentInvoice] = useState<IInvoice>()
+  const [currentInvoice, setCurrentInvoice] = useState<IInvoiceDetaill>()
 
   useEffect(()=>{
-    console.log(id)
     getOderById(id).then((res)=>{
       if(res?.data?.success == true){
-        setCurrentInvoice(res.data.order)
+        setCurrentInvoice(res.data)
       }
     })
   },[id])
@@ -60,11 +58,13 @@ export default function InvoiceDetailsPage() {
               name: 'Invoices',
               href: PATH_DASHBOARD.invoice.root,
             },
-            { name: `INV-${currentInvoice?.ReceiverPhoneNumber}` },
+            { name: currentInvoice?.order.InvoiceNumber },
           ]}
         />
 
-        <InvoiceDetails invoice={currentInvoice} />
+        {currentInvoice &&
+          <InvoiceDetails invoice={currentInvoice} />
+        }
       </Container>
     </>
   );

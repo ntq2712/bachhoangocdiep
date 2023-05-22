@@ -8,7 +8,7 @@ import { RHFSelect, RHFTextField } from '../../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = ['paid', 'unpaid', 'overdue', 'draft'];
+const STATUS_OPTIONS = ['Đang chờ duyệt', 'Duyệt','Đang giao', 'Hoàn thành', 'Hủy'];
 
 // ----------------------------------------------------------------------
 
@@ -16,6 +16,8 @@ export default function InvoiceNewEditStatusDate() {
   const { control, watch } = useFormContext();
 
   const values = watch();
+
+  console.log('values: ', values)
 
   return (
     <Stack
@@ -27,7 +29,7 @@ export default function InvoiceNewEditStatusDate() {
         disabled
         name="invoiceNumber"
         label="Invoice number"
-        value={`INV-${values.invoiceNumber}`}
+        value={values.invoiceNumber}
       />
 
       <RHFSelect fullWidth name="status" label="Status" InputLabelProps={{ shrink: true }}>

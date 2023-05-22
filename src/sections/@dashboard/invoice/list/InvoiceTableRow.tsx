@@ -43,7 +43,7 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }: Props) {
-  const {PaidType, ReceiverPhoneNumber, createdAt, Status, ReceiverName, TotalAmount, DeliveryDate, SubAmount } = row;
+  const {PaidType, InvoiceNumber, ReceiverPhoneNumber, createdAt, Status, ReceiverName, TotalAmount, DeliveryDate, SubAmount } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -65,9 +65,9 @@ export default function InvoiceTableRow({
     setOpenPopover(null);
   };
 
-  useEffect(() => {
-    console.log('row: ', row);
-  }, []);
+  // useEffect(() => {
+  //   console.log('row: ', row);
+  // }, []);
 
   return (
     <>
@@ -91,7 +91,7 @@ export default function InvoiceTableRow({
                 onClick={onViewRow}
                 sx={{ color: 'text.disabled', cursor: 'pointer' }}
               >
-                {`INV-${ReceiverPhoneNumber}`}
+                {InvoiceNumber}
               </Link>
             </div>
           </Stack>

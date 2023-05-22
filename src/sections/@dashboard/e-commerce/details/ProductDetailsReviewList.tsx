@@ -32,7 +32,7 @@ export default function ProductDetailsReviewList({ reviews }: Props) {
           },
         }}
       >
-        {reviews.map((review) => (
+        {reviews?.map((review) => (
           <ReviewItem key={review.Id} review={review} />
         ))}
       </Stack>
@@ -47,7 +47,7 @@ export default function ProductDetailsReviewList({ reviews }: Props) {
           mr: { md: 5 },
         }}
       >
-        {/* <Pagination count={reviews} /> */}
+        <Pagination count={reviews?.length} />
       </Stack>
     </>
   );
@@ -65,6 +65,7 @@ function ReviewItem({ review }: ReviewItemProps) {
     Rate,
     createdAt,
     Account,
+    IsPurchased
   } = review;
 
   const [isHelpful, setIsHelpful] = useState(false);
@@ -111,7 +112,7 @@ function ReviewItem({ review }: ReviewItemProps) {
       <Stack spacing={1} flexGrow={1}>
         <Rating size="small" value={Number(Rate)} precision={0.1} readOnly />
 
-        {/* {isPurchased && (
+        {IsPurchased && (
           <Typography
             variant="caption"
             sx={{
@@ -123,7 +124,7 @@ function ReviewItem({ review }: ReviewItemProps) {
             <Iconify icon="ic:round-verified" width={16} sx={{ mr: 0.5 }} />
             Verified purchase
           </Typography>
-        )} */}
+        )}
 
         <Typography variant="body2">{Content}</Typography>
 

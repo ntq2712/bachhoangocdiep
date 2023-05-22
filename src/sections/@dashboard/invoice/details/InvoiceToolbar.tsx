@@ -16,7 +16,7 @@ import {
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // @types
-import { IInvoice } from '../../../../@types/invoice';
+import { IInvoice, IInvoiceDetaill } from '../../../../@types/invoice';
 // components
 import Iconify from '../../../../components/iconify';
 //
@@ -25,10 +25,13 @@ import InvoicePDF from './InvoicePDF';
 // ----------------------------------------------------------------------
 
 type Props = {
-  invoice: IInvoice;
+  edit:boolean;
+  handleEdit: ()=>void;
+  invoice: IInvoiceDetaill;
 };
 
-export default function InvoiceToolbar({ invoice }: Props) {
+export default function InvoiceToolbar({ invoice, edit, handleEdit }: Props) {
+ 
   const { push } = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -39,10 +42,6 @@ export default function InvoiceToolbar({ invoice }: Props) {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleEdit = () => {
-    push(PATH_DASHBOARD.invoice.edit(invoice.id));
   };
 
   return (
@@ -57,7 +56,7 @@ export default function InvoiceToolbar({ invoice }: Props) {
         <Stack direction="row" spacing={1}>
           <Tooltip title="Edit">
             <IconButton onClick={handleEdit}>
-              <Iconify icon="eva:edit-fill" />
+              <Iconify icon="eva:edit-fill" color={edit ? 'Highlight' : ''}/>
             </IconButton>
           </Tooltip>
 
@@ -69,7 +68,7 @@ export default function InvoiceToolbar({ invoice }: Props) {
 
           <PDFDownloadLink
             document={<InvoicePDF invoice={invoice} />}
-            fileName={invoice.invoiceNumber}
+            fileName={invoice?.order?.InvoiceNumber}
             style={{ textDecoration: 'none' }}
           >
             {({ loading }) => (
@@ -91,7 +90,7 @@ export default function InvoiceToolbar({ invoice }: Props) {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Send">
+          {/* <Tooltip title="Send">
             <IconButton>
               <Iconify icon="ic:round-send" />
             </IconButton>
@@ -101,17 +100,17 @@ export default function InvoiceToolbar({ invoice }: Props) {
             <IconButton>
               <Iconify icon="eva:share-fill" />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
         </Stack>
 
-        <Button
+        {/* <Button
           color="inherit"
           variant="outlined"
           startIcon={<Iconify icon="eva:checkmark-fill" />}
           sx={{ alignSelf: 'flex-end' }}
         >
           Mark as Paid
-        </Button>
+        </Button> */}
       </Stack>
 
       <Dialog fullScreen open={open}>

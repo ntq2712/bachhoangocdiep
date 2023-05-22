@@ -164,7 +164,7 @@ export default function InvoiceListPage() {
   const getTotalPriceByStatus = (status: string) =>
     sumBy(
       tableData.filter((item) => item.Status === status),
-      'totalPrice'
+      'SubAmount'
     );
 
   const getPercentByStatus = (status: string) =>
@@ -183,6 +183,12 @@ export default function InvoiceListPage() {
       label: 'Đã duyệt',
       color: 'default',
       count: getLengthByStatus('Đã duyệt'),
+    },
+    {
+      value: 'Đang giao hàng',
+      label: 'Đang giao hàng',
+      color: 'default',
+      count: getLengthByStatus('Đang giao hàng'),
     },
     {
       value: 'Hoàn thành',
@@ -265,7 +271,7 @@ export default function InvoiceListPage() {
   return (
     <>
       <Head>
-        <title> Invoice: List | Minimal UI</title>
+        <title>Đơn hàng | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -284,16 +290,16 @@ export default function InvoiceListPage() {
               name: 'List',
             },
           ]}
-          action={
-            <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.invoice.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Invoice
-            </Button>
-          }
+          // action={
+          //   <Button
+          //     component={NextLink}
+          //     href={PATH_DASHBOARD.invoice.new}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="eva:plus-fill" />}
+          //   >
+          //     New Invoice
+          //   </Button>
+          // }
         />
 
         <Card sx={{ mb: 5 }}>
@@ -302,6 +308,7 @@ export default function InvoiceListPage() {
               direction="row"
               divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
               sx={{ py: 2 }}
+              spacing={2}
             >
               <InvoiceAnalytic
                 title="Tổng cộng"
@@ -310,15 +317,6 @@ export default function InvoiceListPage() {
                 price={sumBy(tableData, 'totalPrice')}
                 icon="ic:round-receipt"
                 color={theme.palette.info.main}
-              />
-
-              <InvoiceAnalytic
-                title="Hoàn thành"
-                total={getLengthByStatus('Hoàn thành')}
-                percent={getPercentByStatus('Hoàn thành')}
-                price={getTotalPriceByStatus('Hoàn thành')}
-                icon="eva:checkmark-circle-2-fill"
-                color={theme.palette.success.main}
               />
 
               <InvoiceAnalytic
@@ -331,21 +329,37 @@ export default function InvoiceListPage() {
               />
 
               <InvoiceAnalytic
-                title="Hủy"
-                total={getLengthByStatus('Hủy')}
-                percent={getPercentByStatus('Hủy')}
-                price={getTotalPriceByStatus('Hủy')}
-                icon="eva:bell-fill"
-                color={theme.palette.error.main}
-              />
-
-              <InvoiceAnalytic
                 title="Đã duyệt"
                 total={getLengthByStatus('Đã duyệt')}
                 percent={getPercentByStatus('Đã duyệt')}
                 price={getTotalPriceByStatus('Đã duyệt')}
                 icon="eva:file-fill"
                 color={theme.palette.text.secondary}
+              />
+              
+              <InvoiceAnalytic
+                title="Đang giao hàng"
+                total={getLengthByStatus('Đang giao hàng')}
+                percent={getPercentByStatus('Đang giao hàng')}
+                price={getTotalPriceByStatus('Đang giao hàng')}
+                icon="eva:file-fill"
+                color={theme.palette.info.dark}
+              />
+              <InvoiceAnalytic
+                title="Hoàn thành"
+                total={getLengthByStatus('Hoàn thành')}
+                percent={getPercentByStatus('Hoàn thành')}
+                price={getTotalPriceByStatus('Hoàn thành')}
+                icon="eva:checkmark-circle-2-fill"
+                color={theme.palette.success.main}
+              />
+              <InvoiceAnalytic
+                title="Hủy"
+                total={getLengthByStatus('Hủy')}
+                percent={getPercentByStatus('Hủy')}
+                price={getTotalPriceByStatus('Hủy')}
+                icon="eva:bell-fill"
+                color={theme.palette.error.main}
               />
             </Stack>
           </Scrollbar>
@@ -483,7 +497,6 @@ export default function InvoiceListPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
             dense={dense}
             onChangeDense={onChangeDense}
           />
@@ -566,7 +579,8 @@ function applyFilter({
   if (filterStartDate && filterEndDate) {
     inputData = inputData.filter(
       (invoice) =>
-        fTimestamp(new Date(invoice.createdAt).toLocaleDateString()) >= fTimestamp(filterStartDate) &&
+        fTimestamp(new Date(invoice.createdAt).toLocaleDateString()) >=
+          fTimestamp(filterStartDate) &&
         fTimestamp(new Date(invoice.createdAt).toLocaleDateString()) <= fTimestamp(filterEndDate)
     );
   }

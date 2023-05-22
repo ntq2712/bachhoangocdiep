@@ -93,14 +93,7 @@ export default function CategoryGroupEditForm({ isEdit, currentProduct, handleCl
         <Card sx={{ p: 3 }}>
           <Stack spacing={3}>
             <RHFTextField name="Name" label="Tên nhóm danh mục" />
-
-            <Stack spacing={1}>
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Mô tả
-              </Typography>
-
-              <RHFEditor simple name="Description" />
-            </Stack>
+            <RHFTextField name="Description" label="Mô tả" />
           </Stack>
         </Card>
         <LoadingButton

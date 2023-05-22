@@ -67,11 +67,12 @@ export default function EcommerceProductDetailsPage() {
 
   const dispatch = useDispatch();
 
-  const { product, isLoading, checkout, reviews } = useSelector((state) => state.product);
+  const { product, isLoading, checkout, reviews, reviewState } = useSelector((state) => state.product);
 
   const [currentTab, setCurrentTab] = useState('description');
-
+ 
   useEffect(() => {
+ 
     if (name) {
       dispatch(getProduct(name as string));
     }
@@ -106,7 +107,7 @@ export default function EcommerceProductDetailsPage() {
     {
       value: 'reviews',
       label: 'Reviews',
-      component: product ? <ProductDetailsReview reviews={reviews} /> : null,
+      component: product ? <ProductDetailsReview reviewsdata={reviewState} /> : null,
     },
   ];
 

@@ -52,12 +52,14 @@ export default function InvoiceAnalytic({ title, total, icon, color, percent, pr
       </Stack>
 
       <Stack spacing={0.5} sx={{ ml: 2 }}>
-        <Typography variant="h6">{title}</Typography>
+        <Typography noWrap variant="h6">
+          {title}
+        </Typography>
 
         <Typography variant="subtitle2">
-          {fShortenNumber(total)}{' '}
+          {total ? fShortenNumber(total) : 0}{' '}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-          Đơn hàng
+            Đơn hàng
           </Box>
         </Typography>
 

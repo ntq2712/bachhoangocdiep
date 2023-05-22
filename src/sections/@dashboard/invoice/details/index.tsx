@@ -12,18 +12,26 @@ import {
   TableCell,
   Typography,
   TableContainer,
+  MenuItem,
+  Select,
 } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 import { fCurrency } from '../../../../utils/formatNumber';
 // _mock_
-import { IInvoice } from '../../../../@types/invoice';
+import { IInvoice, IInvoiceDetaill } from '../../../../@types/invoice';
 // components
 import Label from '../../../../components/label';
 import Image from '../../../../components/image';
 import Scrollbar from '../../../../components/scrollbar';
 //
 import InvoiceToolbar from './InvoiceToolbar';
+import { useState } from 'react';
+import { RHFSelect } from 'src/components/hook-form';
+import { updateStatus } from 'src/api/ortherEcom';
+import { useRouter } from 'next/router';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -37,28 +45,60 @@ const StyledRowResult = styled(TableRow)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type Props = {
-  invoice?: IInvoice;
+  invoice: IInvoiceDetaill;
 };
 
+const STATUS_OPTIONS = ['Đang chờ duyệt', 'Duyệt', 'Đang giao hàng', 'Hoàn thành', 'Hủy'];
+
 export default function InvoiceDetails({ invoice }: Props) {
+  const { order, carts } = invoice;
+  const {
+    push,
+    query: { id },
+  } = useRouter();
+  const [edit, setEdit] = useState<boolean>(false);
+  const handleEdit = () => {
+    setEdit(!edit);
+  };
+  const { enqueueSnackbar } = useSnackbar();
   if (!invoice) {
     return null;
   }
 
-  const {
-    PaidType,
-    ReceiverPhoneNumber,
-    createdAt,
-    Status,
-    ReceiverName,
-    TotalAmount,
-    DeliveryDate,
-    SubAmount,
-  } = invoice;
+  const numberStatus = (value: string) => {
+    switch (value) {
+      case 'Đang chờ duyệt':
+        return 1;
+      case 'Duyệt':
+        return 2;
+      case 'Đang giao hàng':
+        return 3;
+      case 'Hoàn thành':
+        return 4;
+      case 'Hủy':
+        return 5;
+      default:
+        return 1;
+    }
+  };
 
+  const handleChange = (value: string) => {
+    const data = {
+      statuscode: numberStatus(value),
+    };
+    updateStatus(id, data).then((res) => {
+      if (res.data.success) {
+        enqueueSnackbar(res.data.message);
+        push(PATH_DASHBOARD.invoice.list);
+      } else {
+       
+        setEdit(false);
+      }
+    });
+  };
   return (
     <>
-      <InvoiceToolbar invoice={invoice} />
+      <InvoiceToolbar invoice={invoice} edit={edit} handleEdit={handleEdit} />
 
       <Card sx={{ pt: 5, px: 5 }}>
         <Grid container>
@@ -67,22 +107,41 @@ export default function InvoiceDetails({ invoice }: Props) {
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Box sx={{ textAlign: { sm: 'right' } }}>
-              <Label
-                variant="soft"
-                color={
-                  (status === 'paid' && 'success') ||
-                  (status === 'unpaid' && 'warning') ||
-                  (status === 'overdue' && 'error') ||
-                  'default'
-                }
-                sx={{ textTransform: 'uppercase', mb: 1 }}
-              >
-                {status}
-              </Label>
+            {edit ? (
+              <Box sx={{ textAlign: { sm: 'right' } }}>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={order?.Status}
+                  label="Trạng thái"
+                  onChange={(e) => {
+                    handleChange(e.target.value);
+                  }}
+                >
+                  {STATUS_OPTIONS.map((e: any) => {
+                    return <MenuItem value={e}>{e}</MenuItem>;
+                  })}
+                </Select>
+              </Box>
+            ) : (
+              <Box sx={{ textAlign: { sm: 'right' } }}>
+                <Label
+                  variant="soft"
+                  color={
+                    (order?.Status === 'Hoàn thành' && 'success') ||
+                    (order?.Status === 'Đang chờ duyệt' && 'warning') ||
+                    (order?.Status === 'Đã duyệt' && 'info') ||
+                    (order?.Status === 'Hủy' && 'error') ||
+                    'default'
+                  }
+                  sx={{ textTransform: 'uppercase', mb: 1 }}
+                >
+                  {order?.Status}
+                </Label>
 
-              <Typography variant="h6">{`INV-${invoice?.ReceiverPhoneNumber}`}</Typography>
-            </Box>
+                <Typography variant="h6">{order.InvoiceNumber}</Typography>
+              </Box>
+            )}
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -90,11 +149,11 @@ export default function InvoiceDetails({ invoice }: Props) {
               Invoice from
             </Typography>
 
-            <Typography variant="body2">{invoice?.ReceiverName}</Typography>
+            <Typography variant="body2">Bách hóa Ngọc Diệp</Typography>
 
-            <Typography variant="body2">{invoice?.FullAddress}</Typography>
+            <Typography variant="body2">30/04 phường 5, Thị xã Cai Lậy, tỉnh Tiền Giang</Typography>
 
-            <Typography variant="body2">Phone: {invoice?.ReceiverPhoneNumber}</Typography>
+            <Typography variant="body2">Số điện thoại: 0397516328</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -102,27 +161,29 @@ export default function InvoiceDetails({ invoice }: Props) {
               Invoice to
             </Typography>
 
-            <Typography variant="body2">{invoice?.ReceiverName}</Typography>
+            <Typography variant="body2">{order?.ReceiverName}</Typography>
 
-            <Typography variant="body2">{invoice?.FullAddress}</Typography>
+            <Typography variant="body2">{order?.FullAddress}</Typography>
 
-            <Typography variant="body2">Phone: {invoice?.ReceiverPhoneNumber}</Typography>
+            <Typography variant="body2">Số điện thoại: {order?.ReceiverPhoneNumber}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              date create
+              Ngày đặt hàng
             </Typography>
 
-            <Typography variant="body2">{fDate(invoice?.createdAt)}</Typography>
+            <Typography variant="body2">{fDate(order?.createdAt)}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Due date
+              Ngày hoàn thành
             </Typography>
 
-            <Typography variant="body2">{invoice?.DeliveryDate ? invoice?.DeliveryDate  : 'Chưa hoàn thành'}</Typography>
+            <Typography variant="body2">
+              {order?.DeliveryDate ? order?.DeliveryDate : 'Chưa hoàn thành'}
+            </Typography>
           </Grid>
         </Grid>
 
@@ -138,18 +199,18 @@ export default function InvoiceDetails({ invoice }: Props) {
                 <TableRow>
                   <TableCell width={40}>#</TableCell>
 
-                  <TableCell align="left">Description</TableCell>
+                  <TableCell align="left">Tên sản phẩm</TableCell>
 
-                  <TableCell align="left">Qty</TableCell>
+                  <TableCell align="center">Số lượng</TableCell>
 
-                  <TableCell align="right">Unit price</TableCell>
+                  <TableCell align="right">Đơn giá</TableCell>
 
-                  <TableCell align="right">Total</TableCell>
+                  <TableCell align="right">Tổng tiền</TableCell>
                 </TableRow>
               </TableHead>
 
-              {/* <TableBody>
-                {items.map((row, index) => (
+              <TableBody>
+                {carts?.map((row: any, index: number) => (
                   <TableRow
                     key={index}
                     sx={{
@@ -160,19 +221,22 @@ export default function InvoiceDetails({ invoice }: Props) {
 
                     <TableCell align="left">
                       <Box sx={{ maxWidth: 560 }}>
-                        <Typography variant="subtitle2">{row.title}</Typography>
-
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                          {row.description}
-                        </Typography>
+                        <Image
+                          disabledEffect
+                          visibleByDefault
+                          alt={row.ProductName}
+                          src={row.ProductImageURL}
+                          sx={{ borderRadius: 1.5, width: 48, height: 48 }}
+                        />
+                        <Typography variant="subtitle2">{row.ProductName}</Typography>
                       </Box>
                     </TableCell>
 
-                    <TableCell align="left">{row.quantity}</TableCell>
+                    <TableCell align="center">{row.BuyingQuantity}</TableCell>
 
-                    <TableCell align="right">{fCurrency(row.price)}</TableCell>
+                    <TableCell align="right">{fCurrency(row.ProductPrice)}</TableCell>
 
-                    <TableCell align="right">{fCurrency(row.price * row.quantity)}</TableCell>
+                    <TableCell align="right">{fCurrency(row.Amount)}</TableCell>
                   </TableRow>
                 ))}
 
@@ -181,40 +245,12 @@ export default function InvoiceDetails({ invoice }: Props) {
 
                   <TableCell align="right" sx={{ typography: 'body1' }}>
                     <Box sx={{ mt: 2 }} />
-                    Subtotal
+                    Phương thức thanh toán
                   </TableCell>
 
                   <TableCell align="right" width={120} sx={{ typography: 'body1' }}>
                     <Box sx={{ mt: 2 }} />
-                    {fCurrency(subTotalPrice)}
-                  </TableCell>
-                </StyledRowResult>
-
-                <StyledRowResult>
-                  <TableCell colSpan={3} />
-
-                  <TableCell align="right" sx={{ typography: 'body1' }}>
-                    Discount
-                  </TableCell>
-
-                  <TableCell
-                    align="right"
-                    width={120}
-                    sx={{ color: 'error.main', typography: 'body1' }}
-                  >
-                    {discount && fCurrency(-discount)}
-                  </TableCell>
-                </StyledRowResult>
-
-                <StyledRowResult>
-                  <TableCell colSpan={3} />
-
-                  <TableCell align="right" sx={{ typography: 'body1' }}>
-                    Taxes
-                  </TableCell>
-
-                  <TableCell align="right" width={120} sx={{ typography: 'body1' }}>
-                    {taxes && fCurrency(taxes)}
+                    {order.PaidType == 'transfer' ? 'Chuyển khoản' : 'Tiền mặt'}
                   </TableCell>
                 </StyledRowResult>
 
@@ -222,14 +258,14 @@ export default function InvoiceDetails({ invoice }: Props) {
                   <TableCell colSpan={3} />
 
                   <TableCell align="right" sx={{ typography: 'h6' }}>
-                    Total
+                    Thành tiền
                   </TableCell>
 
                   <TableCell align="right" width={140} sx={{ typography: 'h6' }}>
-                    {fCurrency(totalPrice)}
+                    {fCurrency(order.SubAmount)}
                   </TableCell>
                 </StyledRowResult>
-              </TableBody> */}
+              </TableBody>
             </Table>
           </Scrollbar>
         </TableContainer>
@@ -238,17 +274,17 @@ export default function InvoiceDetails({ invoice }: Props) {
 
         <Grid container>
           <Grid item xs={12} md={9} sx={{ py: 3 }}>
-            <Typography variant="subtitle2">NOTES</Typography>
+            <Typography variant="subtitle2">CHÚ Ý</Typography>
 
             <Typography variant="body2">
-              We appreciate your business. Should you need us to add VAT or extra notes let us know!
+              Chúng tôi luôn sẳn sàn phục vụ quý khách, mọi thắc mắt hảy gửi về họp thư hổ trợ !
             </Typography>
           </Grid>
 
           <Grid item xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
-            <Typography variant="subtitle2">Have a Question?</Typography>
+            <Typography variant="subtitle2">Hổ trợ</Typography>
 
-            <Typography variant="body2">support@minimals.cc</Typography>
+            <Typography variant="body2">trongqui2712@gmail.com</Typography>
           </Grid>
         </Grid>
       </Card>

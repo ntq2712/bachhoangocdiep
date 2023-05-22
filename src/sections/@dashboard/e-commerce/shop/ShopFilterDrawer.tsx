@@ -108,8 +108,6 @@ export default function ShopFilterDrawer({
     })
   }, []);
 
-  const applyFilter = useCallback(() => {}, []);
-
   const marksLabel = [...Array(21)].map((_, index) => {
     const value = index * 50;
 
@@ -208,8 +206,8 @@ export default function ShopFilterDrawer({
               </Stack>
 
               <RHFSlider
-                name="priceRange"
-                step={50}
+                name="pricerange"
+                step={5}
                 min={0}
                 max={1000}
                 marks={marksLabel}
@@ -301,22 +299,22 @@ function InputRange({ type }: InputRangeProps) {
     const max = value[1];
 
     if (min < 0) {
-      setValue('priceRange', [0, max]);
+      setValue('pricerange', [0, max]);
     }
-    if (min > 200) {
-      setValue('priceRange', [200, max]);
+    if (min > 1000) {
+      setValue('pricerange', [1000, max]);
     }
     if (max < 0) {
-      setValue('priceRange', [min, 0]);
+      setValue('pricerange', [min, 0]);
     }
-    if (max > 200) {
-      setValue('priceRange', [min, 200]);
+    if (max > 1000) {
+      setValue('pricerange', [min, 1000]);
     }
   };
 
   return (
     <Controller
-      name="priceRange"
+      name="pricerange"
       control={control}
       render={({ field }) => {
         const isMin = type === 'min';
@@ -351,9 +349,9 @@ function InputRange({ type }: InputRangeProps) {
               }
               onBlur={() => handleBlurInputRange(field.value)}
               inputProps={{
-                step: 50,
+                step: 5,
                 min: 0,
-                max: 800,
+                max: 1000,
                 type: 'number',
                 'aria-labelledby': 'input-slider',
               }}

@@ -48,6 +48,7 @@ import { ProductTableRow, ProductTableToolbar } from '../../../sections/@dashboa
 import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
 import CategoryGroupEditForm from 'src/sections/@dashboard/e-commerce/CategoryGroupEditForm';
 import { Box } from '@mui/system';
+import { deleteCategoryGroup } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -115,6 +116,8 @@ export default function EcommerceCGListPage() {
   const dispatch = useDispatch();
 
   const [tableData, setTableData] = useState<ICategoyGroup[]>([]);
+
+  const [curenData, setCurenData] = useState<ICategoyGroup>();
 
   const [filterName, setFilterName] = useState<string>('');
 
@@ -184,10 +187,20 @@ export default function EcommerceCGListPage() {
   };
 
   const handleDeleteRow = (id: string) => {
-    const deleteRow = tableData.filter((row) => row.Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-
+    deleteCategoryGroup(id).then((res) => {
+      setSelected([]);
+      setIsLoading(true);
+      getCategoryGroup()
+        .then((res) => {
+          if (res?.data?.success == true) {
+            setTableData(res?.data?.CategoryGroups?.Data);
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
+          }
+        })
+        .catch(() => setIsLoading(false));
+    });
     if (page > 0) {
       if (dataInPage.length < 2) {
         setPage(page - 1);
@@ -196,9 +209,20 @@ export default function EcommerceCGListPage() {
   };
 
   const handleDeleteRows = (selectedRows: string[]) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.Id));
+    selectedRows.map((e: any) => {
+      deleteCategoryGroup(e).then((res) => {});
+    });
+    getCategoryGroup()
+      .then((res) => {
+        if (res?.data?.success == true) {
+          setTableData(res?.data?.CategoryGroups?.Data);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      })
+      .catch(() => setIsLoading(false));
     setSelected([]);
-    setTableData(deleteRows);
 
     if (page > 0) {
       if (selectedRows.length === dataInPage.length) {
@@ -212,13 +236,11 @@ export default function EcommerceCGListPage() {
     }
   };
 
-  const handleEditRow = (id: string) => {
-    push(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (row:any) => {
+
   };
 
-  const handleViewRow = (id: string) => {
-    push(PATH_DASHBOARD.eCommerce.view(paramCase(id)));
-  };
+  const handleViewRow = (id: string) => {};
 
   const handleResetFilter = () => {
     setFilterName('');
@@ -236,8 +258,8 @@ export default function EcommerceCGListPage() {
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <Box sx={{ ...style }}>
-          <CategoryGroupEditForm handleClose={handleClose}/>
+        <Box sx={{ ...style, borderRadius: 5 }}>
+          <CategoryGroupEditForm handleClose={handleClose} />
         </Box>
       </Modal>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -319,8 +341,8 @@ export default function EcommerceCGListPage() {
                           selected={selected.includes(row.Id)}
                           onSelectRow={() => onSelectRow(row.Id)}
                           onDeleteRow={() => handleDeleteRow(row.Id)}
-                          onEditRow={() => handleEditRow(row.Name)}
-                          onViewRow={() => handleViewRow(row.Name)}
+                          onEditRow={() => handleEditRow(row)}
+                          onViewRow={() => handleViewRow(row.Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

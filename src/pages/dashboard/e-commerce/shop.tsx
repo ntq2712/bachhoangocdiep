@@ -1,35 +1,31 @@
-import { useState, useEffect } from 'react';
-import orderBy from 'lodash/orderBy';
+import { useEffect, useState } from 'react';
 // form
 import { useForm } from 'react-hook-form';
 // next
 import Head from 'next/head';
 // @mui
-import { Container, Typography, Stack } from '@mui/material';
+import { Container, Pagination, Stack, Typography } from '@mui/material';
 // redux
+import { getCarts, sortProductsByFilter } from '../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getCarts, getProducts, sortProductsByFilter } from '../../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
-import { IProduct, IProductFilter } from '../../../@types/product';
+import { IProductFilter } from '../../../@types/product';
 // layouts
-import DashboardLayout from '../../../layouts/dashboard';
 // components
 import FormProvider from '../../../components/hook-form';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import {
-  ShopTagFiltered,
-  ShopProductSort,
-  ShopProductList,
-  ShopFilterDrawer,
-  ShopProductSearch,
-} from '../../../sections/@dashboard/e-commerce/shop';
-import CartWidget from '../../../sections/@dashboard/e-commerce/CartWidget';
-import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
 import { useAuthContext } from 'src/auth/useAuthContext';
+import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
+import CartWidget from '../../../sections/@dashboard/e-commerce/CartWidget';
+import {
+  ShopFilterDrawer,
+  ShopProductList,
+  ShopProductSearch,
+  ShopProductSort,
+  ShopTagFiltered,
+} from '../../../sections/@dashboard/e-commerce/shop';
 
 // ----------------------------------------------------------------------
 
@@ -42,24 +38,19 @@ EcommerceShopPage.getLayout = (page: React.ReactElement) => (
 export default function EcommerceShopPage() {
   const { themeStretch } = useSettingsContext();
   const { isAuthenticated, isInitialized } = useAuthContext();
+
   const dispatch = useDispatch();
 
-  const { products, checkout, filter } = useSelector((state) => state.product);
+  const { products, checkout, CurrentPage, TotalPages } = useSelector((state) => state.product);
 
-  const [openFilter, setOpenFilter] = useState(false);
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
 
   const defaultValues = {
-    // gender: [],
-    // category: 'All',
-    // colors: [],
-    priceRange: [0, 200],
-    // rating: '',
-    // sortBy: 'featured',
-    brand: 'All',
+    pricerange: [0, 1000],
+    brand: '',
     categorys: [],
     categorygroup: [],
-    // priceMin: 0,
-    // priceMax: 800,
     rate: undefined,
     sortBy: '',
   };
@@ -79,21 +70,39 @@ export default function EcommerceShopPage() {
       !dirtyFields.categorys &&
       !dirtyFields.rate &&
       !dirtyFields.brand &&
-      !dirtyFields.priceRange &&
-      !dirtyFields.priceMax) ||
+      !dirtyFields.pricerange) ||
     false;
 
-  const values = watch();
-
-  // const dataFiltered = applyFilter(products, values);
+  const pricerangechange = watch('pricerange');
+  const brandchange = watch('brand');
+  const categoryschange = watch('categorys');
+  const categorygroupchange = watch('categorygroup');
+  const ratechange = watch('rate');
+  const sortBychange = watch('sortBy');
 
   useEffect(() => {
-    //dispatch(getProducts());
-    dispatch(sortProductsByFilter(filter));
+    const f: any = {
+      brand: brandchange,
+      categorygroup: categorygroupchange,
+      category: categoryschange,
+      pricerange: pricerangechange,
+      rate: ratechange,
+      sortBy: sortBychange,
+      page: 1,
+    };
+    dispatch(sortProductsByFilter(f));
     if (isAuthenticated) {
       dispatch(getCarts());
     }
-  }, [dispatch]);
+  }, [
+    dispatch,
+    brandchange,
+    categorygroupchange,
+    categoryschange,
+    pricerangechange,
+    ratechange,
+    sortBychange,
+  ]);
 
   const handleResetFilter = () => {
     reset();
@@ -110,22 +119,11 @@ export default function EcommerceShopPage() {
   return (
     <>
       <Head>
-        <title> Ecommerce: Shop | Minimal UI</title>
+        <title> Ecommerce: Cửa hàng | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <FormProvider methods={methods}>
         <Container maxWidth={themeStretch ? false : 'lg'}>
-          {/* <CustomBreadcrumbs
-            heading="Shop"
-              { name: 'Dashboard', href: PATH_DASHBOARD.root },
-              {
-                name: 'E-Commerce',
-                href: PATH_DASHBOARD.eCommerce.root,
-              },
-              { name: 'Shop' },
-            ]}
-          /> */}
-
           <Stack
             spacing={2}
             direction={{ xs: 'column', sm: 'row' }}
@@ -162,68 +160,41 @@ export default function EcommerceShopPage() {
           </Stack>
 
           <ShopProductList products={products} loading={!products.length && isDefault} />
-
+          {TotalPages > 1 && (
+            <Stack
+              alignItems={{
+                xs: 'center',
+                md: 'flex-end',
+              }}
+              sx={{
+                my: 5,
+                mr: { md: 5 },
+              }}
+            >
+              <Pagination
+                sx={{ mt: 5 }}
+                count={TotalPages}
+                variant="outlined"
+                shape="rounded"
+                onChange={(e, page: number) => {
+                  const f: any = {
+                    brand: brandchange,
+                    categorygroup: categorygroupchange,
+                    category: categoryschange,
+                    pricerange: pricerangechange,
+                    rate: ratechange,
+                    sortBy: sortBychange,
+                    page: page,
+                  };
+                  dispatch(sortProductsByFilter(f));
+                  setPage(page);
+                }}
+              />
+            </Stack>
+          )}
           <CartWidget totalItems={checkout.TotalQuantity} />
         </Container>
       </FormProvider>
     </>
   );
 }
-
-// ----------------------------------------------------------------------
-
-// function applyFilter(products: IProduct[], filters: any) {
-//   // const { category, priceRange, rating, sortBy } = filters;
-
-//   // const min = priceRange[0];
-
-//   // const max = priceRange[1];
-
-//   // // SORT BY
-//   // if (sortBy === 'featured') {
-//   //   products = orderBy(products, ['sold'], ['desc']);
-//   // }
-
-//   // if (sortBy === 'newest') {
-//   //   products = orderBy(products, ['createdAt'], ['desc']);
-//   // }
-
-//   // if (sortBy === 'priceDesc') {
-//   //   products = orderBy(products, ['price'], ['desc']);
-//   // }
-
-//   // if (sortBy === 'priceAsc') {
-//   //   products = orderBy(products, ['price'], ['asc']);
-//   // }
-
-//   // // FILTER PRODUCTS
-//   // // if (gender.length) {
-//   // //   products = products.filter((product) => gender.includes(product.gender));
-//   // // }
-
-//   // // if (category !== 'All') {
-//   // //   products = products.filter((product) => product.category === category);
-//   // // }
-
-//   // // if (colors.length) {
-//   // //   products = products.filter((product) => product.colors.some((color) => colors.includes(color)));
-//   // // }
-
-//   // // if (min !== 0 || max !== 200) {
-//   // //   products = products.filter((product) => product.price >= min && product.price <= max);
-//   // // }
-
-//   // if (rating) {
-//   //   products = products.filter((product) => {
-//   //     const convertRating = (value: string) => {
-//   //       if (value === 'up4Star') return 4;
-//   //       if (value === 'up3Star') return 3;
-//   //       if (value === 'up2Star') return 2;
-//   //       return 1;
-//   //     };
-//   //     return product.Price > convertRating(rating);
-//   //   });
-//   // }
-
-//   return products;
-// }

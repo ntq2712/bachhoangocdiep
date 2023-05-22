@@ -19,7 +19,7 @@ import navConfig from './nav/config-navigation';
 import NavDesktop from './nav/desktop';
 import NavMobile from './nav/mobile';
 import Iconify from 'src/components/iconify/Iconify';
-import { getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
+import { getBranByCategory, getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
 import { NavItemProps } from './nav/types';
 import { ShopProductSearch } from 'src/sections/@dashboard/e-commerce/shop';
 import NextLink from 'next/link';
@@ -34,39 +34,69 @@ export default function Header() {
 
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
 
+  const navBrands = (id: string): [] => {
+    const team: any = [];
+    getBranByCategory(id).then((resb) => {
+      if (resb.data.success == true) {
+        if (resb?.data?.brands?.length < 1) {
+          return team;
+        } else {
+          resb.data.brands.map((k: any) => {
+            team.push({
+              id: k.Id,
+              title: k.Name,
+              icon: <Iconify icon="eva:home-fill" />,
+              path: PATH_DASHBOARD.eCommerce.shop,
+            });
+          });
+        }
+      }
+    });
+    return team;
+  };
+
+  const navcategory = (id: string) => {
+    let tem: any = [];
+    getCategoryById(id).then((resp) => {
+      if (resp.data.success == true) {
+        if (resp?.data?.category?.length < 1) {
+          return;
+        } else {
+          resp.data.category.map((i: any) => {
+            const team: any = navBrands(i.Id);
+            tem.push({
+              subheader: i.Name,
+              items: team,
+            });
+          });
+         
+        }
+      }
+    });
+    return tem;
+  };
+
   useLayoutEffect(() => {
     const tam: any = [];
     getCategoryGroup().then((res) => {
       if (res.data.success == true) {
         res.data.CategoryGroups.Data.map((e: any) => {
-          const tem: any = [];
-          getCategoryById(e.Id).then((resp) => {
-            if (resp.data.success == true) {
-              resp.data.category.map((i: any) => {
-                tem.push({
-                  id: i.Id,
-                  title: i.Name,
-                  icon: <Iconify icon="eva:home-fill" />,
-                  path: PATH_DASHBOARD.eCommerce.shop,
-                });
-              });
-            }
-          });
-          tam.push({
-            id: e.Id,
-            title: e.Name,
-            icon: <Iconify icon="eva:home-fill" />,
-            path: PATH_DASHBOARD.eCommerce.shop,
-            children: [
-              {
-                subheader: 'Loại sản phẩm',
-                items: tem,
-              },
-            ],
-          });
+            tam.push({
+              id: e.Id,
+              title: e.Name,
+              icon: <Iconify icon="eva:home-fill" />,
+              path: PATH_DASHBOARD.eCommerce.shop,
+              children: navcategory(e.Id),
+            });
+        });
+        tam.push({
+          id: '',
+          title: 'Khác',
+          icon: <Iconify icon="eva:home-fill" />,
+          path: PATH_DASHBOARD.eCommerce.shop,
+          
         });
       }
-
       setDatenav(tam);
     });
   }, []);
@@ -112,7 +142,12 @@ export default function Header() {
             Đăng nhập
           </Button>
           <Link component={NextLink} href={PATH_DASHBOARD.eCommerce.checkout}>
-            <Iconify icon="eva:shopping-cart-fill" width={24} color={'#333'} sx={{ml: 5, mr: -10}}/>
+            <Iconify
+              icon="eva:shopping-cart-fill"
+              width={24}
+              color={'#333'}
+              sx={{ ml: 5, mr: -10 }}
+            />
           </Link>
           {!isDesktop && <NavMobile isOffset={isOffset} data={navConfig} />}
         </Container>

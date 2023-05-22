@@ -1,3 +1,4 @@
+import { Rating } from '@mui/material';
 import { phoneNumber } from './../_mock/assets/phoneNumber';
 import { Image } from '@react-pdf/renderer';
 import { IUserAccountGeneral } from './user';
@@ -75,17 +76,24 @@ export type IProduct = {
   Status: boolean;
   ImageURL?: string;
 };
+export type IProductOver = {
+  Data: IProduct;
+  Pagination: IPagination;
+};
+export type IPagination = {
+  TotalCount: number;
+  TotalPages: number;
+  CurrentPage: number;
+  Limit: number;
+};
 
 export type IProductFilter = {
   brand: string;
   categorys: string[];
   categorygroup: string[];
-  //colors: string[];
-  priceMin: number;
-  priceMax: number;
   rate?: number;
   sortBy: string;
-  priceRange: number[];
+  pricerange: number[];
 };
 
 // ----------------------------------------------------------------------
@@ -200,4 +208,16 @@ export type IReview = {
   deletedAt?: string;
   Account: IUserAccountGeneral;
   Product: IProduct;
+  IsPurchased: boolean;
 };
+
+export type IRating = {
+  name: string;
+  reviewCount: number;
+};
+
+export type IReviewState = {
+  reviews: IReview[],
+  ratings: IRating[],
+  success: boolean
+}

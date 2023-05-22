@@ -73,7 +73,7 @@ export default function ShopProductSort() {
                 selected={option.value === field.value}
                 onClick={() => {
                   handleClosePopover();
-                  dispatch(sortProducts(option.value));
+                  // dispatch(sortProducts(option.value));
                   field.onChange(option.value);
                 }}
               >

@@ -1,19 +1,12 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
-import axios from '../../utils/axios';
 import {
-  IProductState,
-  ICheckoutCartItem,
+  IDataAddCart,
   IProduct,
   IProductCheckoutState,
-  IInitStateProduct,
-  IDataAddCart,
+  IProductOver
 } from '../../@types/product';
-import { addToCard } from 'src/api/ortherEcom';
-import { string } from 'yup';
+import axios from '../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -21,20 +14,11 @@ const initialState: any = {
   isLoading: false,
   error: null,
   products: [],
+  TotalPages: 1,
+  CurrentPage: 1,
   product: null,
   reviews: [],
-  filter: {
-    brand: null, //filter[Brand][eq]=abc123&filter[Brand][eq]=bcd456
-    categorygroup: [],
-    category: [],
-    priceMin: null, //filter[Price][gte]=5&filter[Price][lte]=6
-    priceMax: null, //filter[Price][gte]=5&filter[Price][lte]=6
-    rate: null, //filter[Rate][eq]=5
-    sortBy: null,
-  },
-
-  //filter[Brand][eq]=${abc123}&filter[Brand][eq]=${bcd456&}filter[Price][gte]=${5}&filter[Price][lte]=${6}&filter[Price][gte]=${5}&filter[Price][lte]=${6}&filter[Rate][eq]=${5}
-
+  reviewState: null,
   checkout: {
     activeStep: 0, //0 1 2
     Data: [],
@@ -64,12 +48,16 @@ const slice = createSlice({
 
     // GET PRODUCTS
     getProductsSuccess(state, action) {
+      const DATA: IProductOver = action.payload;
       state.isLoading = false;
-      state.products = action.payload;
+      state.products = DATA.Data;
+      state.CurrentPage = DATA.Pagination.CurrentPage;
+      state.TotalPages = DATA.Pagination.TotalPages;
     },
     //GET REVIEWS
     getReviewSuccess(state, action) {
-      state.reviews = action.payload;
+      console.log('getReviewSuccess:',action.payload)
+      state.reviewState = action.payload;
     },
 
     // GET PRODUCT
@@ -197,7 +185,7 @@ const slice = createSlice({
 
     applyShipping(state, action) {
       const shipping = action.payload;
-      state.checkout.shipping =  shipping;
+      state.checkout.shipping = shipping;
       state.checkout.TotalQuantity = state.checkout.TotalQuantity + shipping;
       // state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
@@ -232,7 +220,7 @@ export function getProducts() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/v1/products');
-      dispatch(slice.actions.getProductsSuccess(response.data.Products.Data));
+      dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -247,7 +235,7 @@ export function sortProducts(value: string) {
       const response = await axios.get('v1/products', {
         params: { sort: query[0], order: query[1] },
       }); //v1/products?sort=craete&order=desc
-      dispatch(slice.actions.getProductsSuccess(response.data.Products.Data));
+      dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -258,13 +246,14 @@ type filter = {
   brand?: string; //filter[Brand][eq]=abc123&filter[Brand][eq]=bcd456
   categorygroup?: string[];
   category?: string[];
-  priceMin?: number; //filter[Price][gte]=5&filter[Price][lte]=6
-  priceMax?: number; //filter[Price][gte]=5&filter[Price][lte]=6
+  pricerange: [number, number];
   rate?: number; //filter[Rate][eq]=5
   sortBy?: string;
+  page:number
 };
 
 export function sortProductsByFilter(value: filter) {
+
   const mapCategory = value.category?.map((a) => `filter[CategoryId][eq]=${a}`).join('&');
   const mapCategorygroup = value.categorygroup
     ?.map((a) => `filter[CategoryGroupId][eq]=${a}`)
@@ -276,19 +265,34 @@ export function sortProductsByFilter(value: filter) {
         `v1/products?${value.brand ? 'filter[BrandId][eq]=' + value.brand : ''}&${
           mapCategory ?? ''
         }&${mapCategorygroup ?? ''}&${
-          value.priceMin ? 'filter[Price][gte]=' + value.priceMin : ''
+          value.pricerange[0] != null ? 'filter[Price][gte]=' + value.pricerange[0] * 1000 : ''
+        }&${value.pricerange[1] ? 'filter[Price][lte]=' + value.pricerange[1] * 1000 : ''}&${
+          value.rate != undefined ? 'filter[Rate][gte]=' + value.rate : ''
         }&${
-          value.priceMax ? 'filter[Price][lte]=' + value.priceMax : ''
-        }&${
-          value.rate ? 'filter[Rate][eq]=' + value.rate : ''
-        }`
+          value.sortBy
+            ? 'sort=' + value.sortBy.split('&')[0] + '&order=' + value.sortBy.split('&')[1]
+            : ''
+        }&page=${value.page > 0 ? value.page : 1}&limit=1`
       ); //v1/products?sort=craete&order=desc
-      dispatch(slice.actions.getProductsSuccess(response.data.Products.Data));
+      dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
+
+export const getProductByBrandId = (id: string) => {
+  axios
+    .get(`v1/products?filter[BrandId][eq]=${id}`)
+    .then((res) => {
+      if (res?.data?.success == true) {
+        return res.data.Products.Data;
+      } else {
+        console.log(res?.data);
+      }
+    })
+    .catch((err) => console.log(err));
+};
 
 export function getCarts() {
   return async (dispatch: Dispatch) => {
@@ -333,7 +337,8 @@ export function getProduct(ProductId: string) {
       const response = await axios.get(`/v1/products/${ProductId}`);
       await dispatch(slice.actions.getProductSuccess(response.data.product));
       const responseReview = await axios.get(`/v1/reviews/product/${ProductId}`);
-      dispatch(slice.actions.getReviewSuccess(responseReview.data.review));
+      
+      dispatch(slice.actions.getReviewSuccess(responseReview.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -356,7 +361,7 @@ export function addProduct(data: Partial<IProduct>) {
   return axios.post('/v1/products', data);
 }
 
-export function updateProduct(data: Partial<IProduct>, id?:string) {
+export function updateProduct(data: Partial<IProduct>, id?: string) {
   // const body = {
   //   Brandid: data?.BrandId,
   //   CategoryId: data?.CategoryId,

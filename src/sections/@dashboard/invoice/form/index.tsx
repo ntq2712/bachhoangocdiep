@@ -11,7 +11,7 @@ import { Card, Stack } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // @types
-import { IInvoice, IInvoiceAddress } from '../../../../@types/invoice';
+import { IInvoice, IInvoiceAddress, IInvoiceDetaill } from '../../../../@types/invoice';
 // mock
 import { _invoiceAddressFrom } from '../../../../_mock/arrays';
 // components
@@ -34,7 +34,7 @@ interface FormValuesProps extends IFormValuesProps {
 
 type Props = {
   isEdit?: boolean;
-  currentInvoice?: FormValuesProps;
+  currentInvoice?: IInvoiceDetaill;
 };
 
 export default function InvoiceNewEditForm({ isEdit, currentInvoice }: Props) {
@@ -52,23 +52,23 @@ export default function InvoiceNewEditForm({ isEdit, currentInvoice }: Props) {
 
   const defaultValues = useMemo(
     () => ({
-      invoiceNumber: currentInvoice?.invoiceNumber || '17099',
-      createDate: currentInvoice?.createDate || new Date(),
-      dueDate: currentInvoice?.dueDate || null,
-      taxes: currentInvoice?.taxes || 0,
-      status: currentInvoice?.status || 'draft',
-      discount: currentInvoice?.discount || 0,
-      invoiceFrom: currentInvoice?.invoiceFrom || _invoiceAddressFrom[0],
-      invoiceTo: currentInvoice?.invoiceTo || null,
-      items: currentInvoice?.items || [
+      invoiceNumber: currentInvoice?.order.InvoiceNumber || '17099',
+      createDate: currentInvoice?.order.createdAt || new Date(),
+      dueDate: currentInvoice?.order.DeliveryDate || null,
+      taxes: currentInvoice?.order.VAT || 0,
+      status: currentInvoice?.order.Status || 'Hủy',
+      discount:   0,
+      invoiceFrom:  _invoiceAddressFrom[0],
+      invoiceTo:  null,
+      items: currentInvoice?.carts || [
         { title: '', description: '', service: '', quantity: 1, price: 0, total: 0 },
       ],
-      totalPrice: currentInvoice?.totalPrice || 0,
+      totalPrice: currentInvoice?.order.SubAmount || 0,
     }),
     [currentInvoice]
   );
 
-  const methods = useForm<FormValuesProps>({
+  const methods = useForm<any>({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });

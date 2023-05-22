@@ -14,6 +14,9 @@ import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 // sections
 import InvoiceNewEditForm from '../../../../sections/@dashboard/invoice/form';
+import { IInvoiceDetaill } from 'src/@types/invoice';
+import { useEffect, useState } from 'react';
+import { getOderById } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -28,8 +31,16 @@ export default function InvoiceEditPage() {
     query: { id },
   } = useRouter();
 
-  const currentInvoice = _invoices.find((invoice) => invoice.id === id);
+  // const currentInvoice = _invoices.find((invoice) => invoice.id === id);
+  const [currentInvoice, setCurrentInvoice] = useState<IInvoiceDetaill>()
 
+  useEffect(()=>{
+    getOderById(id).then((res)=>{
+      if(res?.data?.success == true){
+        setCurrentInvoice(res.data)
+      }
+    })
+  },[id])
   return (
     <>
       <Head>
@@ -48,11 +59,11 @@ export default function InvoiceEditPage() {
               name: 'Invoices',
               href: PATH_DASHBOARD.invoice.list,
             },
-            { name: `INV-${currentInvoice?.invoiceNumber}` },
+            { name: `INV-${currentInvoice?.order.InvoiceNumber}` },
           ]}
         />
 
-        <InvoiceNewEditForm isEdit currentInvoice={currentInvoice} />
+       <InvoiceNewEditForm isEdit currentInvoice={currentInvoice} />
       </Container>
     </>
   );

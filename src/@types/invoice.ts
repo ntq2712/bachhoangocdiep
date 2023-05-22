@@ -22,6 +22,7 @@ export type IInvoiceItem = {
 export type IInvoice = {
   Id: string;
   AccountId: string;
+  InvoiceNumber?:string;
   ShopBankNumber?: string;
   UserBankNumber?: string;
   ShopBankName?: string;
@@ -43,7 +44,12 @@ export type IInvoice = {
   updatedAt?: string;
   deletedAt?: string;
 };
-// export type IInvoice = {
+
+export type IInvoiceDetaill = {
+  order: IInvoice;
+  carts: any;
+}
+  // export type IInvoice = {
 //   id: string;
 //   sent: number;
 //   status: string;

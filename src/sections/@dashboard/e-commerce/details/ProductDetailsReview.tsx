@@ -1,33 +1,25 @@
-import { useCallback, useEffect, useState } from 'react';
 import sumBy from 'lodash/sumBy';
+import { useEffect, useState } from 'react';
 // @mui
-import { Divider, Typography, Rating, Button, LinearProgress, Stack, Box } from '@mui/material';
+import { Box, Button, Divider, LinearProgress, Rating, Stack, Typography } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // @types
-import { IProduct, IReview } from '../../../../@types/product';
+import { IRating, IReviewState } from '../../../../@types/product';
 // components
 import Iconify from '../../../../components/iconify';
 //
-import ProductDetailsReviewList from './ProductDetailsReviewList';
 import ProductDetailsReviewNewDialog from './ProductDetailsNewReviewForm';
-import { getReviwByProduct } from 'src/api/ortherEcom';
-import { useRouter } from 'next/router';
+import ProductDetailsReviewList from './ProductDetailsReviewList';
 
 // ----------------------------------------------------------------------
 
-type rating = {
-  name: string;
-  starCount: string | number;
-  reviewCount: string | number;
-};
-
 type Props = {
-  reviews: IReview[];
+  reviewsdata: IReviewState;
 };
 
-export default function ProductDetailsReview({ reviews }: Props) {
-  // const { totalRating, totalReview, ratings } = product;
+export default function ProductDetailsReview({ reviewsdata }: Props) {
+  const { reviews, ratings } = reviewsdata;
 
   const [openReview, setOpenReview] = useState(false);
 
@@ -41,50 +33,12 @@ export default function ProductDetailsReview({ reviews }: Props) {
 
   const calculate = (): number => {
     let totalRating: number = 0;
-    reviews?.map((e) => {
+    reviews?.map((e: any) => {
       totalRating = totalRating + Number(e.Rate);
     });
-    return Math.round((totalRating / reviews.length) * 10) / 10;
+    return Math.round((totalRating / reviews?.length) * 10) / 10;
   };
-  // const total = sumBy(ratings, (star) => star.starCount);
-  // const calculateRatings = useCallback(() => {
-  //   let onestart: rating = {
-  //     name: '0 Star',
-  //     starCount: 0,
-  //     reviewCount: 0,
-  //   };
-  //   let twostart: rating = {
-  //     name: '0 Star',
-  //     starCount: 0,
-  //     reviewCount: 0,
-  //   };
-  //   let threestart: rating = {
-  //     name: '0 Star',
-  //     starCount: 0,
-  //     reviewCount: 0,
-  //   };
-  //   let fourstart: rating = {
-  //     name: '0 Star',
-  //     starCount: 0,
-  //     reviewCount: 0,
-  //   };
-  //   let fivestart: rating = {
-  //     name: '0 Star',
-  //     starCount: 0,
-  //     reviewCount: 0,
-  //   };
-  //   reviews?.map((e) => {
-  //     switch (Math.round(Number(e.Rate))) {
-  //       case 1:
-  //         onestart.starCount = Number(onestart.starCount) + Number(e.Rate);
-  //         onestart.starCount = Number(onestart.starCount) + 1;
-  //       case 2:
-  //         twostart.starCount = Number(twostart.starCount) + Number(e.Rate);
-  //         twostart.starCount = Number(twostart.starCount) + 1;
-
-  //     }
-  //   });
-  // }, []);
+  const total = sumBy(ratings, (star) => star.reviewCount);
 
   return (
     <>
@@ -96,7 +50,7 @@ export default function ProductDetailsReview({ reviews }: Props) {
         }}
         sx={{
           paddingTop: 2,
-          paddingBottom: 2
+          paddingBottom: 2,
         }}
       >
         <Stack
@@ -109,16 +63,21 @@ export default function ProductDetailsReview({ reviews }: Props) {
           }}
         >
           <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-          Xếp hạng trung bình
+            Xếp hạng trung bình
           </Typography>
+          {Number.isNaN(calculate()) ? (
+            <Typography variant="h6">Chưa có đánh giá</Typography>
+          ) : (
+            <>
+              <Typography variant="h2">{calculate()}/5</Typography>
 
-          <Typography variant="h2">{calculate()}/5</Typography>
+              <Rating readOnly value={calculate()} precision={0.1} />
 
-          <Rating readOnly value={calculate()} precision={0.1} />
-
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            ({fShortenNumber(reviews.length)} đánh giá)
-          </Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                ({fShortenNumber(reviews?.length)} đánh giá)
+              </Typography>
+            </>
+          )}
         </Stack>
 
         <Stack
@@ -130,12 +89,12 @@ export default function ProductDetailsReview({ reviews }: Props) {
             borderRight: (theme) => ({ md: `dashed 1px ${theme.palette.divider}` }),
           }}
         >
-          {/* {ratings
+          {ratings
             .slice(0)
             .reverse()
             .map((rating) => (
               <ProgressItem key={rating.name} star={rating} total={total} />
-            ))} */}
+            ))}
         </Stack>
 
         <Stack
@@ -170,27 +129,23 @@ export default function ProductDetailsReview({ reviews }: Props) {
 // ----------------------------------------------------------------------
 
 type ProgressItemProps = {
-  star: {
-    name: string;
-    starCount: number;
-    reviewCount: number;
-  };
+  star: IRating;
   total: number;
 };
 
 function ProgressItem({ star, total }: ProgressItemProps) {
-  const { name, starCount, reviewCount } = star;
+  const { name, reviewCount } = star;
 
   return (
     <Stack direction="row" alignItems="center">
-      <Typography variant="subtitle2" sx={{ width: 42 }}>
+      <Typography variant="subtitle2" sx={{ width: 50 }}>
         {name}
       </Typography>
 
       <LinearProgress
         color="inherit"
         variant="determinate"
-        value={(starCount / total) * 100}
+        value={(reviewCount / total) * 100}
         sx={{
           mx: 2,
           flexGrow: 1,

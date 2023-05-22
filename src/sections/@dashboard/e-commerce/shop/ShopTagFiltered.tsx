@@ -27,9 +27,7 @@ export default function ShopTagFiltered({ isFiltered, onResetFilter }: Props) {
     brand: filterBrand,
     categorys: filterCategorys,
     categorygroup: filterCategoryGroup,
-    priceRange: filterPriceRange,
-    priceMin: filterPriceMin,
-    priceMax: filterPriceMax,
+    pricerange: filterPriceRange,
     rate: filterRating,
   } = values as IProductFilter;
 
@@ -132,7 +130,7 @@ export default function ShopTagFiltered({ isFiltered, onResetFilter }: Props) {
         <Panel label="Price:">
           <Chip
             size="small"
-            label={`${filterPriceMin} - ${filterPriceMax}`}
+            label={`${min} - ${max}`}
             onDelete={handleRemovePrice}
             sx={{ m: 0.5 }}
           />

@@ -6,15 +6,17 @@ export type NavItemProps = {
   title: string;
   path: string;
   icon?: React.ReactElement;
-  children?: {
-    subheader: string;
-    items: {
-      title: string;
-      path: string;
-    }[];
-  }[];
+  children?: Children[];
 };
 
+type Item = {
+  title: string;
+  path: string;
+};
+type Children = {
+  subheader: string;
+  items: Item[];
+};
 export interface NavItemDesktopProps extends ListItemButtonProps {
   item: NavItemProps;
   isOffset?: boolean;

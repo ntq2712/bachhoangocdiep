@@ -53,6 +53,9 @@ export function getBannerById(id: string) {
 export function getCategoryGroup() {
   return axios.get('v1/categoryGroups');
 }
+export function deleteCategoryGroup(id:string) {
+  return axios.delete(`v1/categoryGroups/${id}`);
+}
 
 export function newCategoryGroup(data: Partial<ICategoyGroup>) {
   const body = {
@@ -234,4 +237,7 @@ export function getOder() {
 }
 export function getOderById(id: any) {
   return axios.get(`v1/orders/${id}`)
+}
+export function updateStatus(id: any, data: any) {
+  return axios.patch(`v1/orders/${id}`, data)
 }

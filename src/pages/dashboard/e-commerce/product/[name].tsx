@@ -103,7 +103,6 @@ export default function EcommerceProductDetailsPage() {
       label: 'description',
       component: product ? <Markdown children={product?.Description} /> : null,
     },
-    //`Reviews (${product ? product.reviews.length : ''})`
     {
       value: 'reviews',
       label: 'Reviews',

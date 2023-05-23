@@ -272,7 +272,7 @@ export function sortProductsByFilter(value: filter) {
           value.sortBy
             ? 'sort=' + value.sortBy.split('&')[0] + '&order=' + value.sortBy.split('&')[1]
             : ''
-        }&page=${value.page > 0 ? value.page : 1}&limit=1`
+        }&page=${value.page > 0 ? value.page : 1}&limit=12`
       ); //v1/products?sort=craete&order=desc
       dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {

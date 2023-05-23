@@ -15,11 +15,11 @@ import ProductDetailsReviewList from './ProductDetailsReviewList';
 // ----------------------------------------------------------------------
 
 type Props = {
-  reviewsdata: IReviewState;
+  reviewsdata?: IReviewState;
 };
 
 export default function ProductDetailsReview({ reviewsdata }: Props) {
-  const { reviews, ratings } = reviewsdata;
+  // const { reviews, ratings } = reviewsdata;
 
   const [openReview, setOpenReview] = useState(false);
 
@@ -33,12 +33,13 @@ export default function ProductDetailsReview({ reviewsdata }: Props) {
 
   const calculate = (): number => {
     let totalRating: number = 0;
-    reviews?.map((e: any) => {
+    const countReviews = reviewsdata?.reviews ? reviewsdata?.reviews?.length : 0;
+    reviewsdata?.reviews?.map((e: any) => {
       totalRating = totalRating + Number(e.Rate);
     });
-    return Math.round((totalRating / reviews?.length) * 10) / 10;
+    return Math.round((totalRating / countReviews) * 10) / 10;
   };
-  const total = sumBy(ratings, (star) => star.reviewCount);
+  const total = sumBy(reviewsdata?.ratings, (star) => star.reviewCount);
 
   return (
     <>
@@ -74,7 +75,7 @@ export default function ProductDetailsReview({ reviewsdata }: Props) {
               <Rating readOnly value={calculate()} precision={0.1} />
 
               <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                ({fShortenNumber(reviews?.length)} đánh giá)
+                ({fShortenNumber(reviewsdata?.reviews ? reviewsdata?.reviews?.length : 0)} đánh giá)
               </Typography>
             </>
           )}
@@ -89,7 +90,7 @@ export default function ProductDetailsReview({ reviewsdata }: Props) {
             borderRight: (theme) => ({ md: `dashed 1px ${theme.palette.divider}` }),
           }}
         >
-          {ratings
+          {reviewsdata?.ratings
             .slice(0)
             .reverse()
             .map((rating) => (
@@ -118,8 +119,7 @@ export default function ProductDetailsReview({ reviewsdata }: Props) {
       </Box>
 
       <Divider />
-
-      <ProductDetailsReviewList reviews={reviews} />
+      {reviewsdata?.reviews && <ProductDetailsReviewList reviews={reviewsdata?.reviews} />}
 
       <ProductDetailsReviewNewDialog open={openReview} onClose={handleCloseReview} />
     </>

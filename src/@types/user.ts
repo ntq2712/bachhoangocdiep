@@ -1,4 +1,3 @@
-import { boolean } from './../_mock/assets/boolean';
 // ----------------------------------------------------------------------
 
 export type IUserSocialLink = {

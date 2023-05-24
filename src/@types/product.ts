@@ -1,6 +1,3 @@
-import { Rating } from '@mui/material';
-import { phoneNumber } from './../_mock/assets/phoneNumber';
-import { Image } from '@react-pdf/renderer';
 import { IUserAccountGeneral } from './user';
 // ----------------------------------------------------------------------
 

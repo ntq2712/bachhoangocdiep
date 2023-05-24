@@ -15,26 +15,29 @@ import Iconify from '../../components/iconify';
 
 const LINKS = [
   {
-    headline: 'Minimal',
+    headline: 'Bách hóa Ngọc Diệp',
     children: [
-      { name: 'About us', href: PATH_PAGE.about },
-      { name: 'Contact us', href: PATH_PAGE.contact },
-      { name: 'FAQs', href: PATH_PAGE.faqs },
+      { name: 'Về chúng tôi', href: PATH_PAGE.about },
+      { name: 'Liên hệ hợp tác', href: PATH_PAGE.contact },
+      { name: 'Hổ trợ & giải đáp', href: PATH_PAGE.faqs },
     ],
   },
   {
-    headline: 'Legal',
+    headline: 'Dịch vụ khách hàng',
     children: [
-      { name: 'Terms and Condition', href: '#' },
-      { name: 'Privacy Policy', href: '#' },
+      { name: 'Chính sách điều khoản', href: '#' },
+      { name: 'Chính sách thanh toán', href: '#' },
+      { name: 'Chính sách bảo hành', href: '#' },
+      { name: 'Chính sách đổi trả', href: '#' },
+      { name: 'Chính sách vận chuyển', href: '#' },
     ],
   },
   {
     headline: 'Liên hệ',
     children: [
-      { name: 'support@minimals.cc', href: '#' },
-      { name: 'Số điện thoại: 0397516328', href: '#' },
-      { name: 'Los Angeles, 359  Hidden Valley Road', href: '#' },
+      { name: 'Hotline', href: '#' },
+      { name: 'Email', href: '#' },
+      { name: 'Messenger', href: '#' },
     ],
   },
 ];
@@ -60,9 +63,11 @@ export default function Footer() {
         <Logo sx={{ mb: 1, mx: 'auto' }} />
 
         <Typography variant="caption" component="div">
-          © All rights reserved
-          <br /> made by &nbsp;
-          <Link href="https://minimals.cc/"> minimals.cc </Link>
+          ©Mọi thứ đều có
+          <br /> tại &nbsp;
+          <Link href="https://www.facebook.com/profile.php?id=100074081858455">
+            Bách hóa Ngọc Diệp
+          </Link>
         </Typography>
       </Container>
     </Box>
@@ -110,7 +115,7 @@ export default function Footer() {
             direction="row"
             sx={{
               mt: 5,
-            
+
               alignItems: 'center',
               alignContent: 'center',
             }}
@@ -123,7 +128,7 @@ export default function Footer() {
             direction="row"
             sx={{
               mt: 2,
-            
+
               alignItems: 'center',
               alignContent: 'center',
             }}
@@ -136,13 +141,15 @@ export default function Footer() {
             direction="row"
             sx={{
               mt: 2,
-            
+
               alignItems: 'center',
               alignContent: 'center',
             }}
           >
             <Typography variant="h6">Địa chỉ:</Typography>
-            <Typography variant="body2">đường 30/4, phường 5, thị xã Cai Lậy, tỉnh Tiền Giang</Typography>
+            <Typography variant="body2">
+              đường 30/4, phường 5, thị xã Cai Lậy, tỉnh Tiền Giang
+            </Typography>
           </Stack>
 
           <Stack
@@ -155,14 +162,14 @@ export default function Footer() {
             }}
           >
             {_socials.map((social) => (
-              <IconButton key={social.name} href={social.path}  target="_blank">
+              <IconButton key={social.name} href={social.path} target="_blank">
                 <Iconify icon={social.icon} />
               </IconButton>
             ))}
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={7} sx={{mr: 10}}>
           <Stack spacing={5} justifyContent="space-between" direction={{ xs: 'column', md: 'row' }}>
             {LINKS.map((list) => (
               <Stack
@@ -200,7 +207,7 @@ export default function Footer() {
           textAlign: { xs: 'center', md: 'left' },
         }}
       >
-        © 2021. All rights reserved
+        © 2023. Bách hóa Ngọc Diệp
       </Typography>
     </Box>
   );

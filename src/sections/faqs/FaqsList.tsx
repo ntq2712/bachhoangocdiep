@@ -8,6 +8,7 @@ import Iconify from '../../components/iconify';
 // ----------------------------------------------------------------------
 
 export default function FaqsList() {
+ 
   return (
     <div>
       {_faqs.map((accordion) => (

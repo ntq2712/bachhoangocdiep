@@ -17,7 +17,7 @@ export default function FaqsPage() {
   return (
     <>
       <Head>
-        <title> Faqs | Minimal UI</title>
+        <title> Hổ trợ & giải đáp | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <FaqsHero />
@@ -26,7 +26,7 @@ export default function FaqsPage() {
         <FaqsCategory />
 
         <Typography variant="h3" sx={{ mb: 5 }}>
-          Frequently asked questions
+          Các câu hỏi thường gặp
         </Typography>
 
         <Box

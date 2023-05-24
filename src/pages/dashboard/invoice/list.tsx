@@ -55,12 +55,9 @@ import { getOder } from 'src/api/ortherEcom';
 // ----------------------------------------------------------------------
 
 const SERVICE_OPTIONS = [
-  'all',
-  'full stack development',
-  'backend development',
-  'ui design',
-  'ui/ux design',
-  'front end development',
+  'All',
+  'Tiền mặt',
+  'Chuyển khoản'
 ];
 
 const TABLE_HEAD = [
@@ -113,7 +110,7 @@ export default function InvoiceListPage() {
 
   const [filterStatus, setFilterStatus] = useState('all');
 
-  const [filterService, setFilterService] = useState('all');
+  const [filterService, setFilterService] = useState('All');
 
   const [filterEndDate, setFilterEndDate] = useState<Date | null>(null);
 
@@ -136,7 +133,7 @@ export default function InvoiceListPage() {
   const isFiltered =
     filterStatus !== 'all' ||
     filterName !== '' ||
-    filterService !== 'all' ||
+    filterService !== 'All' ||
     (!!filterStartDate && !!filterEndDate);
 
   const isNotFound =
@@ -276,18 +273,18 @@ export default function InvoiceListPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Invoice List"
+          // heading="Invoice List"
           links={[
             {
-              name: 'Dashboard',
-              href: PATH_DASHBOARD.root,
+              name: 'Trang chủ',
+              href: '/',
             },
             {
-              name: 'Invoices',
+              name: 'Đơn hàng',
               href: PATH_DASHBOARD.invoice.root,
             },
             {
-              name: 'List',
+              name: 'Danh sách đơn hàng',
             },
           ]}
           // action={
@@ -509,7 +506,7 @@ export default function InvoiceListPage() {
         title="Delete"
         content={
           <>
-            Bạn có chắc chắn muốn xóa <strong> {selected.length} </strong> đơn hàng?
+            Bạn có chắc chắn muốn hủy <strong> {selected.length} </strong> đơn hàng?
           </>
         }
         action={
@@ -521,7 +518,7 @@ export default function InvoiceListPage() {
               handleCloseConfirm();
             }}
           >
-            Xóa
+            Hủy
           </Button>
         }
       />
@@ -561,7 +558,7 @@ function applyFilter({
   if (filterName) {
     inputData = inputData.filter(
       (invoice) =>
-        // invoice.invoiceNumber.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+        invoice.InvoiceNumber.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
         invoice.ReceiverName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
@@ -570,11 +567,10 @@ function applyFilter({
     inputData = inputData.filter((invoice) => invoice.Status === filterStatus);
   }
 
-  // if (filterService !== 'all') {
-  //   inputData = inputData.filter((invoice) =>
-  //     invoice.items.some((c) => c.service === filterService)
-  //   );
-  // }
+  if (filterService !== 'All') {
+    const ifFilter = filterService == 'Tiền mặt' ? 'cash' : 'transfer'
+    inputData = inputData.filter((invoice) => invoice.PaidType === ifFilter);
+  }
 
   if (filterStartDate && filterEndDate) {
     inputData = inputData.filter(

@@ -56,97 +56,45 @@ export default function InvoiceDetails({ invoice }: Props) {
     push,
     query: { id },
   } = useRouter();
-  const [edit, setEdit] = useState<boolean>(false);
-  const handleEdit = () => {
-    setEdit(!edit);
-  };
+
   const { enqueueSnackbar } = useSnackbar();
   if (!invoice) {
     return null;
   }
 
-  const numberStatus = (value: string) => {
-    switch (value) {
-      case 'Đang chờ duyệt':
-        return 1;
-      case 'Duyệt':
-        return 2;
-      case 'Đang giao hàng':
-        return 3;
-      case 'Hoàn thành':
-        return 4;
-      case 'Hủy':
-        return 5;
-      default:
-        return 1;
-    }
-  };
-
-  const handleChange = (value: string) => {
-    const data = {
-      statuscode: numberStatus(value),
-    };
-    updateStatus(id, data).then((res) => {
-      if (res.data.success) {
-        enqueueSnackbar(res.data.message);
-        push(PATH_DASHBOARD.invoice.list);
-      } else {
-       
-        setEdit(false);
-      }
-    });
-  };
   return (
     <>
-      <InvoiceToolbar invoice={invoice} edit={edit} handleEdit={handleEdit} />
+      <InvoiceToolbar invoice={invoice} />
 
       <Card sx={{ pt: 5, px: 5 }}>
         <Grid container>
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Image disabledEffect alt="logo" src="/logo/logo_full.svg" sx={{ maxWidth: 120 }} />
+            <Image disabledEffect alt="logo" src="/logo/Group_5.svg" sx={{ maxWidth: 120 }} />
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            {edit ? (
-              <Box sx={{ textAlign: { sm: 'right' } }}>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={order?.Status}
-                  label="Trạng thái"
-                  onChange={(e) => {
-                    handleChange(e.target.value);
-                  }}
-                >
-                  {STATUS_OPTIONS.map((e: any) => {
-                    return <MenuItem value={e}>{e}</MenuItem>;
-                  })}
-                </Select>
-              </Box>
-            ) : (
-              <Box sx={{ textAlign: { sm: 'right' } }}>
-                <Label
-                  variant="soft"
-                  color={
-                    (order?.Status === 'Hoàn thành' && 'success') ||
-                    (order?.Status === 'Đang chờ duyệt' && 'warning') ||
-                    (order?.Status === 'Đã duyệt' && 'info') ||
-                    (order?.Status === 'Hủy' && 'error') ||
-                    'default'
-                  }
-                  sx={{ textTransform: 'uppercase', mb: 1 }}
-                >
-                  {order?.Status}
-                </Label>
+            <Box sx={{ textAlign: { sm: 'right' } }}>
+              <Label
+                variant="soft"
+                color={
+                  (order?.Status === 'Hoàn thành' && 'success') ||
+                  (order?.Status === 'Đang chờ duyệt' && 'warning') ||
+                  (order?.Status === 'Đã duyệt' && 'info') ||
+                  (order?.Status === 'Hủy' && 'error') ||
+                  'default'
+                }
+                sx={{ textTransform: 'uppercase', mb: 1 }}
+              >
+                {order?.Status}
+              </Label>
 
-                <Typography variant="h6">{order.InvoiceNumber}</Typography>
-              </Box>
-            )}
+              <Typography variant="h6">{order.InvoiceNumber}</Typography>
+            </Box>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Invoice from
+                Từ
             </Typography>
 
             <Typography variant="body2">Bách hóa Ngọc Diệp</Typography>
@@ -158,7 +106,7 @@ export default function InvoiceDetails({ invoice }: Props) {
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Invoice to
+              đến
             </Typography>
 
             <Typography variant="body2">{order?.ReceiverName}</Typography>

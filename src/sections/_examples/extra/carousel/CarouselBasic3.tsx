@@ -5,16 +5,12 @@ import { Box } from '@mui/material';
 // components
 import Image from '../../../../components/image';
 import Carousel, { CarouselDots, CarouselArrows } from '../../../../components/carousel';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  data: {
-    id: string;
-    title: string;
-    image: string;
-    description: string;
-  }[];
+  data: ICarousels[]
 };
 
 export default function CarouselBasic3({ data }: Props) {
@@ -72,7 +68,7 @@ type CarouselItemProps = {
   image: string;
 };
 
-function CarouselItem({ item }: { item: CarouselItemProps }) {
+function CarouselItem({ item }: { item: ICarousels }) {
   const { image, title } = item;
 
   return <Image alt={title} src={image} ratio="1/1" />;

@@ -82,7 +82,7 @@ export default function ProductDetailsSummary({
 
   const onSubmit = async (data: IDataAddCart) => {
     try {
-      onAddCart(data)
+      onAddCart(data);
       onGotoStep(0);
       push(PATH_DASHBOARD.eCommerce.checkout);
     } catch (error) {
@@ -134,8 +134,7 @@ export default function ProductDetailsSummary({
             <Rating value={Number(Rate) > 1 ? Number(Rate) : 5} precision={0.1} readOnly />
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ({fShortenNumber(68)}
-              reviews)
+              (2 reviews)
             </Typography>
           </Stack>
 
@@ -148,12 +147,12 @@ export default function ProductDetailsSummary({
                 {fCurrency(priceSale)}
               </Box>
             )} */}
-            <Box
+            {/* <Box
               component="span"
               sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 0.5 }}
             >
               {fCurrency(Price + 10)}
-            </Box>
+            </Box> */}
             {fCurrency(Price)}
           </Typography>
         </Stack>

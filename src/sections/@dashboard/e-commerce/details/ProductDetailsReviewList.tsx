@@ -47,7 +47,7 @@ export default function ProductDetailsReviewList({ reviews }: Props) {
           mr: { md: 5 },
         }}
       >
-        <Pagination count={reviews?.length} />
+        {/* <Pagination count={reviews?.length} /> */}
       </Stack>
     </>
   );
@@ -67,6 +67,8 @@ function ReviewItem({ review }: ReviewItemProps) {
     Account,
     IsPurchased
   } = review;
+
+  console.log('review: ', review)
 
   const [isHelpful, setIsHelpful] = useState(false);
 

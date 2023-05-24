@@ -3,10 +3,28 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
-import { Box, Card, Container, Divider, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  Divider,
+  Grid,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import { alpha } from '@mui/material/styles';
 // redux
-import { addToCart, getCarts, getProduct, gotoStep } from '../../../../redux/slices/product';
+import {
+  addToCart,
+  getCarts,
+  getProduct,
+  getProductSame,
+  gotoStep,
+} from '../../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
@@ -27,8 +45,10 @@ import {
   ProductDetailsReview,
   ProductDetailsSummary,
 } from '../../../../sections/@dashboard/e-commerce/details';
-import { IDataAddCart } from 'src/@types/product';
+import { IDataAddCart, IProduct } from 'src/@types/product';
 import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
+import { CarouselCenterMode } from 'src/sections/_examples/extra/carousel';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
@@ -67,17 +87,20 @@ export default function EcommerceProductDetailsPage() {
 
   const dispatch = useDispatch();
 
-  const { product, isLoading, checkout, reviews, reviewState } = useSelector((state) => state.product);
+  const { product, isLoading, checkout, reviews, reviewState } = useSelector(
+    (state) => state.product
+  );
 
   const [currentTab, setCurrentTab] = useState('description');
- 
+
   useEffect(() => {
- 
     if (name) {
       dispatch(getProduct(name as string));
     }
   }, [dispatch, name]);
 
+  
+  
   const handleAddCart = (cart: IDataAddCart) => {
     addToCart(cart)
       .then((res) => {
@@ -118,9 +141,8 @@ export default function EcommerceProductDetailsPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          // heading="Thông tin sản phẩm"
           links={[
-            { name: 'Trang chủ', href: "/" },
+            { name: 'Trang chủ', href: '/' },
             {
               name: 'Cửa hàng',
               href: PATH_DASHBOARD.eCommerce.shop,

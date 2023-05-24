@@ -19,7 +19,7 @@ export default function ContactPage() {
   return (
     <>
       <Head>
-        <title> Contact us | Minimal UI</title>
+        <title> Liên hệ hợp tác | Bách hóa Ngọc diệp</title>
       </Head>
 
       <ContactHero />

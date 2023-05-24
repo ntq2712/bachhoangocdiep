@@ -58,6 +58,8 @@ export default function SettingsDrawer() {
     themeDirection !== defaultSettings.themeDirection ||
     themeColorPresets !== defaultSettings.themeColorPresets;
 
+  console.log('notDefault: ', notDefault, themeStretch);
+
   return (
     <>
       {!open && <ToggleButton open={open} notDefault={notDefault} onToggle={handleToggle} />}

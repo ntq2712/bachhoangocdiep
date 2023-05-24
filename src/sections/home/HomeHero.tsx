@@ -4,9 +4,24 @@ import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 // @mui
 import { styled, alpha, useTheme } from '@mui/material/styles';
-import { Button, Box, Link, Container, Typography, Stack, Grid, Rating } from '@mui/material';
+import {
+  Button,
+  Box,
+  Link,
+  Container,
+  Typography,
+  Stack,
+  Grid,
+  Rating,
+  IconButton,
+} from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_FIGMA_PREVIEW, PATH_FREE_VERSION } from '../../routes/paths';
+import {
+  PATH_DASHBOARD,
+  PATH_FIGMA_PREVIEW,
+  PATH_FREE_VERSION,
+  PATH_PAGE,
+} from '../../routes/paths';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // utils
@@ -19,6 +34,7 @@ import { secondaryFont } from '../../theme/typography';
 import SvgColor from '../../components/svg-color';
 import Iconify from '../../components/iconify';
 import { MotionContainer, varFade } from '../../components/animate';
+import { _socials } from 'src/_mock/arrays';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +80,7 @@ const StyledGradientText = styled(m.h1)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     fontSize: `${96 / 16}rem`,
   },
+  minHeight: 220,
 }));
 
 const StyledEllipseTop = styled('div')(({ theme }) => ({
@@ -160,14 +177,14 @@ function Description() {
             repeat: Infinity,
           }}
         >
-         Ngọc Diệp
+          Ngọc Diệp
         </StyledGradientText>
       </m.div>
 
       <m.div variants={varFade().in}>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          The starting point for your next project is based on MUI.Easy customization Helps you
-          build apps faster and better.
+          Mọi thứ sẻ dể dàng hơn với Bách hóa Ngọc Diệp. Hảy bắt đầu mua sắm ngay lúc này để nhận
+          dược ưu đã tốt nhất.
         </Typography>
       </m.div>
 
@@ -184,7 +201,7 @@ function Description() {
             <Box component="strong" sx={{ mr: 0.5, color: 'text.primary' }}>
               4.95/5
             </Box>
-            (99+ reviews)
+            (99+ đánh giá)
           </Typography>
         </Stack>
       </m.div>
@@ -194,7 +211,7 @@ function Description() {
           <Stack alignItems="center" spacing={2}>
             <Button
               component={NextLink}
-              href={PATH_DASHBOARD.root}
+              href={PATH_DASHBOARD.eCommerce.shop}
               color="inherit"
               size="large"
               variant="contained"
@@ -210,7 +227,7 @@ function Description() {
               Mua sắm ngay
             </Button>
 
-            <Link
+            {/* <Link
               color="inherit"
               variant="caption"
               target="_blank"
@@ -220,7 +237,7 @@ function Description() {
             >
               <Iconify icon="eva:external-link-fill" width={16} sx={{ mr: 0.5 }} />
               Get Free Version
-            </Link>
+            </Link> */}
           </Stack>
 
           <Button
@@ -230,24 +247,24 @@ function Description() {
             startIcon={<Iconify icon="eva:external-link-fill" width={24} />}
             target="_blank"
             rel="noopener"
-            href={PATH_FIGMA_PREVIEW}
+            href={PATH_PAGE.about}
             sx={{ borderColor: 'text.primary' }}
           >
-           Về cửa hàng
+            Về cửa hàng
           </Button>
         </Stack>
       </m.div>
 
       <Stack spacing={3} sx={{ textAlign: 'center', opacity: 0.48 }}>
         <m.div variants={varFade().in}>
-          <Typography variant="overline">Available For</Typography>
+          <Typography variant="overline">Liên kết</Typography>
         </m.div>
 
         <Stack spacing={2} direction="row" justifyContent="center">
-          {['sketch', 'figma', 'js', 'ts', 'nextjs'].map((platform) => (
-            <m.div key={platform} variants={varFade().in}>
-              <SvgColor src={`/assets/icons/platforms/ic_${platform}.svg`} />
-            </m.div>
+          {_socials.map((social) => (
+            <IconButton key={social.name} href={social.path} target="_blank">
+              <Iconify icon={social.icon} />
+            </IconButton>
           ))}
         </Stack>
       </Stack>

@@ -9,24 +9,24 @@ import { TextAnimate, MotionContainer, varFade } from '../../components/animate'
 
 const CONTACTS = [
   {
-    country: 'Bali',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(239) 555-0108',
+    country: 'Tiền Giang',
+    address: '30/04 phường 5, thị xã Cai Lậy, tỉnh Tiền Giang',
+    phoneNumber: '0364466591',
   },
   {
-    country: 'London',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(319) 555-0115',
+    country: 'Bến Tre',
+    address: '349 ấp 7, xã Hưng Lế, Huyện Giồng Trôm, tỉnh Bến Tre',
+    phoneNumber: '0397516328',
   },
   {
-    country: 'Prague',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(252) 555-0126',
+    country: 'TP.HCM',
+    address: 'A75/6/7 Bạch Đằng, phường 2, quận Tân Bình, TP.HCM',
+    phoneNumber: '0397516329',
   },
   {
-    country: 'Moscow',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(307) 555-0133',
+    country: 'Tiền Giang',
+    address: '30/04 phường 5, thị xã Cai Lậy, tỉnh Tiền Giang',
+    phoneNumber: '0975446292',
   },
 ];
 
@@ -70,7 +70,7 @@ export default function ContactHero() {
           <Grid container spacing={5} sx={{ mt: 5, color: 'common.white' }}>
             {CONTACTS.map((contact) => (
               <Grid
-                key={contact.country}
+                key={contact.phoneNumber}
                 item
                 xs={12}
                 sm={6}

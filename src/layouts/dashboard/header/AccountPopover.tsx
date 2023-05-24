@@ -22,11 +22,15 @@ const OPTIONS = [
     linkTo: '/',
   },
   {
+    label: 'Đơn hàng',
+    linkTo: PATH_DASHBOARD.invoice.list,
+  },
+  {
     label: 'Tài khoản của tôi',
     linkTo: PATH_DASHBOARD.user.profile,
   },
   {
-    label: 'Cài dặt',
+    label: 'Cài dặt tài khoản',
     linkTo: PATH_DASHBOARD.user.account,
   },
 ];

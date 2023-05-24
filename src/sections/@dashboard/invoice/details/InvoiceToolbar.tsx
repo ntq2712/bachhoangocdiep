@@ -25,13 +25,10 @@ import InvoicePDF from './InvoicePDF';
 // ----------------------------------------------------------------------
 
 type Props = {
-  edit:boolean;
-  handleEdit: ()=>void;
   invoice: IInvoiceDetaill;
 };
 
-export default function InvoiceToolbar({ invoice, edit, handleEdit }: Props) {
- 
+export default function InvoiceToolbar({ invoice }: Props) {
   const { push } = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -54,17 +51,11 @@ export default function InvoiceToolbar({ invoice, edit, handleEdit }: Props) {
         sx={{ mb: 5 }}
       >
         <Stack direction="row" spacing={1}>
-          <Tooltip title="Edit">
+          {/* <Tooltip title="Edit">
             <IconButton onClick={handleEdit}>
               <Iconify icon="eva:edit-fill" color={edit ? 'Highlight' : ''}/>
             </IconButton>
-          </Tooltip>
-
-          <Tooltip title="View">
-            <IconButton onClick={handleOpen}>
-              <Iconify icon="eva:eye-fill" />
-            </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           <PDFDownloadLink
             document={<InvoicePDF invoice={invoice} />}
@@ -83,7 +74,11 @@ export default function InvoiceToolbar({ invoice, edit, handleEdit }: Props) {
               </Tooltip>
             )}
           </PDFDownloadLink>
-
+          <Tooltip title="View">
+            <IconButton onClick={handleOpen}>
+              <Iconify icon="eva:eye-fill" />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Print">
             <IconButton>
               <Iconify icon="eva:printer-fill" />

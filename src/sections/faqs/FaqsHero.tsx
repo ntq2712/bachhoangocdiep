@@ -50,7 +50,7 @@ export default function FaqsHero() {
 
           <m.div variants={varFade().inUp}>
             <TextField
-              placeholder="Search support..."
+              placeholder="Tìm kiếm..."
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

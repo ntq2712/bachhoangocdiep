@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 // next
 import Head from 'next/head';
 // @mui
-import { Container, Pagination, Stack, Typography } from '@mui/material';
+import { Box, Container, Divider, Pagination, Stack, Typography } from '@mui/material';
 // redux
 import { getCarts, sortProductsByFilter } from '../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -26,6 +26,9 @@ import {
   ShopProductSort,
   ShopTagFiltered,
 } from '../../../sections/@dashboard/e-commerce/shop';
+import Logo from 'src/components/logo/Logo';
+import Link from 'next/link';
+import Footer from 'src/layouts/main/Footer';
 
 // ----------------------------------------------------------------------
 
@@ -131,7 +134,8 @@ export default function EcommerceShopPage() {
             justifyContent="space-between"
             sx={{ mb: 2 }}
           >
-            <ShopProductSearch />
+            {/* <ShopProductSearch /> */}
+            <div />
 
             <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
               <ShopFilterDrawer
@@ -195,6 +199,13 @@ export default function EcommerceShopPage() {
           <CartWidget totalItems={checkout.TotalQuantity} />
         </Container>
       </FormProvider>
+      <Divider
+        sx={{
+          mt: 5,
+          mb: 2,
+        }}
+      />
+      <Footer/>
     </>
   );
 }

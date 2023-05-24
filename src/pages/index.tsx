@@ -76,25 +76,7 @@ export default function HomePage() {
         }}
       >
         <DemoCarouselsPage/>
-        {/* <HomeBestSeller />
-        <HomeSale/> */}
-        {/* <HomeMinimal /> */}
-
-        {/* <HomeHugePackElements />
-
-        <HomeForDesigner />
-
-        <HomeDarkMode />
-
-        <HomeColorPresets />
-
-        <HomeCleanInterfaces />
-
-        <HomePricingPlans />
-
-        <HomeLookingFor />
-
-        <HomeAdvertisement /> */}
+        
       </Box>
     </>
   );

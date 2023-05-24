@@ -28,11 +28,12 @@ import NextLink from 'next/link';
 export default function Header() {
   const theme = useTheme();
 
-  const [datanav, setDatenav] = useState<NavItemProps[]>([]);
-
+ 
   const isDesktop = useResponsive('up', 'md');
 
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
+
+  const [datanav, setDatenav] = useState<NavItemProps[]>([]);
 
   const navBrands = (id: string): [] => {
     const team: any = [];
@@ -100,6 +101,7 @@ export default function Header() {
       setDatenav(tam);
     });
   }, []);
+  
 
   return (
     <AppBar color="transparent" sx={{ boxShadow: 0 }}>
@@ -123,15 +125,6 @@ export default function Header() {
         }}
       >
         <Container sx={{ height: 1, display: 'flex', alignItems: 'center' }}>
-          {/* <Link
-            href={PATH_DOCS.changelog}
-            target="_blank"
-            rel="noopener"
-            underline="none"
-            sx={{ ml: 1 }}
-          >
-            <Label color="info"> v4.2.0 </Label>
-          </Link> */}
           <Logo sx={{ mr: 5 }} />
           <ShopProductSearch />
           <Box sx={{ flexGrow: 1 }} />

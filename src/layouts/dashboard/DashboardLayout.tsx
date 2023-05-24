@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: Props) {
             minHeight: { lg: 1 },
           }}
         >
-          {renderNavVertical}
+          {/* {renderNavVertical} */}
 
           <Main>{children}</Main>
         </Box>

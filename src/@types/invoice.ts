@@ -22,7 +22,7 @@ export type IInvoiceItem = {
 export type IInvoice = {
   Id: string;
   AccountId: string;
-  InvoiceNumber?:string;
+  InvoiceNumber:string;
   ShopBankNumber?: string;
   UserBankNumber?: string;
   ShopBankName?: string;

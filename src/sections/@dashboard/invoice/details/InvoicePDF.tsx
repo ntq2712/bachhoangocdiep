@@ -22,7 +22,7 @@ export default function InvoicePDF({ invoice }: Props) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={[styles.gridContainer, styles.mb40]}>
-          <Image source="/logo/logo_full.jpg" style={{ height: 32 }} />
+          <Image source="/logo/Group_5.jpg" style={{ height: 32 }} />
           <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
             <Text style={styles.h3}>{order?.Status}</Text>
             <Text> {order.InvoiceNumber} </Text>
@@ -30,19 +30,19 @@ export default function InvoicePDF({ invoice }: Props) {
         </View>
 
         <View style={[styles.gridContainer, styles.mb40]}>
-          {/* <View style={styles.col6}>
-            <Text style={[styles.overline, styles.mb8]}>Invoice from</Text>
-            <Text style={styles.body1}>{invoiceFrom.name}</Text>
-            <Text style={styles.body1}>{invoiceFrom.address}</Text>
-            <Text style={styles.body1}>{invoiceFrom.phone}</Text>
+          <View style={styles.col6}>
+            <Text style={[styles.overline, styles.mb8]}>Từ</Text>
+            <Text style={styles.body1}>Bách hóa Ngọc Diệp</Text>
+            <Text style={styles.body1}>30/04 phường 5, Thị xã Cai Lậy, tỉnh Tiền Giang</Text>
+            <Text style={styles.body1}>Số điện thoại: 0397516328</Text>
           </View>
 
           <View style={styles.col6}>
-            <Text style={[styles.overline, styles.mb8]}>Invoice to</Text>
-            <Text style={styles.body1}>{invoiceTo.name}</Text>
-            <Text style={styles.body1}>{invoiceTo.address}</Text>
-            <Text style={styles.body1}>{invoiceTo.phone}</Text>
-          </View> */}
+            <Text style={[styles.overline, styles.mb8]}>đến</Text>
+            <Text style={styles.body1}>{invoice.order.ReceiverName}</Text>
+            <Text style={styles.body1}>{invoice.order.FullAddress}</Text>
+            <Text style={styles.body1}>{invoice.order.ReceiverPhoneNumber}</Text>
+          </View>
         </View>
 
         <View style={[styles.gridContainer, styles.mb40]}>
@@ -52,7 +52,9 @@ export default function InvoicePDF({ invoice }: Props) {
           </View>
           <View style={styles.col6}>
             <Text style={[styles.overline, styles.mb8]}>Ngày hoàn thành</Text>
-            <Text style={styles.body1}>{order?.DeliveryDate ? order?.DeliveryDate : 'Chưa hoàn thành'}</Text>
+            <Text style={styles.body1}>
+              {order?.DeliveryDate ? order?.DeliveryDate : 'Chưa hoàn thành'}
+            </Text>
           </View>
         </View>
 
@@ -84,7 +86,7 @@ export default function InvoicePDF({ invoice }: Props) {
           </View>
 
           <View style={styles.tableBody}>
-            {carts.map((item:any, index:number) => (
+            {carts.map((item: any, index: number) => (
               <View style={styles.tableRow} key={item.Id}>
                 <View style={styles.tableCell_1}>
                   <Text>{index + 1}</Text>
@@ -141,7 +143,7 @@ export default function InvoicePDF({ invoice }: Props) {
                 <Text>VAT</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{order.VAT}</Text>
+                <Text>{order.VAT}%</Text>
               </View>
             </View>
 
@@ -163,7 +165,7 @@ export default function InvoicePDF({ invoice }: Props) {
           <View style={styles.col8}>
             <Text style={styles.subtitle2}>CHÚ Ý</Text>
             <Text>
-            Chúng tôi luôn sẳn sàn phục vụ quý khách, mọi thắc mắt hảy gửi về họp thư hổ trợ !
+              Chúng tôi luôn sẳn sàn phục vụ quý khách, mọi thắc mắt hảy gửi về họp thư hổ trợ !
             </Text>
           </View>
           <View style={[styles.col4, styles.alignRight]}>

@@ -1,11 +1,6 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
-import {
-  IDataAddCart,
-  IProduct,
-  IProductCheckoutState,
-  IProductOver
-} from '../../@types/product';
+import { IDataAddCart, IProduct, IProductCheckoutState, IProductOver } from '../../@types/product';
 import axios from '../../utils/axios';
 
 // ----------------------------------------------------------------------
@@ -56,7 +51,7 @@ const slice = createSlice({
     },
     //GET REVIEWS
     getReviewSuccess(state, action) {
-      console.log('getReviewSuccess:',action.payload)
+      console.log('getReviewSuccess:', action.payload);
       state.reviewState = action.payload;
     },
 
@@ -249,11 +244,10 @@ type filter = {
   pricerange: [number, number];
   rate?: number; //filter[Rate][eq]=5
   sortBy?: string;
-  page:number
+  page: number;
 };
 
 export function sortProductsByFilter(value: filter) {
-
   const mapCategory = value.category?.map((a) => `filter[CategoryId][eq]=${a}`).join('&');
   const mapCategorygroup = value.categorygroup
     ?.map((a) => `filter[CategoryGroupId][eq]=${a}`)
@@ -292,6 +286,13 @@ export const getProductByBrandId = (id: string) => {
       }
     })
     .catch((err) => console.log(err));
+};
+
+export const getProductSame = (id?: string) => {
+  return axios.get(`v1/products?filter[CategoryId][eq]=${id}`);
+};
+export const getLatestProducts = () => {
+  return axios.get(`v1/products?sort=createdAt&order=desc&page=1&limit=10`);
 };
 
 export function getCarts() {
@@ -337,7 +338,7 @@ export function getProduct(ProductId: string) {
       const response = await axios.get(`/v1/products/${ProductId}`);
       await dispatch(slice.actions.getProductSuccess(response.data.product));
       const responseReview = await axios.get(`/v1/reviews/product/${ProductId}`);
-      
+
       dispatch(slice.actions.getReviewSuccess(responseReview.data));
     } catch (error) {
       console.error(error);

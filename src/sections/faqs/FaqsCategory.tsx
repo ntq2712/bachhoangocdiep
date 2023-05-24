@@ -24,32 +24,32 @@ import { MotionViewport, varFade } from '../../components/animate';
 
 const CATEGORIES = [
   {
-    label: 'Managing your account',
+    label: 'Quản lý tài khoản của bạn',
     icon: '/assets/icons/faqs/ic_account.svg',
     href: '#',
   },
   {
-    label: 'Payment',
+    label: 'Thanh toán',
     icon: '/assets/icons/faqs/ic_payment.svg',
     href: '#',
   },
   {
-    label: 'Delivery',
+    label: 'Giao hàng',
     icon: '/assets/icons/faqs/ic_delivery.svg',
     href: '#',
   },
   {
-    label: 'Problem with the Product',
+    label: 'Vấn đề về sản phẩm',
     icon: '/assets/icons/faqs/ic_package.svg',
     href: '#',
   },
   {
-    label: 'Return & Refund',
+    label: 'Trả lại và hoàn tiền',
     icon: '/assets/icons/faqs/ic_refund.svg',
     href: '#',
   },
   {
-    label: 'Guarantees and assurances',
+    label: 'Bảo lãnh và đảm bảo',
     icon: '/assets/icons/faqs/ic_assurances.svg',
     href: '#',
   },

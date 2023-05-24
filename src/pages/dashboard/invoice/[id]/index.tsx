@@ -51,11 +51,11 @@ export default function InvoiceDetailsPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Invoice Details"
+          // heading="Invoice Details"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: '/' },
             {
-              name: 'Invoices',
+              name: 'Đơn hàng',
               href: PATH_DASHBOARD.invoice.root,
             },
             { name: currentInvoice?.order.InvoiceNumber },

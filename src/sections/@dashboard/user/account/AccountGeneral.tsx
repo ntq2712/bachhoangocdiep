@@ -1,10 +1,10 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Grid, Card, Stack, Typography } from '@mui/material';
+import { Box, Grid, Card, Stack, Typography, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // auth
 import { useAuthContext } from '../../../../auth/useAuthContext';
@@ -25,6 +25,7 @@ import { IUserAccountGeneral } from 'src/@types/user';
 import { upLoadImage, updateProfile } from 'src/api/ortherEcom';
 import { CalendarToolbar } from '../../calendar';
 import { fDate } from 'src/utils/formatTime';
+import { DatePicker } from '@mui/x-date-pickers';
 
 // ----------------------------------------------------------------------
 
@@ -42,12 +43,12 @@ type FormValuesProps = {
   isPublic: boolean;
 };
 
-export default function AccountGeneral({user}:any) {
+const INPUT_WIDTH = 160;
+
+export default function AccountGeneral({ user }: any) {
   const { enqueueSnackbar } = useSnackbar();
-  
-  useEffect(()=>{
-console.log(user)
-  },[])
+
+  const [birthDate, setBirthDate] = useState<any>();
 
   const UpdateUserSchema = Yup.object().shape({
     FirstName: Yup.string().required('Name is required'),
@@ -73,6 +74,13 @@ console.log(user)
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const onChangeDate = (value: any) => {
+    const date = new Date(value).toLocaleDateString();
+    console.log('date: ',new Date(value).toLocaleDateString())
+    setValue('DateOfBirth', date);
+    setBirthDate(value);
+  };
 
   const onSubmit = async (data: Partial<IUserAccountGeneral>) => {
     try {
@@ -157,7 +165,22 @@ console.log(user)
 
               <RHFTextField name="PhoneNumber" label="Số điện thoại" />
 
-              <RHFTextField name="DateOfBirth" label="Ngày sinh" />
+              {/* <RHFTextField name="DateOfBirth" label="Ngày sinh" /> */}
+
+              <DatePicker
+                label="Ngày sinh"
+                value={birthDate}
+                onChange={onChangeDate}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    sx={{
+                      Width: '100%',
+                    }}
+                  />
+                )}
+              />
 
               {/* <RHFTextField name="address" label="Address" /> */}
 

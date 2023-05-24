@@ -236,11 +236,13 @@ export default function EcommerceCGListPage() {
     }
   };
 
-  const handleEditRow = (row:any) => {
-
+  const handleEditRow = (row: any) => {
+    setCurenData(row);
   };
 
-  const handleViewRow = (id: string) => {};
+  const handleViewRow = (id: string) => {
+    
+  };
 
   const handleResetFilter = () => {
     setFilterName('');

@@ -48,7 +48,7 @@ export default function InvoiceTableToolbar({
       <TextField
         fullWidth
         select
-        label="Trạng thái"
+        label="Thanh toán"
         value={filterService}
         onChange={onFilterService}
         SelectProps={{

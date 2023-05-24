@@ -5,16 +5,12 @@ import { Card, Typography, CardContent, Stack } from '@mui/material';
 // components
 import Image from '../../../../components/image';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  data: {
-    id: string;
-    title: string;
-    image: string;
-    description: string;
-  }[];
+  data: ICarousels[]
 };
 
 export default function CarouselBasic2({ data }: Props) {
@@ -49,7 +45,7 @@ export default function CarouselBasic2({ data }: Props) {
       <Carousel ref={carouselRef} {...carouselSettings}>
         {data.map((item) => (
           <Stack key={item.id}>
-            <Image alt={item.title} src={item.image} ratio="4/3" />
+            <Image alt={item.title} src={item.image} ratio="1/1"/>
 
             <CardContent sx={{ textAlign: 'left' }}>
               <Typography variant="h6" noWrap gutterBottom>

@@ -12,12 +12,35 @@ export const _carouselsMembers = [...Array(6)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export const _faqs = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Questions ${index + 1}`,
-  detail: _mock.text.description(index),
-}));
+// export const _faqs = [...Array(8)].map((_, index) => ({
+//   id: _mock.id(index),
+//   value: `panel${index + 1}`,
+//   heading: `Questions ${index + 1}`,
+//   detail: _mock.text.description(index),
+// }));
+export const _faqs = [
+  {
+    id: '_faqs_1',
+    value: 'Tôi có thể làm cộng tác viên của cửa hàng ?',
+    heading: `Câu 1`,
+    detail: 'Tôi có thể làm cộng tác viên của cửa hàng không?',
+  },
+  {
+    id: '_faqs_2',
+    value: 'Cửa hàng có cung cấp sản phẩm giá sỉ không. Nếu có thì điều kiện để có giá sỉ là gì ?',
+    heading: `Câu 2`,
+    detail:
+      'Cửa hàng có cung cấp sản phẩm giá sỉ không. Nếu có thì điều kiện để có giá sỉ là gì ??',
+  },
+  {
+    id: '_faqs_3',
+    value:
+      'Cửa hàng có chế độ tích điểm vậy tôi có thể đổi điểm lấy được gì và bao nhiều điểm thì được đổi, điểm có quy được ra tiền không ?',
+    heading: `Câu 3`,
+    detail:
+      'Cửa hàng có chế độ tích điểm vậy tôi có thể đổi điểm lấy được gì và bao nhiều điểm thì được đổi, điểm có quy được ra tiền không?',
+  },
+];
 
 // ----------------------------------------------------------------------
 

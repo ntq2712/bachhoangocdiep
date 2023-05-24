@@ -1,5 +1,5 @@
 import sumBy from 'lodash/sumBy';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // @mui
 import { Box, Button, Divider, LinearProgress, Rating, Stack, Typography } from '@mui/material';
 // utils
@@ -9,6 +9,9 @@ import { IRating, IReviewState } from '../../../../@types/product';
 // components
 import Iconify from '../../../../components/iconify';
 //
+import { useRouter } from 'next/router';
+import { useAuthContext } from 'src/auth/useAuthContext';
+import { PATH_AUTH } from 'src/routes/paths';
 import ProductDetailsReviewNewDialog from './ProductDetailsNewReviewForm';
 import ProductDetailsReviewList from './ProductDetailsReviewList';
 
@@ -21,10 +24,17 @@ type Props = {
 export default function ProductDetailsReview({ reviewsdata }: Props) {
   // const { reviews, ratings } = reviewsdata;
 
+  const { isAuthenticated } = useAuthContext();
+  const { push } = useRouter();
+
   const [openReview, setOpenReview] = useState(false);
 
   const handleOpenReview = () => {
-    setOpenReview(true);
+    if (isAuthenticated) {
+      setOpenReview(true);
+    } else {
+      push(PATH_AUTH.login);
+    }
   };
 
   const handleCloseReview = () => {

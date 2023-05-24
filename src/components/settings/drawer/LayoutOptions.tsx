@@ -8,6 +8,8 @@ import { StyledCard, StyledWrap, MaskControl, LayoutIcon } from '../styles';
 
 const OPTIONS = ['vertical', 'horizontal', 'mini'] as const;
 
+// const OPTIONS = ['vertical'] as const;
+
 export default function LayoutOptions() {
   const { themeLayout, onChangeLayout } = useSettingsContext();
 

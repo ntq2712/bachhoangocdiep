@@ -82,7 +82,7 @@ export default function ShopProductSearch() {
       renderInput={(params) => (
         <CustomTextField
           {...params}
-          width={220}
+          width={300}
           placeholder="Search..."
           onKeyUp={handleKeyUp}
           InputProps={{

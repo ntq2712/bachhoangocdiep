@@ -24,7 +24,7 @@ type Props = {
   data: ICarousels[];
 };
 
-export default function CarouselCenterMode1({ data }: Props) {
+export default function CarouselCenterMode({ data }: Props) {
   const carouselRef = useRef<Carousel | null>(null);
 
   const theme = useTheme();

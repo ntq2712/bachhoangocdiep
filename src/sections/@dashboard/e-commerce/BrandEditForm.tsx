@@ -7,22 +7,18 @@ import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Typography } from '@mui/material';
-// routes
-// @types
-import { ICategoy, ICategoyGroup, IProduct } from '../../../@types/product';
-// components
-import FormProvider, { RHFEditor, RHFSelect, RHFTextField } from '../../../components/hook-form';
+import { useSnackbar } from 'notistack';
 import {
-  getCategory,
   getCategoryById,
   getCategoryGroup,
-  newBrand,
-  newCategory,
-  newCategoryGroup,
+  newBrand
 } from 'src/api/ortherEcom';
-import { useSnackbar } from 'notistack';
-import { error } from 'console';
-import { getValue } from '@mui/system';
+// routes
+// @types
+import { ICategoy, ICategoyGroup } from '../../../@types/product';
+// components
+
+import FormProvider, { RHFEditor, RHFSelect, RHFTextField } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +42,7 @@ export default function BrandEditForm({ isEdit, currentProduct, handleClose }: P
 
   useEffect(() => {
     getCategoryGroup().then((res) => {
-      if (res?.data?.success == true) {
+      if (res?.data?.success === true) {
         setCategoryGroups(res?.data?.CategoryGroups?.Data);
       } else {
         enqueueSnackbar('Không thành công');
@@ -92,20 +88,18 @@ export default function BrandEditForm({ isEdit, currentProduct, handleClose }: P
     if (!isEdit) {
       reset(defaultValues);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
   const onSubmit = (data: Partial<ICategoy>) => {
     try {
       newBrand(data).then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           enqueueSnackbar(!isEdit ? 'Thành công!' : 'Update success!');
           handleClose();
         } else {
           enqueueSnackbar('Không thành công');
         }
       });
-      // reset();
     } catch (error) {
       console.error(error);
     }
@@ -125,7 +119,7 @@ export default function BrandEditForm({ isEdit, currentProduct, handleClose }: P
               onChange={(e) => {
                 setValue('CategoryGroupId', e.target.value);
                 getCategoryById(e.target.value).then((res) => {
-                  if (res?.data?.success == true) {
+                  if (res?.data?.success === true) {
                     setCategorys(res?.data?.category);
                   } else {
                     enqueueSnackbar('Không thành công');

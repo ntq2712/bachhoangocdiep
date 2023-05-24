@@ -1,8 +1,6 @@
-import { paramCase } from 'change-case';
 import { useEffect, useState } from 'react';
 // next
 import Head from 'next/head';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 // @mui
 import {
@@ -17,6 +15,10 @@ import {
   Tooltip,
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { Box } from '@mui/system';
+import { deleteCategoryGroup } from 'src/api/ortherEcom';
+import CategoryGroupEditForm from 'src/sections/@dashboard/e-commerce/CategoryGroupEditForm';
+import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
 // redux
 import { getCategoryGroup } from '../../../redux/slices/product';
 import { useDispatch } from '../../../redux/store';
@@ -43,12 +45,7 @@ import {
   getComparator,
   useTable,
 } from '../../../components/table';
-// sections
-import { ProductTableRow, ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
-import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
-import CategoryGroupEditForm from 'src/sections/@dashboard/e-commerce/CategoryGroupEditForm';
-import { Box } from '@mui/system';
-import { deleteCategoryGroup } from 'src/api/ortherEcom';
+import { ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
 
 // ----------------------------------------------------------------------
 
@@ -140,7 +137,7 @@ export default function EcommerceCGListPage() {
     setIsLoading(true);
     getCategoryGroup()
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           setTableData(res?.data?.CategoryGroups?.Data);
           setIsLoading(false);
         } else {
@@ -192,7 +189,7 @@ export default function EcommerceCGListPage() {
       setIsLoading(true);
       getCategoryGroup()
         .then((res) => {
-          if (res?.data?.success == true) {
+          if (res?.data?.success === true) {
             setTableData(res?.data?.CategoryGroups?.Data);
             setIsLoading(false);
           } else {
@@ -214,7 +211,7 @@ export default function EcommerceCGListPage() {
     });
     getCategoryGroup()
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           setTableData(res?.data?.CategoryGroups?.Data);
           setIsLoading(false);
         } else {

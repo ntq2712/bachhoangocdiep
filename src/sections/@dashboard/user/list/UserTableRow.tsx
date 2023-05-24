@@ -36,7 +36,7 @@ export default function UserTableRow({
   onSelectRow,
   onDeleteRow,
 }: Props) {
-  const { name, avatarUrl, company, role, isVerified, status } = row;
+  // const { name, avatarUrl, company, role, isVerified, status } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -60,7 +60,7 @@ export default function UserTableRow({
 
   return (
     <>
-      <TableRow hover selected={selected}>
+      {/* <TableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
@@ -148,7 +148,7 @@ export default function UserTableRow({
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }

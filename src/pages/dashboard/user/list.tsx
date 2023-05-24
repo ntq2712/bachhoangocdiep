@@ -101,7 +101,7 @@ export default function UserListPage() {
 
   const { push } = useRouter();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState<any>(_userList);
 
   const [filterName, setFilterName] = useState('');
 
@@ -154,21 +154,20 @@ export default function UserListPage() {
   };
 
   const handleDeleteRow = (id: string) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
-      }
-    }
+    // const deleteRow = tableData.filter((row) => row.id !== id);
+    // setSelected([]);
+    // setTableData(deleteRow);
+    // if (page > 0) {
+    //   if (dataInPage.length < 2) {
+    //     setPage(page - 1);
+    //   }
+    // }
   };
 
   const handleDeleteRows = (selectedRows: string[]) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
+    // const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
     setSelected([]);
-    setTableData(deleteRows);
+    // setTableData(deleteRows);
 
     if (page > 0) {
       if (selectedRows.length === dataInPage.length) {
@@ -249,11 +248,12 @@ export default function UserListPage() {
               dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.id)
-                )
+              onSelectAllRows={
+                (checked) => {}
+                // onSelectAllRows(
+                //   checked,
+                //   tableData.map((row) => row.id)
+                // )
               }
               action={
                 <Tooltip title="Delete">
@@ -264,7 +264,7 @@ export default function UserListPage() {
               }
             />
 
-            <Scrollbar>
+            {/* <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
@@ -303,7 +303,7 @@ export default function UserListPage() {
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
-            </Scrollbar>
+            </Scrollbar> */}
           </TableContainer>
 
           <TablePaginationCustom
@@ -370,19 +370,19 @@ function applyFilter({
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
+  // if (filterName) {
+  //   inputData = inputData.filter(
+  //     (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+  //   );
+  // }
 
-  if (filterStatus !== 'all') {
-    inputData = inputData.filter((user) => user.status === filterStatus);
-  }
+  // if (filterStatus !== 'all') {
+  //   inputData = inputData.filter((user) => user.status === filterStatus);
+  // }
 
-  if (filterRole !== 'all') {
-    inputData = inputData.filter((user) => user.role === filterRole);
-  }
+  // if (filterRole !== 'all') {
+  //   inputData = inputData.filter((user) => user.role === filterRole);
+  // }
 
   return inputData;
 }

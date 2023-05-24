@@ -4,7 +4,10 @@ import { useForm } from 'react-hook-form';
 // next
 import Head from 'next/head';
 // @mui
-import { Box, Container, Divider, Pagination, Stack, Typography } from '@mui/material';
+import { Container, Divider, Pagination, Stack, Typography } from '@mui/material';
+import { useAuthContext } from 'src/auth/useAuthContext';
+import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
+import Footer from 'src/layouts/main/Footer';
 // redux
 import { getCarts, sortProductsByFilter } from '../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -16,19 +19,14 @@ import { IProductFilter } from '../../../@types/product';
 import FormProvider from '../../../components/hook-form';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import { useAuthContext } from 'src/auth/useAuthContext';
-import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
+
 import CartWidget from '../../../sections/@dashboard/e-commerce/CartWidget';
 import {
   ShopFilterDrawer,
   ShopProductList,
-  ShopProductSearch,
   ShopProductSort,
-  ShopTagFiltered,
+  ShopTagFiltered
 } from '../../../sections/@dashboard/e-commerce/shop';
-import Logo from 'src/components/logo/Logo';
-import Link from 'next/link';
-import Footer from 'src/layouts/main/Footer';
 
 // ----------------------------------------------------------------------
 

@@ -72,7 +72,7 @@ export default function BannerTableRow({
         </TableCell>
 
         <TableCell>
-          <Stack ddirection="row" alignItems="center" spacing={2}>
+          <Stack direction="row" alignItems="center" spacing={2}>
             <Image
               disabledEffect
               visibleByDefault

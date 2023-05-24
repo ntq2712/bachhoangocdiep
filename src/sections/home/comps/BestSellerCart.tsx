@@ -2,19 +2,17 @@ import { paramCase } from 'change-case';
 // next
 import NextLink from 'next/link';
 // @mui
-import { Box, Card, Link, Stack, Fab } from '@mui/material';
+import { Box, Card, Fab, Link, Stack } from '@mui/material';
 // routes
-import { useSnackbar } from 'notistack';
-import { addToCart, getCarts } from 'src/redux/slices/product';
-import { useAuthContext } from 'src/auth/useAuthContext';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'src/redux/store';
 import { IProduct } from 'src/@types/product';
-import { PATH_DASHBOARD } from 'src/routes/paths';
-import Label from 'src/components/label/Label';
+import { useAuthContext } from 'src/auth/useAuthContext';
 import Iconify from 'src/components/iconify/Iconify';
 import Image from 'src/components/image/Image';
+import Label from 'src/components/label/Label';
+import { useDispatch } from 'src/redux/store';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 import { fCurrency } from 'src/utils/formatNumber';
 
 // ----------------------------------------------------------------------
@@ -30,7 +28,6 @@ type typeCart = {
 
 export default function BestSellerCart({ product }: Props) {
   const { Id, Name, Price, Status, ImageURL, Rate } = product;
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { isAuthenticated, isInitialized } = useAuthContext();
 
@@ -49,32 +46,7 @@ export default function BestSellerCart({ product }: Props) {
   const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(Id));
 
   const handleAddCart = async () => {
-    // if (!isInitialized) {
-    //   return <LoadingScreen />;
-    // }
-    // if (!isAuthenticated) {
-    //   if (pathname !== requestedLocation) {
-    //     setRequestedLocation(pathname);
-    //   }
-    //   push(PATH_AUTH.login)
-    // } else {
-    //   const cart: typeCart = {
-    //     ProductId: Id,
-    //     Quantity: 1,
-    //   };
-    //   addToCart(cart)
-    //     .then((res) => {
-    //       if (res?.data?.success == true) {
-    //         dispatch(getCarts());
-    //         enqueueSnackbar('Thêm vào giỏ hàng thành công!');
-    //       } else {
-    //         enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
-    //       }
-    //     })
-    //     .catch(() => {
-    //       enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
-    //     });
-    // }
+    
   };
 
   return (
@@ -130,14 +102,10 @@ export default function BestSellerCart({ product }: Props) {
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {/* <ColorPreview colors={colors} /> */}
+          
 
           <Stack direction="row" spacing={0.5} sx={{ typography: 'subtitle1' }}>
-            {/* {priceSale && (
-              <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                {fCurrency(PriceSale)}
-              </Box>
-            )} */}
+        
             <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
               {fCurrency(Price + 20)}đ
             </Box>

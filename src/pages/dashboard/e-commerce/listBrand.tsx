@@ -5,23 +5,27 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
 import {
-    Button,
-    Card,
-    Container,
-    IconButton,
-    Modal,
-    Table,
-    TableBody,
-    TableContainer,
-    Tooltip,
+  Button,
+  Card,
+  Container,
+  IconButton,
+  Modal,
+  Table,
+  TableBody,
+  TableContainer,
+  Tooltip,
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { Box } from '@mui/system';
+import { getBran } from 'src/api/ortherEcom';
+import BrandEditForm from 'src/sections/@dashboard/e-commerce/BrandEditForm';
+import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
 // redux
 import { useDispatch } from '../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
-import { IBrand, ICategoy, ICategoyGroup } from '../../../@types/product';
+import { IBrand, ICategoyGroup } from '../../../@types/product';
 // layouts
 import DashboardLayout from '../../../layouts/dashboard';
 // components
@@ -31,23 +35,19 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import { useSettingsContext } from '../../../components/settings';
 import {
-    TableEmptyRows,
-    TableHeadCustom,
-    TableNoData,
-    TablePaginationCustom,
-    TableSelectedAction,
-    TableSkeleton,
-    emptyRows,
-    getComparator,
-    useTable,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableNoData,
+  TablePaginationCustom,
+  TableSelectedAction,
+  TableSkeleton,
+  emptyRows,
+  getComparator,
+  useTable,
 } from '../../../components/table';
 // sections
-import { Box } from '@mui/system';
-import { getBran, getCategory } from 'src/api/ortherEcom';
-import CategoryEditForm from 'src/sections/@dashboard/e-commerce/CategoryEditForm';
-import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
+
 import { ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
-import BrandEditForm from 'src/sections/@dashboard/e-commerce/BrandEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -137,7 +137,7 @@ export default function ListBrand() {
     setIsLoading(true);
     getBran()
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           setTableData(res?.data?.Brands?.Data);
           setIsLoading(false);
         } else {

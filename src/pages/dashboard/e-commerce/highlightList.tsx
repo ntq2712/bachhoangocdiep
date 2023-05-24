@@ -17,11 +17,15 @@ import {
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 // redux
+import { Box } from '@mui/system';
+import { getBanner } from 'src/api/ortherEcom';
+import BannerTableRow from 'src/sections/@dashboard/e-commerce/BannerTableRow';
+import EventEditFrom from 'src/sections/@dashboard/e-commerce/EventEditFrom';
 import { useDispatch } from '../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
-import { IBanner, IBrand, ICategoy, ICategoyGroup } from '../../../@types/product';
+import { IBanner } from '../../../@types/product';
 // layouts
 import DashboardLayout from '../../../layouts/dashboard';
 // components
@@ -42,14 +46,8 @@ import {
   useTable,
 } from '../../../components/table';
 // sections
-import { Box } from '@mui/system';
-import { getBanner, getBran, getCategory } from 'src/api/ortherEcom';
-import CategoryEditForm from 'src/sections/@dashboard/e-commerce/CategoryEditForm';
-import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
+
 import { ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
-import BrandEditForm from 'src/sections/@dashboard/e-commerce/BrandEditForm';
-import EventEditFrom from 'src/sections/@dashboard/e-commerce/EventEditFrom';
-import BannerTableRow from 'src/sections/@dashboard/e-commerce/BannerTableRow';
 
 // ----------------------------------------------------------------------
 
@@ -129,7 +127,7 @@ export default function HighlightList() {
   const [idRow, setIdRow] = useState<string>('');
 
   const handleOpen = () => {
-    setIsEdit(false)
+    setIsEdit(false);
     setOpen(true);
   };
   const handleClose = () => {
@@ -140,8 +138,8 @@ export default function HighlightList() {
     setIsLoading(true);
     getBanner('highlight')
       .then((res) => {
-        if (res?.data?.success == true) {
-          setTableData(res?.data?.Banners?.Data);   
+        if (res?.data?.success === true) {
+          setTableData(res?.data?.Banners?.Data);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -216,9 +214,9 @@ export default function HighlightList() {
   };
 
   const handleEditRow = (id: any) => {
-    setIsEdit(true)
-    setIdRow(id)
-    setOpen(true)
+    setIsEdit(true);
+    setIdRow(id);
+    setOpen(true);
   };
 
   const handleViewRow = (id: string) => {
@@ -244,7 +242,12 @@ export default function HighlightList() {
       >
         <Box sx={{ ...style }}>
           <Scrollbar>
-            <EventEditFrom type={'highlight'} handleClose={handleClose} isEdit={isEdit} current={isEdit ? idRow : undefined}/>
+            <EventEditFrom
+              type={'highlight'}
+              handleClose={handleClose}
+              isEdit={isEdit}
+              current={isEdit ? idRow : undefined}
+            />
           </Scrollbar>
         </Box>
       </Modal>

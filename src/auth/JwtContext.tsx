@@ -1,11 +1,10 @@
-import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useReducer } from 'react';
 // utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
-import { isValidToken, setSession } from './utils';
 import { ActionMapType, AuthStateType, AuthUserType, JWTContextType } from './types';
-import { string } from 'yup/lib/locale';
+import { isValidToken, setSession } from './utils';
 
 // ----------------------------------------------------------------------
 

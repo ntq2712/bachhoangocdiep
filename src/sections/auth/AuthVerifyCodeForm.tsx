@@ -2,17 +2,18 @@ import * as Yup from 'yup';
 // next
 import { useRouter } from 'next/router';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Stack, FormHelperText, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// routes
-import { PATH_AUTH, PATH_DASHBOARD } from '../../routes/paths';
+import { Alert, FormHelperText, Stack } from '@mui/material';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFCodes } from '../../components/hook-form';
 import { useAuthContext } from 'src/auth/useAuthContext';
+// routes
+import { PATH_DASHBOARD } from '../../routes/paths';
+
+import FormProvider, { RHFCodes } from '../../components/hook-form';
+import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
 

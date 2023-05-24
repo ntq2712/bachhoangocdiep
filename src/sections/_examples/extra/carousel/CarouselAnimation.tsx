@@ -1,16 +1,16 @@
 import { m } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 // @mui
+import { Box, Button, Card, CardContent, Paper, Typography } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
-import { Box, Card, Paper, Button, Typography, CardContent } from '@mui/material';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 // utils
 import { bgGradient } from '../../../../utils/cssStyles';
 // components
-import Image from '../../../../components/image';
+
 import { MotionContainer, varFade } from '../../../../components/animate';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
-import { ICarousels } from 'src/pages/components/extra/carousel';
-import Link from 'src/theme/overrides/Link';
+import Image from '../../../../components/image';
 
 // ----------------------------------------------------------------------
 
@@ -130,7 +130,9 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
 
         <m.div variants={varFade().inRight}>
           <Button variant="contained" sx={{ mt: 3 }}>
-            <a target='_blank' href='https://www.facebook.com/trongqui2712'>Xem thêm</a>
+            <a target="_blank" href="https://www.facebook.com/trongqui2712">
+              Xem thêm
+            </a>
           </Button>
         </m.div>
       </CardContent>

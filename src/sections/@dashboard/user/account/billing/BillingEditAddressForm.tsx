@@ -1,30 +1,29 @@
 import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
-  Stack,
-  Dialog,
   Button,
-  DialogTitle,
-  DialogContent,
+  Dialog,
   DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-// @types
-import { IAddress, ICheckoutBillingAddress } from '../../../../../@types/product';
 // assets
-import { countries } from '../../../../../assets/data';
-import FormProvider, {
-  RHFCheckbox,
-  RHFSelect,
-  RHFTextField,
-  RHFRadioGroup,
-} from '../../../../../components/hook-form';
 import { useEffect, useState } from 'react';
 import { getDistrict, getProvince, getWard } from 'src/api/ortherEcom';
+// @types
+import { IAddress } from '../../../../../@types/product';
+import FormProvider, {
+  RHFCheckbox,
+  RHFRadioGroup,
+  RHFSelect,
+  RHFTextField,
+} from '../../../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 type Props = {
@@ -94,7 +93,7 @@ export default function BillingEditAddressForm({ open, onClose, onUpateBilling, 
 
   useEffect(() => {
     getProvince().then((res) => {
-      if (res?.data?.message == 'Success') {
+      if (res?.data?.message === 'Success') {
         setProvinces(res.data.data);
       }
     });
@@ -140,7 +139,7 @@ export default function BillingEditAddressForm({ open, onClose, onUpateBilling, 
                 onChange={(e) => {
                   setValue('City', e.target.value);
                   getDistrict(JSON.parse(e.target.value).id).then((res) => {
-                    if (res?.data?.message == 'Success') {
+                    if (res?.data?.message === 'Success') {
                       setDistricts(res.data.data);
                     }
                   });
@@ -163,7 +162,7 @@ export default function BillingEditAddressForm({ open, onClose, onUpateBilling, 
                 onChange={(e) => {
                   setValue('District', e.target.value);
                   getWard(JSON.parse(e.target.value).id).then((res) => {
-                    if (res?.data?.message == 'Success') {
+                    if (res?.data?.message === 'Success') {
                       setWards(res.data.data);
                     }
                   });

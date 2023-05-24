@@ -1,21 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // @mui
 import { Box } from '@mui/material';
 // hooks
+import { useAuthContext } from 'src/auth/useAuthContext';
 import useResponsive from '../../hooks/useResponsive';
 // auth
-import AuthGuard from '../../auth/AuthGuard';
 // components
 import { useSettingsContext } from '../../components/settings';
 //
+
+import HeaderNoneLogin from '../main/Header';
 import Main from './Main';
 import HeaderLogin from './header';
-import NavMini from './nav/NavMini';
 import NavVertical from './nav/NavVertical';
-import NavHorizontal from './nav/NavHorizontal';
-import HeaderNoneLogin from '../main/Header';
-import { useRouter } from 'next/router';
-import { useAuthContext } from 'src/auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 

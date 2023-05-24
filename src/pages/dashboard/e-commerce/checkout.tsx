@@ -3,44 +3,39 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
-import { Grid, Container } from '@mui/material';
+import { Container, Grid } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { CalculateFee, addAddress, deleteToCard } from 'src/api/ortherEcom';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
 import DashboardLayout from '../../../layouts/dashboard';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
 import {
-  resetCart,
-  getCart,
-  nextStep,
-  backStep,
-  gotoStep,
-  deleteCart,
-  createBilling,
-  applyShipping,
   applyDiscount,
+  applyShipping,
+  createBilling,
   getCarts,
+  gotoStep,
+  resetCart,
   updateQuantity,
   updateShipping,
-  // increaseQuantity,
-  // decreaseQuantity,
 } from '../../../redux/slices/product';
+import { useDispatch, useSelector } from '../../../redux/store';
 // @types
-import { IAddress, ICheckoutBillingAddress, ICheckoutCartItem } from '../../../@types/product';
+import { IAddress } from '../../../@types/product';
 // components
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
+
 import {
-  CheckoutCart,
-  CheckoutSteps,
-  CheckoutPayment,
-  CheckoutOrderComplete,
   CheckoutBillingAddress,
+  CheckoutCart,
+  CheckoutOrderComplete,
+  CheckoutPayment,
+  CheckoutSteps,
 } from '../../../sections/@dashboard/e-commerce/checkout';
-import { CalculateFee, addAddress, deleteAddress, deleteToCard } from 'src/api/ortherEcom';
-import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -98,7 +93,7 @@ export default function EcommerceCheckoutPage() {
   const handleDeleteCart = (productId: string) => {
     deleteToCard(productId)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           dispatch(getCarts());
           enqueueSnackbar('Thêm vào giỏ hàng thành công!');
         } else {
@@ -113,7 +108,7 @@ export default function EcommerceCheckoutPage() {
   const handleIncreaseQuantity = (id: string, productId: string, quantity: number) => {
     updateQuantity(id, productId, quantity + 1)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           dispatch(getCarts());
           enqueueSnackbar('Cập nhật giỏ hàng thành công!');
         } else {
@@ -128,7 +123,7 @@ export default function EcommerceCheckoutPage() {
   const handleDecreaseQuantity = (id: string, productId: string, quantity: number) => {
     updateQuantity(id, productId, quantity - 1)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           dispatch(getCarts());
           enqueueSnackbar('Cập nhật giỏ hàng thành công!');
         } else {
@@ -143,9 +138,9 @@ export default function EcommerceCheckoutPage() {
   const handleCreateBilling = (address: IAddress) => {
     addAddress(address)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           CalculateFee(Number(address.DistrictGHNId), Number(address.WardGHNid)).then((res) => {
-            if (res.data.message == 'Success') {
+            if (res.data.message === 'Success') {
               dispatch(updateShipping(res.data.data.total));
             }
           });
@@ -162,8 +157,8 @@ export default function EcommerceCheckoutPage() {
   };
 
   const handleAddBilling = (address: IAddress) => {
-    CalculateFee(Number(address.DistrictGHNId),Number(address.WardGHNid)).then((res) => {
-      if (res.data.message == 'Success') {
+    CalculateFee(Number(address.DistrictGHNId), Number(address.WardGHNid)).then((res) => {
+      if (res.data.message === 'Success') {
         dispatch(updateShipping(res.data.data.total));
       }
     });

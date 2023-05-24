@@ -2,26 +2,12 @@ import { m, useScroll, useSpring } from 'framer-motion';
 // next
 import Head from 'next/head';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 // layouts
 import MainLayout from '../layouts/main';
 // sections
-import {
-  HomeHero,
-  HomeMinimal,
-  HomeDarkMode,
-  HomeLookingFor,
-  HomeForDesigner,
-  HomeColorPresets,
-  HomePricingPlans,
-  HomeAdvertisement,
-  HomeCleanInterfaces,
-  HomeHugePackElements,
-} from '../sections/home';
-import EcommerceShopPage from './dashboard/e-commerce/shop';
-import HomeBestSeller from 'src/sections/home/HomeBestSeller';
-import HomeSale from 'src/sections/home/HomeSale';
+import { HomeHero } from '../sections/home';
 import DemoCarouselsPage from './components/extra/carousel';
 
 // ----------------------------------------------------------------------
@@ -72,11 +58,10 @@ export default function HomePage() {
           overflow: 'hidden',
           position: 'relative',
           bgcolor: 'background.default',
-          pt: 3
+          pt: 3,
         }}
       >
-        <DemoCarouselsPage/>
-        
+        <DemoCarouselsPage />
       </Box>
     </>
   );

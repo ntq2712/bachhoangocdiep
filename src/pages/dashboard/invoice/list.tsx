@@ -1,56 +1,55 @@
-import { useEffect, useState } from 'react';
 import sumBy from 'lodash/sumBy';
+import { useEffect, useState } from 'react';
 // next
 import Head from 'next/head';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import {
-  Tab,
-  Tabs,
-  Card,
-  Table,
-  Stack,
   Button,
-  Tooltip,
-  Divider,
-  TableBody,
+  Card,
   Container,
+  Divider,
   IconButton,
+  Stack,
+  Tab,
+  Table,
+  TableBody,
   TableContainer,
+  Tabs,
+  Tooltip,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { getOder } from 'src/api/ortherEcom';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // utils
 import { fTimestamp } from '../../../utils/formatTime';
 // _mock_
-import { _invoices } from '../../../_mock/arrays';
 // @types
 import { IInvoice } from '../../../@types/invoice';
 // layouts
 import DashboardLayout from '../../../layouts/dashboard';
 // components
-import Label from '../../../components/label';
-import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import Iconify from '../../../components/iconify';
+import Label from '../../../components/label';
+import Scrollbar from '../../../components/scrollbar';
 import { useSettingsContext } from '../../../components/settings';
 import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
+  TableNoData,
   TablePaginationCustom,
+  TableSelectedAction,
+  emptyRows,
+  getComparator,
+  useTable,
 } from '../../../components/table';
 // sections
+
 import InvoiceAnalytic from '../../../sections/@dashboard/invoice/InvoiceAnalytic';
 import { InvoiceTableRow, InvoiceTableToolbar } from '../../../sections/@dashboard/invoice/list';
-import { getOder } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -568,7 +567,7 @@ function applyFilter({
   }
 
   if (filterService !== 'All') {
-    const ifFilter = filterService == 'Tiền mặt' ? 'cash' : 'transfer'
+    const ifFilter = filterService === 'Tiền mặt' ? 'cash' : 'transfer'
     inputData = inputData.filter((invoice) => invoice.PaidType === ifFilter);
   }
 

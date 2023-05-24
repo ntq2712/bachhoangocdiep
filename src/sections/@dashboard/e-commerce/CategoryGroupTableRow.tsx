@@ -1,27 +1,23 @@
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
-  Link,
-  Stack,
   Button,
-  TableRow,
   Checkbox,
-  MenuItem,
-  TableCell,
   IconButton,
+  Link,
+  MenuItem,
+  Stack,
+  TableCell,
+  TableRow,
 } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
 // @types
-import { ICategoyGroup, IProduct } from '../../../@types/product';
+import { ICategoyGroup } from '../../../@types/product';
 // components
-import Label from '../../../components/label';
-import Image from '../../../components/image';
+import ConfirmDialog from '../../../components/confirm-dialog';
 import Iconify from '../../../components/iconify';
 import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 

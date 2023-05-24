@@ -1,42 +1,25 @@
 // next
 import Head from 'next/head';
 // @mui
-import { Box, Stack, Card, Container, CardHeader, CardContent } from '@mui/material';
 import { Masonry } from '@mui/lab';
-// routes
-import { PATH_PAGE } from '../../../routes/paths';
-// _mock
-import _mock from '../../../_mock';
+import { Card, CardContent, CardHeader, Container, Stack } from '@mui/material';
+
+// components
+// sections
+import { useEffect, useState } from 'react';
+import { IBanner, IProduct } from 'src/@types/product';
+import { getBanner, getProductsBestSeller } from 'src/api/ortherEcom';
+import { getLatestProducts } from 'src/redux/slices/product';
+import CarouselCenterMode1 from 'src/sections/_examples/extra/carousel/CarouselCenterMode';
 // layouts
 import MainLayout from '../../../layouts/main';
-// components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-// sections
 import {
-  CarouselBasic1,
+  CarouselAnimation,
   CarouselBasic2,
   CarouselBasic3,
-  CarouselBasic4,
-  CarouselAnimation,
-  CarouselThumbnail,
   CarouselCenterMode,
+  CarouselThumbnail,
 } from '../../../sections/_examples/extra/carousel';
-import { useEffect, useState } from 'react';
-import { getBanner, getProductsBestSeller } from 'src/api/ortherEcom';
-import { IBanner, IProduct } from 'src/@types/product';
-import CarouselCenterMode1 from 'src/sections/_examples/extra/carousel/CarouselCenterMode';
-import { getLatestProducts } from 'src/redux/slices/product';
-
-// ----------------------------------------------------------------------
-
-const _carouselsExample = [...Array(5)].map((_, index) => ({
-  id: _mock.id(index),
-  title: _mock.text.title(index),
-  image: _mock.image.cover(index),
-  description: _mock.text.description(index),
-}));
-
-// ----------------------------------------------------------------------
 
 DemoCarouselsPage.getLayout = (page: React.ReactElement) => <MainLayout>{page}</MainLayout>;
 
@@ -46,7 +29,6 @@ export type ICarousels = {
   image?: string;
   description: string;
 };
-// ----------------------------------------------------------------------
 
 export default function DemoCarouselsPage() {
   const [productBestSeller, setProductBestSeller] = useState<ICarousels[]>([]);
@@ -66,7 +48,7 @@ export default function DemoCarouselsPage() {
 
     getProductsBestSeller()
       .then((res) => {
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           res.data.Products.Data.map((e: IProduct) => {
             tamproductBestSeller.push({
               id: e.Id,
@@ -80,7 +62,7 @@ export default function DemoCarouselsPage() {
       })
       .catch((err) => console.log(err));
     getBanner('event').then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         res.data.Banners.Data.map((e: IBanner) => {
           tampevent.push({
             id: e.Id,
@@ -93,7 +75,7 @@ export default function DemoCarouselsPage() {
       }
     });
     getBanner('highlight').then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         res.data.Banners.Data.map((e: IBanner) => {
           tamhighlight.push({
             id: e.Id,
@@ -106,7 +88,7 @@ export default function DemoCarouselsPage() {
       }
     });
     getBanner('latestProduct').then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         res.data.Banners.Data.map((e: IBanner) => {
           newProductsTam.push({
             id: e.Id,
@@ -119,7 +101,7 @@ export default function DemoCarouselsPage() {
       }
     });
     getBanner('history').then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         res.data.Banners.Data.map((e: IBanner) => {
           historytam.push({
             id: e.Id,
@@ -132,7 +114,7 @@ export default function DemoCarouselsPage() {
       }
     });
     getLatestProducts().then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         res.data.Products.Data.map((e: IProduct) => {
           latestProductstam.push({
             id: e.Id,

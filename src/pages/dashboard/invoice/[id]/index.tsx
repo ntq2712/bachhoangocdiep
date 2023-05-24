@@ -3,20 +3,20 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
 import { Container } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { IInvoiceDetaill } from 'src/@types/invoice';
+import { getOderById } from 'src/api/ortherEcom';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // _mock_
-import { _invoices } from '../../../../_mock/arrays';
 // layouts
 import DashboardLayout from '../../../../layouts/dashboard';
 // components
-import { useSettingsContext } from '../../../../components/settings';
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../../components/settings';
 // sections
+
 import InvoiceDetails from '../../../../sections/@dashboard/invoice/details';
-import { useEffect, useState } from 'react';
-import { IInvoice, IInvoiceDetaill } from 'src/@types/invoice';
-import { getOderById } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -33,15 +33,15 @@ export default function InvoiceDetailsPage() {
     query: { id },
   } = useRouter();
 
-  const [currentInvoice, setCurrentInvoice] = useState<IInvoiceDetaill>()
+  const [currentInvoice, setCurrentInvoice] = useState<IInvoiceDetaill>();
 
-  useEffect(()=>{
-    getOderById(id).then((res)=>{
-      if(res?.data?.success == true){
-        setCurrentInvoice(res.data)
+  useEffect(() => {
+    getOderById(id).then((res) => {
+      if (res?.data?.success === true) {
+        setCurrentInvoice(res.data);
       }
-    })
-  },[id])
+    });
+  }, [id]);
 
   return (
     <>
@@ -62,9 +62,7 @@ export default function InvoiceDetailsPage() {
           ]}
         />
 
-        {currentInvoice &&
-          <InvoiceDetails invoice={currentInvoice} />
-        }
+        {currentInvoice && <InvoiceDetails invoice={currentInvoice} />}
       </Container>
     </>
   );

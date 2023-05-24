@@ -3,19 +3,19 @@ import * as Yup from 'yup';
 // next
 import { useRouter } from 'next/router';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Stack, IconButton, InputAdornment, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { FormHelperText, IconButton, InputAdornment, Stack } from '@mui/material';
+// components
+import { resetPassword } from 'src/api/ortherEcom';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// components
+
+import FormProvider, { RHFCodes, RHFTextField } from '../../components/hook-form';
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField, RHFCodes } from '../../components/hook-form';
-import { useAuthContext } from 'src/auth/useAuthContext';
-import { resetPassword } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 

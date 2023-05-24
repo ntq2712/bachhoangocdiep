@@ -3,10 +3,6 @@ import { Stack } from '@mui/material';
 //
 import { NavProps } from '../types';
 import NavList from './NavList';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { getCategoryGroup } from 'src/api/ortherEcom';
-import Iconify from 'src/components/iconify/Iconify';
-import { PATH_DASHBOARD } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 

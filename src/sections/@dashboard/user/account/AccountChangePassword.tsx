@@ -3,15 +3,16 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
-import { Stack, Card } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { Card, Stack } from '@mui/material';
+// components
+import { changePasswork } from 'src/api/ortherEcom';
 // @types
 import { IUserAccountChangePassword } from '../../../../@types/user';
-// components
+
+import FormProvider, { RHFTextField } from '../../../../components/hook-form';
 import Iconify from '../../../../components/iconify';
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField } from '../../../../components/hook-form';
-import { changePasswork } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -48,7 +49,7 @@ export default function AccountChangePassword() {
   const onSubmit = async (data: FormValuesProps) => {
     try {
       changePasswork(data).then((res)=>{
-        if(res.data.success == true){
+        if(res.data.success === true){
           reset();
           enqueueSnackbar(res.data.message);
         }else{

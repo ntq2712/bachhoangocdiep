@@ -3,34 +3,18 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Container,
-  Divider,
-  Grid,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from '@mui/material';
+import { Box, Card, Container, Divider, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
+import { IDataAddCart } from 'src/@types/product';
+import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
 // redux
-import {
-  addToCart,
-  getCarts,
-  getProduct,
-  getProductSame,
-  gotoStep,
-} from '../../../../redux/slices/product';
+import { addToCart, getCarts, getProduct, gotoStep } from '../../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // @types
 // layouts
-import DashboardLayout from '../../../../layouts/dashboard';
 // components
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
 import Iconify from '../../../../components/iconify';
@@ -38,17 +22,13 @@ import Markdown from '../../../../components/markdown';
 import { useSettingsContext } from '../../../../components/settings';
 import { SkeletonProductDetails } from '../../../../components/skeleton';
 // sections
-import { useSnackbar } from 'notistack';
+
 import CartWidget from '../../../../sections/@dashboard/e-commerce/CartWidget';
 import {
   ProductDetailsCarousel,
   ProductDetailsReview,
   ProductDetailsSummary,
 } from '../../../../sections/@dashboard/e-commerce/details';
-import { IDataAddCart, IProduct } from 'src/@types/product';
-import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
-import { CarouselCenterMode } from 'src/sections/_examples/extra/carousel';
-import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
@@ -99,12 +79,10 @@ export default function EcommerceProductDetailsPage() {
     }
   }, [dispatch, name]);
 
-  
-  
   const handleAddCart = (cart: IDataAddCart) => {
     addToCart(cart)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           dispatch(getCarts());
           enqueueSnackbar('Thêm vào giỏ hàng thành công!');
         } else {

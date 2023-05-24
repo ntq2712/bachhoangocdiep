@@ -7,13 +7,14 @@ import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { getBannerById, newBanner, upLoadImage } from 'src/api/ortherEcom';
 // routes
 // @types
-import { IBanner, ICategoy, ICategoyGroup } from '../../../@types/product';
+import { IBanner } from '../../../@types/product';
 // components
-import { useSnackbar } from 'notistack';
-import { getBannerById, getCategoryGroup, newBanner, upLoadImage } from 'src/api/ortherEcom';
-import FormProvider, { RHFEditor, RHFTextField, RHFUpload } from '../../../components/hook-form';
+
+import FormProvider, { RHFTextField, RHFUpload } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -88,7 +89,7 @@ export default function EventEditFrom({ isEdit, current, handleClose, type }: Pr
   const onSubmit = (data: Partial<IBanner>) => {
     try {
       newBanner(data).then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           enqueueSnackbar(!isEdit ? 'Thành công!' : 'Update success!');
           handleClose();
         } else {
@@ -103,7 +104,7 @@ export default function EventEditFrom({ isEdit, current, handleClose, type }: Pr
 
   const handleDrop = useCallback((acceptedFiles: File[]) => {
     upLoadImage(acceptedFiles).then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         setValue('Images', res?.data?.images);
       }
     });

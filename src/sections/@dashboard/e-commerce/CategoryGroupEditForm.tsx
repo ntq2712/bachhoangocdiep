@@ -6,23 +6,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Stack, Typography } from '@mui/material';
+import { Card, Grid, Stack } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { newCategoryGroup } from 'src/api/ortherEcom';
 // routes
 // @types
 import { ICategoyGroup, IProduct } from '../../../@types/product';
 // components
-import FormProvider, { RHFEditor, RHFTextField } from '../../../components/hook-form';
-import { newCategoryGroup } from 'src/api/ortherEcom';
-import { useSnackbar } from 'notistack';
-import { error } from 'console';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
-
-const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
-];
 
 type Props = {
   isEdit?: boolean;
@@ -74,7 +67,7 @@ export default function CategoryGroupEditForm({ isEdit, currentProduct, handleCl
   const onSubmit = (data: Partial<ICategoyGroup>) => {
     try {
       newCategoryGroup(data).then((res) => {
-        if(res?.data?.success == true){
+        if(res?.data?.success === true){
             enqueueSnackbar(!isEdit ? 'Thành công!' : 'Update success!');
             handleClose();
         }else{

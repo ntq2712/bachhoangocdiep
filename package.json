@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next dev -p 8081",
     "start": "next start",
-    "build": "CI=false && next build",
+    "build": "next build",
     "build-netlify": "next build && cp -r .next _next && mv _next .next/",
     "export": "yarn build && next export -o _static",
     "lint": "eslint --ext .ts,.tsx .",

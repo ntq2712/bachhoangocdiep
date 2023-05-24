@@ -1,14 +1,12 @@
-
 // utils
-import { IAddress, IBanner, IBrand, ICategoy, ICategoyGroup } from 'src/@types/product';
-import axios from '../utils/axios';
 import Axios from 'axios';
-import { log } from 'console';
+import { IAddress, IBanner, IBrand, ICategoy, ICategoyGroup } from 'src/@types/product';
 import { IUserAccountGeneral } from 'src/@types/user';
+import axios from '../utils/axios';
 
 //PRODUCT
 export function getProductsBestSeller() {
-  return axios.get('/v1/products?filter[IsBestSeller][eq]=true')
+  return axios.get('/v1/products?filter[IsBestSeller][eq]=true');
 }
 //BRAND
 export function getBran() {
@@ -53,7 +51,7 @@ export function getBannerById(id: string) {
 export function getCategoryGroup() {
   return axios.get('v1/categoryGroups');
 }
-export function deleteCategoryGroup(id:string) {
+export function deleteCategoryGroup(id: string) {
   return axios.delete(`v1/categoryGroups/${id}`);
 }
 
@@ -220,7 +218,7 @@ export function addAddress(data: IAddress) {
   return axios.post('v1/addresses', data);
 }
 
-export function updateAddress(data: IAddress, id:string) {
+export function updateAddress(data: IAddress, id: string) {
   return axios.patch(`v1/addresses/${id}`, data);
 }
 
@@ -233,11 +231,11 @@ export function newOder(data: any) {
   return axios.post('v1/orders', data);
 }
 export function getOder() {
-  return axios.get('v1/orders')
+  return axios.get('v1/orders');
 }
 export function getOderById(id: any) {
-  return axios.get(`v1/orders/${id}`)
+  return axios.get(`v1/orders/${id}`);
 }
 export function updateStatus(id: any, data: any) {
-  return axios.patch(`v1/orders/${id}`, data)
+  return axios.patch(`v1/orders/${id}`, data);
 }

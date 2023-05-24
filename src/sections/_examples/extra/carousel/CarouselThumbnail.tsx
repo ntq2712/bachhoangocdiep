@@ -2,19 +2,19 @@ import { useState, useRef, useEffect } from 'react';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 // utils
 import { bgGradient } from '../../../../utils/cssStyles';
 // components
 import Image from '../../../../components/image';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
-import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
 const THUMB_SIZE = 64;
 
 type Props = {
-  data: ICarousels[]
+  data: ICarousels[];
 };
 
 type StyledThumbnailsContainerProps = {
@@ -133,7 +133,13 @@ export default function CarouselThumbnail({ data }: Props) {
     >
       <Carousel {...carouselSettings1} asNavFor={nav2} ref={carousel1}>
         {data.map((item) => (
-          <Image sx={{minWidth: 1082}} key={item.id} alt={item.title} src={item.image} ratio="16/9" />
+          <Image
+            sx={{ minWidth: 1082 }}
+            key={item.id}
+            alt={item.title}
+            src={item.image}
+            ratio="16/9"
+          />
         ))}
       </Carousel>
 

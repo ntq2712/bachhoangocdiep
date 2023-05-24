@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // @mui
-import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { alpha, styled, useTheme } from '@mui/material/styles';
+// components
+import { getImages } from 'src/api/ortherEcom';
 // utils
 import { bgGradient } from '../../../../utils/cssStyles';
 // @types
-import { IProduct } from '../../../../@types/product';
-// components
+
+import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
 import Image from '../../../../components/image';
 import Lightbox from '../../../../components/lightbox';
-import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
-import { getImages } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 

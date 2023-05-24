@@ -1,13 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, View, Text, Image, Document } from '@react-pdf/renderer';
+import { Document, Image, Page, Text, View } from '@react-pdf/renderer';
 // utils
-import { fDate } from '../../../../utils/formatTime';
 import { fCurrency } from '../../../../utils/formatNumber';
+import { fDate } from '../../../../utils/formatTime';
 // @types
-import { IInvoice, IInvoiceDetaill } from '../../../../@types/invoice';
+import { IInvoiceDetaill } from '../../../../@types/invoice';
 //
 import styles from './InvoiceStyle';
-import { ownerDocument } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -119,7 +118,7 @@ export default function InvoicePDF({ invoice }: Props) {
                 <Text>Thanh toán</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text> {order.PaidType == 'transfer' ? 'Chuyển khoản' : 'Tiền mặt'}</Text>
+                <Text> {order.PaidType === 'transfer' ? 'Chuyển khoản' : 'Tiền mặt'}</Text>
               </View>
             </View>
 

@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react';
 // @mui
-import { Grid, Card, Button, Typography, Stack, Box } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { deleteAddress, getAdress } from 'src/api/ortherEcom';
 // @types
 import {
   IAddress,
-  ICheckoutBillingAddress,
-  IProductCheckoutState,
+  IProductCheckoutState
 } from '../../../../../@types/product';
 // _mock
-import { _addressBooks } from '../../../../../_mock/arrays';
 // components
-import Label from '../../../../../components/label';
 import Iconify from '../../../../../components/iconify';
+import Label from '../../../../../components/label';
 //
+
 import CheckoutSummary from '../CheckoutSummary';
 import CheckoutBillingNewAddressForm from './CheckoutBillingNewAddressForm';
-import { deleteAddress, getAdress } from 'src/api/ortherEcom';
-import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +40,7 @@ export default function CheckoutBillingAddress({
 
   useEffect(() => {
     getAdress().then((res) => {
-      if (res?.data?.success == true) {
+      if (res?.data?.success === true) {
         setListAdress(res?.data?.Data);
       }
     })
@@ -49,7 +48,7 @@ export default function CheckoutBillingAddress({
 
   const onDeleteBilling = (Id: any) => {
     deleteAddress(Id).then((res)=>{
-      if(res?.data?.success == true){
+      if(res?.data?.success === true){
         setOnload(!onload)
         enqueueSnackbar('Xóa thành công!');
       }else{

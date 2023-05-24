@@ -77,7 +77,6 @@ export default function ProductDetailsSummary({
     if (product) {
       reset(defaultValues);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   const onSubmit = async (data: IDataAddCart) => {

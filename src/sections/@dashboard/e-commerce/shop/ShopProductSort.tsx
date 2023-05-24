@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
 import { Button, MenuItem, Box } from '@mui/material';
+import { sortProducts } from 'src/redux/slices/product';
+import { useDispatch } from 'src/redux/store';
 // components
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
-import { sortProducts } from 'src/redux/slices/product';
-import { useDispatch } from 'src/redux/store';
+
 
 // ----------------------------------------------------------------------
 

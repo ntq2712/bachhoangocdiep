@@ -1,11 +1,11 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 // @mui
+import { Card, CardContent, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Card, Typography, CardContent, Stack } from '@mui/material';
 // components
-import Image from '../../../../components/image';
-import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
 import { ICarousels } from 'src/pages/components/extra/carousel';
+import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
+import Image from '../../../../components/image';
 
 // ----------------------------------------------------------------------
 

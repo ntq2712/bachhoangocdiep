@@ -7,14 +7,14 @@ import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Stack, Typography } from '@mui/material';
+import { getCategoryGroup, newCategory } from 'src/api/ortherEcom';
 // routes
 // @types
-import { ICategoy, ICategoyGroup, IProduct } from '../../../@types/product';
+import { ICategoy, ICategoyGroup } from '../../../@types/product';
 // components
-import FormProvider, { RHFEditor, RHFSelect, RHFTextField } from '../../../components/hook-form';
-import { getCategoryGroup, newCategory, newCategoryGroup } from 'src/api/ortherEcom';
 import { useSnackbar } from 'notistack';
-import { error } from 'console';
+
+import FormProvider, { RHFEditor, RHFSelect, RHFTextField } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ export default function CategoryEditForm({ isEdit, currentProduct, handleClose }
 
   useEffect(() => {
     getCategoryGroup().then((res) => {
-      if (res?.data?.success == true) {
+      if (res?.data?.success === true) {
         setCategoryGroups(res?.data?.CategoryGroups?.Data);
       } else {
         enqueueSnackbar('Không thành công');
@@ -88,7 +88,7 @@ export default function CategoryEditForm({ isEdit, currentProduct, handleClose }
   const onSubmit = (data: Partial<ICategoy>) => {
     try {
       newCategory(data).then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           enqueueSnackbar(!isEdit ? 'Thành công!' : 'Update success!');
           handleClose();
         } else {

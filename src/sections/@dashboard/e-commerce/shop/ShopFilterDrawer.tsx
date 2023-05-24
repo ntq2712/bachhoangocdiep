@@ -1,31 +1,31 @@
 // form
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
-import { alpha } from '@mui/material/styles';
 import {
-  Box,
-  Radio,
-  Stack,
-  Input,
   Badge,
+  Box,
   Button,
-  Drawer,
-  Rating,
   Divider,
-  IconButton,
-  Typography,
-  RadioGroup,
+  Drawer,
   FormControlLabel,
+  IconButton,
+  Input,
+  Radio,
+  RadioGroup,
+  Rating,
+  Stack,
+  Typography,
 } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+// components
+import { useEffect, useState } from 'react';
+import { getBran, getCategory, getCategoryGroup } from 'src/api/ortherEcom';
 // config
 import { NAV } from '../../../../config-global';
-// components
+
+import { RHFMultiCheckbox, RHFRadioGroup, RHFSlider } from '../../../../components/hook-form';
 import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
-import { ColorMultiPicker } from '../../../../components/color-utils';
-import { RHFMultiCheckbox, RHFRadioGroup, RHFSlider } from '../../../../components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import { getBran, getCategory, getCategoryGroup } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ export default function ShopFilterDrawer({
 
   useEffect(() => {
     getCategory().then((res)=>{
-      if(res.data.success == true){
+      if(res.data.success === true){
         const tam:any = []
         res?.data?.Categories?.Data?.map((e:any)=>{
          tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
@@ -89,7 +89,7 @@ export default function ShopFilterDrawer({
       }
     })
     getBran().then((res)=>{
-      if(res.data.success == true){
+      if(res.data.success === true){
         const tam:any = []
         res?.data?.Brands?.Data?.map((e:any)=>{
          tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
@@ -98,7 +98,7 @@ export default function ShopFilterDrawer({
       }
     })
     getCategoryGroup().then((res)=>{
-      if(res.data.success == true){
+      if(res.data.success === true){
         const tam:any = []
         res?.data?.CategoryGroups?.Data?.map((e:any)=>{
          tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })

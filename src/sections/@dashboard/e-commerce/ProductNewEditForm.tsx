@@ -1,30 +1,14 @@
-import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import * as Yup from 'yup';
 // next
 import { useRouter } from 'next/router';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, InputAdornment } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// @types
-import { ICategoy, ICategoyGroup, IProduct } from '../../../@types/product';
+import { Box, Card, Grid, InputAdornment, Stack, Typography } from '@mui/material';
 // components
-import { CustomFile } from '../../../components/upload';
-import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSwitch,
-  RHFSelect,
-  RHFEditor,
-  RHFUpload,
-  RHFTextField,
-  RHFRadioGroup,
-  RHFAutocomplete,
-} from '../../../components/hook-form';
-import { addProduct, getBran, updateProduct } from 'src/redux/slices/product';
 import {
   getBranByCategory,
   getCategoryById,
@@ -32,16 +16,21 @@ import {
   getImages,
   upLoadImage,
 } from 'src/api/ortherEcom';
+import { addProduct, updateProduct } from 'src/redux/slices/product';
+// routes
+import { PATH_DASHBOARD } from '../../../routes/paths';
+// @types
+import { ICategoy, ICategoyGroup, IProduct } from '../../../@types/product';
 
-// ----------------------------------------------------------------------
-
-const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
-];
-
-// ----------------------------------------------------------------------
+import FormProvider, {
+  RHFEditor,
+  RHFSelect,
+  RHFSwitch,
+  RHFTextField,
+  RHFUpload
+} from '../../../components/hook-form';
+import { useSnackbar } from '../../../components/snackbar';
+import { CustomFile } from '../../../components/upload';
 
 interface FormValuesProps extends Omit<IProduct, 'images'> {
   taxes: boolean;
@@ -65,7 +54,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
   const [images, setimages] = useState<any>([]);
   useEffect(() => {
     getCategoryGroup().then((res) => {
-      if (res?.data?.success == true) {
+      if (res?.data?.success === true) {
         setCategoryGroups(res?.data?.CategoryGroups?.Data);
       } else {
         enqueueSnackbar('Không thành công');
@@ -73,21 +62,21 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
     });
     if (!!currentProduct) {
       getCategoryById(currentProduct.CategoryGroupId).then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           setCategorys(res?.data?.category);
         } else {
           enqueueSnackbar('Không thành công');
         }
       });
       getBranByCategory(currentProduct.CategoryId).then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           setBrans(res?.data?.brands);
         } else {
           enqueueSnackbar('Không thành công');
         }
       });
       getImages(currentProduct.Id).then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           setimages(res?.data?.image);
         } else {
           enqueueSnackbar('Không thành công');
@@ -146,7 +135,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
     try {
       if (isEdit) {
         updateProduct(data, currentProduct?.Id).then((res) => {
-          if (res?.data?.success == true) {
+          if (res?.data?.success === true) {
             reset();
             enqueueSnackbar('Update success!');
             push(PATH_DASHBOARD.eCommerce.list);
@@ -154,7 +143,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         });
       } else {
         addProduct(data).then((res) => {
-          if (res?.data?.success == true) {
+          if (res?.data?.success === true) {
             reset();
             enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
             push(PATH_DASHBOARD.eCommerce.list);
@@ -173,7 +162,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
     const files = getValues('Images') || [];
     
     upLoadImage(acceptedFiles).then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         console.log('Data: ', res?.data?.images);
         setValue('Images', [...files, ...res?.data?.images]);
       }
@@ -260,7 +249,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
                   onChange={(e) => {
                     setValue('CategoryGroupId', e.target.value);
                     getCategoryById(e.target.value).then((res) => {
-                      if (res?.data?.success == true) {
+                      if (res?.data?.success === true) {
                         setCategorys(res?.data?.category);
                       } else {
                         enqueueSnackbar('Không thành công');
@@ -279,7 +268,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
                   onChange={(e) => {
                     setValue('CategoryId', e.target.value);
                     getBranByCategory(e.target.value).then((res) => {
-                      if (res?.data?.success == true) {
+                      if (res?.data?.success === true) {
                         setBrans(res?.data?.brands);
                       } else {
                         enqueueSnackbar('Không thành công');

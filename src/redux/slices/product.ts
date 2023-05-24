@@ -78,35 +78,9 @@ const slice = createSlice({
       state.filter.brand = action.payload;
     },
 
-    // addToCart(state, action) {
-    //   const cart = action.payload;
-
-    //   addToCard(cart).then
-    //   // const isEmptyCart = !state.checkout.cart.length;
-
-    //   // if (isEmptyCart) {
-    //   //   state.checkout.Data = [...state.checkout.Data, newProduct];
-    //   // } else {
-    //   //   state.checkout.Data = state.checkout.Data.map((item:any) => {
-    //   //     const isExisted = item.ProductId === newProduct.Id;
-
-    //   //     if (isExisted) {
-    //   //       return {
-    //   //         ...item,
-    //   //         quantity: item.Quantity + 1,
-    //   //       };
-    //   //     }
-
-    //   //     return item;
-    //   //   });
-    //   // }
-    //   // state.checkout.cart = uniqBy([...state.checkout.cart, newProduct], 'id');
-    //   // state.checkout.totalItems = sum(state.checkout.cart.map((product) => product.quantity));
-    // },
-
+   
     deleteCart(state, action) {
-      // const updateCart = state.checkout.cart.filter((product) => product.Id !== action.payload);
-      // state.checkout.cart = updateCart;
+  
     },
 
     resetCart(state) {
@@ -133,37 +107,6 @@ const slice = createSlice({
       state.checkout.activeStep = step;
     },
 
-    // increaseQuantity(state, action) {
-    //   const productId = action.payload;
-
-    //   const updateCart = state.checkout.cart.map((product) => {
-    //     if (product.Id === productId) {
-    //       return {
-    //         ...product,
-    //         quantity: product.quantity + 1,
-    //       };
-    //     }
-    //     return product;
-    //   });
-
-    //   state.checkout.cart = updateCart;
-    // },
-
-    // decreaseQuantity(state, action) {
-    //   const productId = action.payload;
-    //   const updateCart = state.checkout.cart.map((product) => {
-    //     if (product.Id === productId) {
-    //       return {
-    //         ...product,
-    //         quantity: product.quantity - 1,
-    //       };
-    //     }
-    //     return product;
-    //   });
-
-    //   state.checkout.cart = updateCart;
-    // },
-
     createBilling(state, action) {
       state.checkout.Address = action.payload;
     },
@@ -182,7 +125,6 @@ const slice = createSlice({
       const shipping = action.payload;
       state.checkout.shipping = shipping;
       state.checkout.TotalQuantity = state.checkout.TotalQuantity + shipping;
-      // state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
   },
 });
@@ -204,8 +146,6 @@ export const {
   applyDiscount,
   updateShipping,
   setFilterSort,
-  // increaseQuantity,
-  // decreaseQuantity,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -229,7 +169,7 @@ export function sortProducts(value: string) {
     try {
       const response = await axios.get('v1/products', {
         params: { sort: query[0], order: query[1] },
-      }); //v1/products?sort=craete&order=desc
+      }); 
       dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -238,11 +178,11 @@ export function sortProducts(value: string) {
 }
 
 type filter = {
-  brand?: string; //filter[Brand][eq]=abc123&filter[Brand][eq]=bcd456
+  brand?: string; 
   categorygroup?: string[];
   category?: string[];
   pricerange: [number, number];
-  rate?: number; //filter[Rate][eq]=5
+  rate?: number; 
   sortBy?: string;
   page: number;
 };
@@ -259,15 +199,15 @@ export function sortProductsByFilter(value: filter) {
         `v1/products?${value.brand ? 'filter[BrandId][eq]=' + value.brand : ''}&${
           mapCategory ?? ''
         }&${mapCategorygroup ?? ''}&${
-          value.pricerange[0] != null ? 'filter[Price][gte]=' + value.pricerange[0] * 1000 : ''
+          value.pricerange[0] !== null ? 'filter[Price][gte]=' + value.pricerange[0] * 1000 : ''
         }&${value.pricerange[1] ? 'filter[Price][lte]=' + value.pricerange[1] * 1000 : ''}&${
-          value.rate != undefined ? 'filter[Rate][gte]=' + value.rate : ''
+          value.rate !== undefined ? 'filter[Rate][gte]=' + value.rate : ''
         }&${
           value.sortBy
             ? 'sort=' + value.sortBy.split('&')[0] + '&order=' + value.sortBy.split('&')[1]
             : ''
         }&page=${value.page > 0 ? value.page : 1}&limit=12`
-      ); //v1/products?sort=craete&order=desc
+      ); 
       dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -279,7 +219,7 @@ export const getProductByBrandId = (id: string) => {
   axios
     .get(`v1/products?filter[BrandId][eq]=${id}`)
     .then((res) => {
-      if (res?.data?.success == true) {
+      if (res?.data?.success === true) {
         return res.data.Products.Data;
       } else {
         console.log(res?.data);
@@ -349,29 +289,9 @@ export function getProduct(ProductId: string) {
 
 //new product
 export function addProduct(data: Partial<IProduct>) {
-  // const body = {
-  //   Brandid: data?.BrandId,
-  //   CategoryId: data?.CategoryId,
-  //   CategoryGroupId: data?.CategoryGroupId,
-  //   Name: data?.Name,
-  //   Price: data?.Price,
-  //   Quantity: data?.Quantity,
-  //   Images: data?.Images,
-
-  // };
   return axios.post('/v1/products', data);
 }
 
 export function updateProduct(data: Partial<IProduct>, id?: string) {
-  // const body = {
-  //   Brandid: data?.BrandId,
-  //   CategoryId: data?.CategoryId,
-  //   CategoryGroupId: data?.CategoryGroupId,
-  //   Name: data?.Name,
-  //   Price: data?.Price,
-  //   Quantity: data?.Quantity,
-  //   Images: data?.Images,
-
-  // };
   return axios.patch(`/v1/products/${id}`, data);
 }

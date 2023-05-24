@@ -1,27 +1,24 @@
 import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Grid, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { Button, Grid } from '@mui/material';
+import { newOder } from 'src/api/ortherEcom';
 // @types
 import {
   ICheckoutCardOption,
-  ICheckoutPaymentOption,
   ICheckoutDeliveryOption,
-  IProductCheckoutState,
-  IInitStateProduct,
+  ICheckoutPaymentOption
 } from '../../../../../@types/product';
 // components
-import Iconify from '../../../../../components/iconify';
 import FormProvider from '../../../../../components/hook-form';
+import Iconify from '../../../../../components/iconify';
 //
 import CheckoutSummary from '../CheckoutSummary';
-import CheckoutDelivery from './CheckoutDelivery';
 import CheckoutBillingInfo from './CheckoutBillingInfo';
 import CheckoutPaymentMethods from './CheckoutPaymentMethods';
-import { newOder } from 'src/api/ortherEcom';
 
 // ----------------------------------------------------------------------
 

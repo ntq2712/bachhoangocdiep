@@ -1,49 +1,27 @@
+import { useCallback, useState } from 'react';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useState } from 'react';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Box, Grid, Card, Stack, Typography, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { Box, Card, Grid, Stack, TextField, Typography } from '@mui/material';
+// components
+import { DatePicker } from '@mui/x-date-pickers';
+import { IUserAccountGeneral } from 'src/@types/user';
+import { upLoadImage, updateProfile } from 'src/api/ortherEcom';
+import { fDate } from 'src/utils/formatTime';
 // auth
-import { useAuthContext } from '../../../../auth/useAuthContext';
 // utils
 import { fData } from '../../../../utils/formatNumber';
 // assets
-import { countries } from '../../../../assets/data';
-// components
-import { CustomFile } from '../../../../components/upload';
-import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, {
   RHFSwitch,
-  RHFSelect,
   RHFTextField,
-  RHFUploadAvatar,
+  RHFUploadAvatar
 } from '../../../../components/hook-form';
-import { IUserAccountGeneral } from 'src/@types/user';
-import { upLoadImage, updateProfile } from 'src/api/ortherEcom';
-import { CalendarToolbar } from '../../calendar';
-import { fDate } from 'src/utils/formatTime';
-import { DatePicker } from '@mui/x-date-pickers';
+import { useSnackbar } from '../../../../components/snackbar';
 
-// ----------------------------------------------------------------------
-
-type FormValuesProps = {
-  displayName: string;
-  email: string;
-  photoURL: CustomFile | string | null;
-  phoneNumber: string | null;
-  country: string | null;
-  address: string | null;
-  state: string | null;
-  city: string | null;
-  zipCode: string | null;
-  about: string | null;
-  isPublic: boolean;
-};
-
-const INPUT_WIDTH = 160;
 
 export default function AccountGeneral({ user }: any) {
   const { enqueueSnackbar } = useSnackbar();
@@ -77,7 +55,6 @@ export default function AccountGeneral({ user }: any) {
 
   const onChangeDate = (value: any) => {
     const date = new Date(value).toLocaleDateString();
-    console.log('date: ',new Date(value).toLocaleDateString())
     setValue('DateOfBirth', date);
     setBirthDate(value);
   };
@@ -97,7 +74,7 @@ export default function AccountGeneral({ user }: any) {
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       upLoadImage(acceptedFiles).then((res) => {
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           setValue('Avatar', res?.data?.images[0]?.OriginalImageUrl, { shouldValidate: true });
         }
       });

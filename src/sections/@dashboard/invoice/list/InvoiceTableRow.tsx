@@ -104,7 +104,7 @@ export default function InvoiceTableRow({
         <TableCell align="center">{TotalAmount}</TableCell>
 
         <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
-          {PaidType == 'cash' ? 'Tiền mặt' : 'Chuyển khoản'}
+          {PaidType === 'cash' ? 'Tiền mặt' : 'Chuyển khoản'}
         </TableCell>
 
         <TableCell align="left">

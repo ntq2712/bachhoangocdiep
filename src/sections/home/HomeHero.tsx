@@ -3,38 +3,35 @@ import { useEffect, useState } from 'react';
 // next
 import NextLink from 'next/link';
 // @mui
-import { styled, alpha, useTheme } from '@mui/material/styles';
 import {
-  Button,
   Box,
-  Link,
+  Button,
   Container,
-  Typography,
-  Stack,
   Grid,
-  Rating,
   IconButton,
+  Rating,
+  Stack,
+  Typography
 } from '@mui/material';
+import { alpha, styled, useTheme } from '@mui/material/styles';
+// components
+import { _socials } from 'src/_mock/arrays';
 // routes
 import {
   PATH_DASHBOARD,
-  PATH_FIGMA_PREVIEW,
-  PATH_FREE_VERSION,
-  PATH_PAGE,
+  PATH_PAGE
 } from '../../routes/paths';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // utils
-import { textGradient, bgGradient } from '../../utils/cssStyles';
+import { bgGradient, textGradient } from '../../utils/cssStyles';
 // config
 import { HEADER } from '../../config-global';
 // theme
 import { secondaryFont } from '../../theme/typography';
-// components
-import SvgColor from '../../components/svg-color';
-import Iconify from '../../components/iconify';
+
 import { MotionContainer, varFade } from '../../components/animate';
-import { _socials } from 'src/_mock/arrays';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 

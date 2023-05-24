@@ -1,16 +1,16 @@
 import { useRef } from 'react';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 // components
-import Image from '../../../../components/image';
-import Carousel, { CarouselDots, CarouselArrows } from '../../../../components/carousel';
 import { ICarousels } from 'src/pages/components/extra/carousel';
+import Carousel, { CarouselArrows, CarouselDots } from '../../../../components/carousel';
+import Image from '../../../../components/image';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  data: ICarousels[]
+  data: ICarousels[];
 };
 
 export default function CarouselBasic3({ data }: Props) {

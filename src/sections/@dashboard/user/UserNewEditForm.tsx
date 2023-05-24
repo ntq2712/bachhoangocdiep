@@ -58,19 +58,19 @@ export default function UserNewEditForm({ isEdit = false, currentUser }: Props) 
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      email: currentUser?.email || '',
-      phoneNumber: currentUser?.phoneNumber || '',
-      address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      state: currentUser?.state || '',
-      city: currentUser?.city || '',
-      zipCode: currentUser?.zipCode || '',
-      avatarUrl: currentUser?.avatarUrl || null,
-      isVerified: currentUser?.isVerified || true,
-      status: currentUser?.status,
-      company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      name: currentUser?.FullName || '',
+      email: currentUser?.Email || '',
+      phoneNumber: currentUser?.PhoneNumber || '',
+      address: '',
+      country: '',
+      state: '',
+      city: '',
+      zipCode: '',
+      avatarUrl: null,
+      isVerified: true,
+      status: '',
+      company: '',
+      role: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -132,7 +132,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }: Props) 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>
             {isEdit && (
               <Label
@@ -254,7 +254,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }: Props) 
               </LoadingButton>
             </Stack>
           </Card>
-        </Grid>
+        </Grid> */}
       </Grid>
     </FormProvider>
   );

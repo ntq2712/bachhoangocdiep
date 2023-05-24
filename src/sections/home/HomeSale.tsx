@@ -1,6 +1,4 @@
 import { Container, Grid, Stack } from '@mui/material';
-import React from 'react';
-import Image from 'src/components/image/Image';
 
 function HomeSale() {
   return (

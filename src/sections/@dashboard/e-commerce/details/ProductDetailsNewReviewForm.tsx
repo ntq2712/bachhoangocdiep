@@ -78,7 +78,7 @@ export default function ProductDetailsNewReviewForm({ onClose, ...other }: Props
   const onSubmit = async (data: FormValuesProps) => {
     try {
       newReview(data).then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           dispatch(getProduct(name as string));
           reset();
           onClose();
@@ -122,10 +122,6 @@ export default function ProductDetailsNewReviewForm({ onClose, ...other }: Props
               rows={3}
               sx={{ mt: 3, width: 500 }}
             />
-
-            {/* <RHFTextField name="name" label="Name *" sx={{ mt: 3 }} />
-
-          <RHFTextField name="email" label="Email *" sx={{ mt: 3 }} /> */}
           </DialogContent>
 
           <DialogActions>

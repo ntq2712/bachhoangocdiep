@@ -2,7 +2,14 @@ import { paramCase } from 'change-case';
 // next
 import NextLink from 'next/link';
 // @mui
-import { Box, Card, Link, Stack, Fab } from '@mui/material';
+import { Box, Card, Fab, Link, Stack } from '@mui/material';
+// components
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
+import { useAuthContext } from 'src/auth/useAuthContext';
+import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
+import { addToCart, getCarts } from 'src/redux/slices/product';
 // routes
 import { PATH_AUTH, PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
@@ -11,19 +18,10 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import { useDispatch } from '../../../../redux/store';
 // @types
 import { IProduct } from '../../../../@types/product';
-// components
+
 import Iconify from '../../../../components/iconify';
-import Label from '../../../../components/label';
 import Image from '../../../../components/image';
-import { ColorPreview } from '../../../../components/color-utils';
-import { useSnackbar } from 'notistack';
-import { addToCart, getCarts } from 'src/redux/slices/product';
-import { useAuthContext } from 'src/auth/useAuthContext';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import Login from '../../../../pages/auth/login';
-import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
-import LoginPage from '../../../../pages/auth/login';
+import Label from '../../../../components/label';
 
 // ----------------------------------------------------------------------
 
@@ -74,7 +72,7 @@ export default function ShopProductCard({ product }: Props) {
       };
       addToCart(cart)
         .then((res) => {
-          if (res?.data?.success == true) {
+          if (res?.data?.success === true) {
             dispatch(getCarts());
             enqueueSnackbar('Thêm vào giỏ hàng thành công!');
           } else {

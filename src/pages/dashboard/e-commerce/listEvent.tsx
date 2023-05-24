@@ -16,12 +16,16 @@ import {
   Tooltip,
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { Box } from '@mui/system';
+import { getBanner } from 'src/api/ortherEcom';
+import BannerTableRow from 'src/sections/@dashboard/e-commerce/BannerTableRow';
+import EventEditFrom from 'src/sections/@dashboard/e-commerce/EventEditFrom';
 // redux
 import { useDispatch } from '../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
-import { IBanner, IBrand, ICategoy, ICategoyGroup } from '../../../@types/product';
+import { IBanner } from '../../../@types/product';
 // layouts
 import DashboardLayout from '../../../layouts/dashboard';
 // components
@@ -42,14 +46,8 @@ import {
   useTable,
 } from '../../../components/table';
 // sections
-import { Box } from '@mui/system';
-import { getBanner, getBran, getCategory } from 'src/api/ortherEcom';
-import CategoryEditForm from 'src/sections/@dashboard/e-commerce/CategoryEditForm';
-import CategoryGroupTableRow from 'src/sections/@dashboard/e-commerce/CategoryGroupTableRow';
+
 import { ProductTableToolbar } from '../../../sections/@dashboard/e-commerce/list';
-import BrandEditForm from 'src/sections/@dashboard/e-commerce/BrandEditForm';
-import EventEditFrom from 'src/sections/@dashboard/e-commerce/EventEditFrom';
-import BannerTableRow from 'src/sections/@dashboard/e-commerce/BannerTableRow';
 
 // ----------------------------------------------------------------------
 
@@ -140,7 +138,7 @@ export default function ListEvent() {
     setIsLoading(true);
     getBanner('event')
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           setTableData(res?.data?.Banners?.Data);   
           setIsLoading(false);
         } else {

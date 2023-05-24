@@ -1,37 +1,32 @@
 // @mui
-import { styled } from '@mui/material/styles';
 import {
   Box,
   Card,
+  Divider,
   Grid,
   Table,
-  Divider,
-  TableRow,
   TableBody,
-  TableHead,
   TableCell,
-  Typography,
   TableContainer,
-  MenuItem,
-  Select,
+  TableHead,
+  TableRow,
+  Typography
 } from '@mui/material';
-// utils
-import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
-// _mock_
-import { IInvoice, IInvoiceDetaill } from '../../../../@types/invoice';
-// components
-import Label from '../../../../components/label';
-import Image from '../../../../components/image';
-import Scrollbar from '../../../../components/scrollbar';
+import { styled } from '@mui/material/styles';
 //
-import InvoiceToolbar from './InvoiceToolbar';
-import { useState } from 'react';
-import { RHFSelect } from 'src/components/hook-form';
-import { updateStatus } from 'src/api/ortherEcom';
 import { useRouter } from 'next/router';
-import { PATH_DASHBOARD } from 'src/routes/paths';
 import { useSnackbar } from 'notistack';
+// utils
+import { fCurrency } from '../../../../utils/formatNumber';
+import { fDate } from '../../../../utils/formatTime';
+// _mock_
+import { IInvoiceDetaill } from '../../../../@types/invoice';
+// components
+import Image from '../../../../components/image';
+import Label from '../../../../components/label';
+import Scrollbar from '../../../../components/scrollbar';
+
+import InvoiceToolbar from './InvoiceToolbar';
 
 // ----------------------------------------------------------------------
 
@@ -198,7 +193,7 @@ export default function InvoiceDetails({ invoice }: Props) {
 
                   <TableCell align="right" width={120} sx={{ typography: 'body1' }}>
                     <Box sx={{ mt: 2 }} />
-                    {order.PaidType == 'transfer' ? 'Chuyển khoản' : 'Tiền mặt'}
+                    {order.PaidType === 'transfer' ? 'Chuyển khoản' : 'Tiền mặt'}
                   </TableCell>
                 </StyledRowResult>
 

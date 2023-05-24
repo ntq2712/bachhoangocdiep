@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import { Box, Paper, Link, CardContent } from '@mui/material';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import { ICarousels } from 'src/pages/components/extra/carousel';
 // utils
 import { bgGradient } from '../../../../utils/cssStyles';
 // components
@@ -9,8 +11,6 @@ import Image from '../../../../components/image';
 import Iconify from '../../../../components/iconify';
 import TextMaxLine from '../../../../components/text-max-line';
 import Carousel, { CarouselArrows } from '../../../../components/carousel';
-import { PATH_DASHBOARD } from 'src/routes/paths';
-import { ICarousels } from 'src/pages/components/extra/carousel';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ export default function CarouselCenterMode({ data }: Props) {
   const carouselSettings = {
     slidesToShow: data?.length > 3 ? 3 : data.length,
     centerMode: true,
-    centerPadding:'60px',
+    centerPadding: '60px',
     rtl: Boolean(theme.direction === 'rtl'),
     responsive: [
       {
@@ -102,10 +102,10 @@ function CarouselItem({ item }: { item: ICarousels }) {
         borderRadius: 2,
         overflow: 'hidden',
         position: 'relative',
-        maxWidth: 300
+        maxWidth: 300,
       }}
     >
-      <Image alt={title} src={image} ratio="3/4" sx={{maxHeight: 100}}/>
+      <Image alt={title} src={image} ratio="3/4" sx={{ maxHeight: 100 }} />
       <CardContent
         sx={{
           bottom: 0,

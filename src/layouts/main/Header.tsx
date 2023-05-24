@@ -1,6 +1,17 @@
 // @mui
 import { AppBar, Box, BoxProps, Button, Container, Link, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+
+//
+import NextLink from 'next/link';
+import { useLayoutEffect, useState } from 'react';
+import { getBranByCategory, getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
+import Iconify from 'src/components/iconify/Iconify';
+import { ShopProductSearch } from 'src/sections/@dashboard/e-commerce/shop';
+import navConfig from './nav/config-navigation';
+import NavDesktop from './nav/desktop';
+import NavMobile from './nav/mobile';
+import { NavItemProps } from './nav/types';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 import useResponsive from '../../hooks/useResponsive';
@@ -9,26 +20,14 @@ import { bgBlur } from '../../utils/cssStyles';
 // config
 import { HEADER } from '../../config-global';
 // routes
-import { PATH_AUTH, PATH_DASHBOARD, PATH_DOCS } from '../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from '../../routes/paths';
 // components
-import Label from '../../components/label';
 import Logo from '../../components/logo';
-//
-import { useLayoutEffect, useState } from 'react';
-import navConfig from './nav/config-navigation';
-import NavDesktop from './nav/desktop';
-import NavMobile from './nav/mobile';
-import Iconify from 'src/components/iconify/Iconify';
-import { getBranByCategory, getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
-import { NavItemProps } from './nav/types';
-import { ShopProductSearch } from 'src/sections/@dashboard/e-commerce/shop';
-import NextLink from 'next/link';
 // ----------------------------------------------------------------------
 
 export default function Header() {
   const theme = useTheme();
 
- 
   const isDesktop = useResponsive('up', 'md');
 
   const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
@@ -38,7 +37,7 @@ export default function Header() {
   const navBrands = (id: string): [] => {
     const team: any = [];
     getBranByCategory(id).then((resb) => {
-      if (resb.data.success == true) {
+      if (resb.data.success === true) {
         if (resb?.data?.brands?.length < 1) {
           return team;
         } else {
@@ -59,7 +58,7 @@ export default function Header() {
   const navcategory = (id: string) => {
     let tem: any = [];
     getCategoryById(id).then((resp) => {
-      if (resp.data.success == true) {
+      if (resp.data.success === true) {
         if (resp?.data?.category?.length < 1) {
           return;
         } else {
@@ -70,7 +69,6 @@ export default function Header() {
               items: team,
             });
           });
-         
         }
       }
     });
@@ -80,28 +78,26 @@ export default function Header() {
   useLayoutEffect(() => {
     const tam: any = [];
     getCategoryGroup().then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         res.data.CategoryGroups.Data.map((e: any) => {
-            tam.push({
-              id: e.Id,
-              title: e.Name,
-              icon: <Iconify icon="eva:home-fill" />,
-              path: PATH_DASHBOARD.eCommerce.shop,
-              children: navcategory(e.Id),
-            });
+          tam.push({
+            id: e.Id,
+            title: e.Name,
+            icon: <Iconify icon="eva:home-fill" />,
+            path: PATH_DASHBOARD.eCommerce.shop,
+            children: navcategory(e.Id),
+          });
         });
         tam.push({
           id: '',
           title: 'Khác',
           icon: <Iconify icon="eva:home-fill" />,
           path: PATH_DASHBOARD.eCommerce.shop,
-          
         });
       }
       setDatenav(tam);
     });
   }, []);
-  
 
   return (
     <AppBar color="transparent" sx={{ boxShadow: 0 }}>

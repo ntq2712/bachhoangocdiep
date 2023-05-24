@@ -1,10 +1,9 @@
 // @mui
 import { Box, BoxProps } from '@mui/material';
-import BestSellerCart from './BestSellerCart';
 import { IProduct } from 'src/@types/product';
 import { SkeletonProductItem } from 'src/components/skeleton';
+import BestSellerCart from './BestSellerCart';
 // @type
-
 
 // ----------------------------------------------------------------------
 

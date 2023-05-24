@@ -1,17 +1,17 @@
 // @mui
-import { Box, Card, Button, Typography, Stack, Divider } from '@mui/material';
+import { Box, Button, Card, Divider, Stack, Typography } from '@mui/material';
+// components
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { IAddress } from 'src/@types/product';
+import { addAddress, deleteAddress, updateAddress } from 'src/api/ortherEcom';
+import { useAuthContext } from 'src/auth/useAuthContext';
+import { CheckoutBillingNewAddressForm } from 'src/sections/@dashboard/e-commerce/checkout';
 // @types
 import { IUserAccountBillingAddress } from '../../../../../@types/user';
-// components
+
 import Iconify from '../../../../../components/iconify';
-import { CheckoutBillingNewAddressForm } from 'src/sections/@dashboard/e-commerce/checkout';
-import { useState } from 'react';
-import { addAddress, deleteAddress, updateAddress } from 'src/api/ortherEcom';
-import { IAddress } from 'src/@types/product';
-import { useSnackbar } from 'notistack';
 import BillingEditAddressForm from './BillingEditAddressForm';
-import { useDispatch } from 'src/redux/store';
-import { useAuthContext } from 'src/auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export default function AccountBillingAddressBook({ addressBook }: Props) {
   const handleCreateBilling = (address: IAddress) => {
     addAddress(address)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           enqueueSnackbar('Thêm địa chỉ thành công!');
           initialize();
           handleClose();
@@ -36,14 +36,12 @@ export default function AccountBillingAddressBook({ addressBook }: Props) {
         }
       })
       .catch((err) => enqueueSnackbar('Đã có lỗi xảy ra!', { variant: 'error' }));
-
-    // // dispatch(nextStep());
   };
 
   const handleUpateBilling = (address: IAddress, id: string) => {
     updateAddress(address, id)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           enqueueSnackbar('Sửa địa chỉ thành công!');
           initialize();
           handleCloseUpdate();
@@ -52,14 +50,12 @@ export default function AccountBillingAddressBook({ addressBook }: Props) {
         }
       })
       .catch((err) => enqueueSnackbar('Đã có lỗi xảy ra!', { variant: 'error' }));
-
-    // // dispatch(nextStep());
   };
 
   const handleDeleteBilling = (id?: string) => {
     deleteAddress(id)
       .then((res) => {
-        if (res?.data?.success == true) {
+        if (res?.data?.success === true) {
           enqueueSnackbar('Xóa địa chỉ thành công!');
           initialize();
         } else {
@@ -67,8 +63,6 @@ export default function AccountBillingAddressBook({ addressBook }: Props) {
         }
       })
       .catch((err) => enqueueSnackbar('Đã có lỗi xảy ra!', { variant: 'error' }));
-
-    // // dispatch(nextStep());
   };
 
   const handleOpen = () => {
@@ -89,7 +83,7 @@ export default function AccountBillingAddressBook({ addressBook }: Props) {
           ĐỊA CHỈ NHẬN HÀNG MẶT ĐỊNH
         </Typography>
 
-        {addressBook[0] == null && (
+        {addressBook[0] === null && (
           <>
             <Button onClick={handleOpen} size="small" startIcon={<Iconify icon="eva:plus-fill" />}>
               New Billing Address
@@ -104,7 +98,7 @@ export default function AccountBillingAddressBook({ addressBook }: Props) {
       </Stack>
 
       <Stack spacing={3} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
-        {addressBook[0] != null &&
+        {addressBook[0] !== null &&
           addressBook?.map((address: any) => (
             <Stack key={address?.Id} spacing={1}>
               <Typography variant="subtitle1">{address?.ReceiverName}</Typography>

@@ -1,29 +1,28 @@
 // @mui
+import { AppBar, Box, Container, Stack, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Stack, AppBar, Toolbar, IconButton, Container, Box } from '@mui/material';
+import { useLayoutEffect, useState } from 'react';
+import { getBranByCategory, getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
+import NavDesktop from 'src/layouts/main/nav/desktop/NavDesktop';
+import { NavItemProps } from 'src/layouts/main/nav/types';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import { ShopProductSearch } from 'src/sections/@dashboard/e-commerce/shop';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
 // config
-import { HEADER, NAV } from '../../../config-global';
+import { HEADER } from '../../../config-global';
 // components
-import Logo from '../../../components/logo';
 import Iconify from '../../../components/iconify';
-import { useSettingsContext } from '../../../components/settings';
+import Logo from '../../../components/logo';
 //
-import Searchbar from './Searchbar';
+
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
+import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
-import { ShopProductSearch } from 'src/sections/@dashboard/e-commerce/shop';
-import { useLayoutEffect, useState } from 'react';
-import { getBranByCategory, getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
-import { PATH_DASHBOARD } from 'src/routes/paths';
-import { NavItemProps } from 'src/layouts/main/nav/types';
-import NavDesktop from 'src/layouts/main/nav/desktop/NavDesktop';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +38,7 @@ export default function Header({ onOpenNav }: Props) {
   const navBrands = (id: string): [] => {
     const team: any = [];
     getBranByCategory(id).then((resb) => {
-      if (resb.data.success == true) {
+      if (resb.data.success === true) {
         if (resb?.data?.brands?.length < 1) {
           return team;
         } else {
@@ -60,7 +59,7 @@ export default function Header({ onOpenNav }: Props) {
   const navcategory = (id: string) => {
     let tem: any = [];
     getCategoryById(id).then((resp) => {
-      if (resp.data.success == true) {
+      if (resp.data.success === true) {
         if (resp?.data?.category?.length < 1) {
           return;
         } else {
@@ -80,7 +79,7 @@ export default function Header({ onOpenNav }: Props) {
   useLayoutEffect(() => {
     const tam: any = [];
     getCategoryGroup().then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         res.data.CategoryGroups.Data.map((e: any) => {
           tam.push({
             id: e.Id,
@@ -101,27 +100,12 @@ export default function Header({ onOpenNav }: Props) {
     });
   }, []);
 
-  // const { themeLayout } = useSettingsContext();
-
-  // const isNavHorizontal = themeLayout === 'horizontal';
-
-  // const isNavMini = themeLayout === 'mini';
-
   const isDesktop = useResponsive('up', 'lg');
 
-  const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) 
-  //&& !isNavHorizontal;
+  const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP);
 
   const renderContent = (
     <>
-      {/* {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />} */}
-
-      {/* {!isDesktop && (
-        <IconButton onClick={onOpenNav} sx={{ mr: 1, color: 'text.primary' }}>
-          <Iconify icon="eva:menu-2-fill" />
-        </IconButton>
-      )} */}
-
       <Stack
         flexGrow={1}
         direction="row"
@@ -152,22 +136,13 @@ export default function Header({ onOpenNav }: Props) {
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,
         }),
-        //`calc(100% - ${NAV.W_DASHBOARD + 1}px)`
+
         ...(isDesktop && {
           width: '100%',
           height: HEADER.H_DASHBOARD_DESKTOP,
           ...(isOffset && {
             height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
           }),
-          // ...(isNavHorizontal && {
-          //   width: 1,
-          //   bgcolor: 'background.default',
-          //   height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
-          //   borderBottom: `dashed 1px ${theme.palette.divider}`,
-          // }),
-          // ...(isNavMini && {
-          //   width: `calc(100% - ${NAV.W_DASHBOARD_MINI + 1}px)`,
-          // }),
         }),
       }}
     >

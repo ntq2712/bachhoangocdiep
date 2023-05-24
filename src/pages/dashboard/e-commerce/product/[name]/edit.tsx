@@ -40,7 +40,6 @@ export default function EcommerceProductEditPage() {
   );
 
   useEffect(() => {
-    console.log("name: ", currentProduct)
     dispatch(getProducts());
   }, [dispatch]);
 

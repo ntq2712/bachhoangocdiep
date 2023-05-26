@@ -2,13 +2,10 @@ import { useState } from 'react';
 // form
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
-import { Button, MenuItem, Box } from '@mui/material';
-import { sortProducts } from 'src/redux/slices/product';
-import { useDispatch } from 'src/redux/store';
+import { Box, Button, MenuItem } from '@mui/material';
 // components
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
-
 
 // ----------------------------------------------------------------------
 
@@ -16,8 +13,6 @@ import MenuPopover from '../../../../components/menu-popover';
 
 export default function ShopProductSort() {
   const { control } = useFormContext();
-
-  const dispatch = useDispatch();
 
   const OPTIONS = [
     { value: 'createdAt&asc', label: 'Cũ đến mới' },
@@ -27,7 +22,6 @@ export default function ShopProductSort() {
   ];
 
   function renderLabel(label: string) {
-   
     return {
       'createdAt&asc': 'Cũ đến mới',
       'createdAt&desc': 'Mới đến cũ',
@@ -61,7 +55,7 @@ export default function ShopProductSort() {
             }
             sx={{ fontWeight: 'fontWeightMedium' }}
           >
-            Sort By:
+            Sắp xếp:
             <Box component="span" sx={{ color: 'text.secondary', ml: 0.5 }}>
               {renderLabel(field.value)}
             </Box>

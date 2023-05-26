@@ -87,7 +87,7 @@ export default function BlogPostPage() {
   return (
     <>
       <Head>
-        <title>{`Blog: ${post?.title || ''} | Minimal UI`}</title>
+        <title>{`Blog: ${post?.title || ''} | Bách hóa Ngọc Diệp`}</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

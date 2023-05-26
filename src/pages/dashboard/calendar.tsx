@@ -256,7 +256,7 @@ export default function CalendarPage() {
   return (
     <>
       <Head>
-        <title> Calendar | Minimal UI</title>
+        <title> Calendar | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

@@ -22,7 +22,7 @@ export default function MUIBreadcrumbsPage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Breadcrumbs | Minimal UI</title>
+        <title> MUI Components: Breadcrumbs | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

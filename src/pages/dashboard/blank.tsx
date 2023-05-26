@@ -20,7 +20,7 @@ export default function BlankPage() {
   return (
     <>
       <Head>
-        <title> Blank Page | Minimal UI</title>
+        <title> Blank Page | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

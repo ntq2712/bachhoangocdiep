@@ -26,7 +26,7 @@ export default function InvoiceCreatePage() {
   return (
     <>
       <Head>
-        <title> Invoices: Create a new invoice | Minimal UI</title>
+        <title> Invoices: Create a new invoice | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

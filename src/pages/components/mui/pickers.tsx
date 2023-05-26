@@ -36,7 +36,7 @@ export default function MUIPickersPage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Pickers | Minimal UI</title>
+        <title> MUI Components: Pickers | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

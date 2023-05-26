@@ -79,7 +79,7 @@ export default function MUISliderPage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Slider | Minimal UI</title>
+        <title> MUI Components: Slider | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

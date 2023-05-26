@@ -70,7 +70,7 @@ export default function MUIProgressPage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Progress | Minimal UI</title>
+        <title> MUI Components: Progress | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

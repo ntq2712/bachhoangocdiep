@@ -60,7 +60,7 @@ export default function DemoMultiLanguagePage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Multi Language | Minimal UI</title>
+        <title> Extra Components: Multi Language | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

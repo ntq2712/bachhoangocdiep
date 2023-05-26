@@ -29,7 +29,7 @@ export default function DemoImagePage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Image | Minimal UI</title>
+        <title> Extra Components: Image | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

@@ -34,7 +34,7 @@ export default function UserEditPage() {
   return (
     <>
       <Head>
-        <title> User: Edit user | Minimal UI</title>
+        <title> User: Edit user | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

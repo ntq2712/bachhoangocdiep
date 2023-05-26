@@ -26,7 +26,7 @@ export default function DemoLabelPage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Label | Minimal UI</title>
+        <title> Extra Components: Label | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

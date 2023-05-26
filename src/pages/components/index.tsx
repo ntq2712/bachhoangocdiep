@@ -19,7 +19,7 @@ export default function ComponentsOverviewPage() {
   return (
     <>
       <Head>
-        <title> Components Overview | Minimal UI</title>
+        <title> Components Overview | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <ComponentHero />

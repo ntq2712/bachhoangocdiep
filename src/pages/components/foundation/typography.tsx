@@ -55,7 +55,7 @@ export default function FoundationTypographyPage() {
   return (
     <>
       <Head>
-        <title> Foundations: Typography | Minimal UI</title>
+        <title> Foundations: Typography | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

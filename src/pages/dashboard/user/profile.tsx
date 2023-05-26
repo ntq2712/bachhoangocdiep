@@ -83,7 +83,7 @@ export default function UserProfilePage() {
   return (
     <>
       <Head>
-        <title> User: Profile | Minimal UI</title>
+        <title> User: Profile | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

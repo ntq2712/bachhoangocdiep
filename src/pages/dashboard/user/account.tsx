@@ -79,7 +79,7 @@ export default function UserAccountPage() {
   return (
     <>
       <Head>
-        <title> User: Account Settings | Minimal UI</title>
+        <title> User: Account Settings | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

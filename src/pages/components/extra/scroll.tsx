@@ -20,7 +20,7 @@ export default function DemoScrollbarPage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Scrollbar | Minimal UI</title>
+        <title> Extra Components: Scrollbar | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

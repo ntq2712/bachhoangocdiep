@@ -73,7 +73,7 @@ export default function MUIPopoverPage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Popover | Minimal UI</title>
+        <title> MUI Components: Popover | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

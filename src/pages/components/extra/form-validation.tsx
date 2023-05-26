@@ -36,7 +36,7 @@ export default function DemoFormValidationPage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Form Validation | Minimal UI</title>
+        <title> Extra Components: Form Validation | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

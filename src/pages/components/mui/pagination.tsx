@@ -60,7 +60,7 @@ export default function MUIPaginationPage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Pagination | Minimal UI</title>
+        <title> MUI Components: Pagination | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

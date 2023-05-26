@@ -9,7 +9,7 @@ export default function LoginUnprotectedPage() {
   return (
     <>
       <Head>
-        <title> Login Unprotected | Minimal UI</title>
+        <title> Login Unprotected | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Login />

@@ -40,7 +40,7 @@ export default function GeneralBankingPage() {
   return (
     <>
       <Head>
-        <title> General: Banking | Minimal UI</title>
+        <title> General: Banking | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

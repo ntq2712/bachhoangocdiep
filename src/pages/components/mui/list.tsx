@@ -97,7 +97,7 @@ export default function MUIListPage() {
   return (
     <>
       <Head>
-        <title> MUI Components: List | Minimal UI</title>
+        <title> MUI Components: List | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

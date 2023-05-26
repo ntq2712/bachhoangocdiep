@@ -106,7 +106,7 @@ export default function MUITimelinePage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Timeline | Minimal UI</title>
+        <title> MUI Components: Timeline | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

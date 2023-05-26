@@ -71,7 +71,7 @@ export default function DemoLightboxPage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Lightbox | Minimal UI</title>
+        <title> Extra Components: Lightbox | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

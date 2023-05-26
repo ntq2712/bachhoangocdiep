@@ -44,7 +44,7 @@ export default function InvoiceEditPage() {
   return (
     <>
       <Head>
-        <title> Invoice: Edit | Minimal UI</title>
+        <title> Invoice: Edit | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

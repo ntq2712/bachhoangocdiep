@@ -120,7 +120,7 @@ export default function DemoCarouselsPage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Carousels | Minimal UI</title>
+        <title> Trang chủ | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container sx={{ my: 10 }}>

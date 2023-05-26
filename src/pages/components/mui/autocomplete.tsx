@@ -47,7 +47,7 @@ export default function MUIAutocompletePage() {
   return (
     <>
       <Head>
-        <title> MUI Components: Autocomplete | Minimal UI</title>
+        <title> MUI Components: Autocomplete | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

@@ -46,7 +46,7 @@ export default function InvoiceDetailsPage() {
   return (
     <>
       <Head>
-        <title> Invoice: View | Minimal UI</title>
+        <title> Invoice: View | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

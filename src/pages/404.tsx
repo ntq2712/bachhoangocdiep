@@ -21,7 +21,7 @@ export default function Page404() {
   return (
     <>
       <Head>
-        <title> 404 Page Not Found | Minimal UI</title>
+        <title> 404 Page Not Found | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <MotionContainer>

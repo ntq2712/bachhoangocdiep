@@ -30,7 +30,7 @@ export default function DemoMegaMenuPage() {
   return (
     <>
       <Head>
-        <title> Extra Components: Mega Menu | Minimal UI</title>
+        <title> Extra Components: Mega Menu | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

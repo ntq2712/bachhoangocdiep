@@ -96,7 +96,7 @@ export default function EcommerceProductDetailsPage() {
   return (
     <>
       <Head>
-        <title>{`Sản phẩm: ${product?.Name || ''} | Minimal UI`}</title>
+        <title>{`Sản phẩm: ${product?.Name || ''} | Bách hóa Ngọc Diệp`}</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

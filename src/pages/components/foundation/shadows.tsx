@@ -51,7 +51,7 @@ export default function FoundationShadowsPage() {
   return (
     <>
       <Head>
-        <title> Foundations: Shadows | Minimal UI</title>
+        <title> Foundations: Shadows | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Box

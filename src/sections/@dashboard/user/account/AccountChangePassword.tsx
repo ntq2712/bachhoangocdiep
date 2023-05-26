@@ -84,7 +84,7 @@ export default function AccountChangePassword() {
           <RHFTextField name="confirmNewPassword" type="password" label="Confirm New Password" />
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save Changes
+            Đổi mật khẩu
           </LoadingButton>
         </Stack>
       </Card>

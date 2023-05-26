@@ -76,9 +76,9 @@ export default function BillingEditAddressForm({ open, onClose, onUpateBilling, 
       Street: data?.Street,
       ReceiverName: data?.ReceiverName,
       ReceiverPhoneNumber: data?.ReceiverPhoneNumber,
-      CityGHNId: JSON.parse(data?.City).id | 0,
-      DistrictGHNId: JSON.parse(data?.District).id | 0,
-      WardGHNid: JSON.parse(data?.Ward).id | 0,
+      CityGHNId: JSON.parse(data?.City).id || 0,
+      DistrictGHNId: JSON.parse(data?.District).id || 0,
+      WardGHNid: JSON.parse(data?.Ward).id || 0,
     };
     try {
       onUpateBilling(body, addressItem.Id || '');

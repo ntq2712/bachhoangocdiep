@@ -40,13 +40,13 @@ export default function UserAccountPage() {
   const TABS = [
     {
       value: 'general',
-      label: 'General',
+      label: 'Thông tin',
       icon: <Iconify icon="ic:round-account-box" />,
       component: <AccountGeneral user={user?.general}/>,
     },
     {
       value: 'billing',
-      label: 'Billing',
+      label: 'Địa chỉ nhận hàng',
       icon: <Iconify icon="ic:round-receipt" />,
       component: (
         <AccountBilling
@@ -58,19 +58,19 @@ export default function UserAccountPage() {
     },
     {
       value: 'notifications',
-      label: 'Notifications',
+      label: 'Thông báo',
       icon: <Iconify icon="eva:bell-fill" />,
       component: <AccountNotifications />,
     },
     {
       value: 'social_links',
-      label: 'Social links',
+      label: 'Liên kết',
       icon: <Iconify icon="eva:share-fill" />,
       component: <AccountSocialLinks socialLinks={_userAbout.socialLinks} />,
     },
     {
       value: 'change_password',
-      label: 'Change password',
+      label: 'Đổi mật khẩu',
       icon: <Iconify icon="ic:round-vpn-key" />,
       component: <AccountChangePassword />,
     },
@@ -84,11 +84,10 @@ export default function UserAccountPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Account"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'Account Settings' },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            { name: 'Người dùng', href: PATH_DASHBOARD.user.root },
+            { name: 'Cài đặt tài khoảng' },
           ]}
         />
 

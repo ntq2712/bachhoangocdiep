@@ -9,7 +9,6 @@ import { newOder } from 'src/api/ortherEcom';
 // @types
 import {
   ICheckoutCardOption,
-  ICheckoutDeliveryOption,
   ICheckoutPaymentOption
 } from '../../../../../@types/product';
 // components
@@ -76,32 +75,19 @@ export default function CheckoutPayment({
   onGotoStep,
   onApplyShipping,
 }: Props) {
-  const { TotalQuantity, TotalPrice, discount, shipping, Address, totalItems, Data } = checkout;
+  const { TotalQuantity, TotalPrice, shipping, Address, Data } = checkout;
 
   const PaymentSchema = Yup.object().shape({
     paidtype: Yup.string().required('Payment is required!'),
   });
 
   const defaultValues = {
-    shippingcost: shipping,
+    shippingcost: shipping || 0,
     paidtype: '',
-    Data: Data,
-    Address: Address,
-    totalprice: TotalPrice
+    Data: Data || '',
+    Address: Address || '',
+    totalprice: TotalPrice || ''
   };
-
-  const DELIVERY_OPTIONS: ICheckoutDeliveryOption[] = [
-    {
-      value: shipping,
-      title: `Giao hàng tiêu chuẩn`,
-      description: 'Giao vào tất cả các ngày trong tuần',
-    },
-    {
-      value: shipping * 1.5,
-      title: `Giao hàng nhanh`,
-      description: 'Giao vào tất cả các ngày trong tuần',
-    },
-  ];
 
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(PaymentSchema),
@@ -120,8 +106,6 @@ export default function CheckoutPayment({
         if (res.data.success) {
           onNextStep();
           onReset();
-        }else{
-
         }
       });
     } catch (error) {

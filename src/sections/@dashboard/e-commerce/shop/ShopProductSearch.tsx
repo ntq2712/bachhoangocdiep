@@ -31,9 +31,6 @@ export default function ShopProductSearch() {
     try {
       setSearchProducts(value);
       if (value) {
-        // const response = await axios.get('/api/products/search', {
-        //   params: { query: value },
-        // });
         const response = await axios.get('v1/products', {
           params: { search: value },
         });
@@ -68,7 +65,7 @@ export default function ShopProductSearch() {
       componentsProps={{
         popper: {
           sx: {
-            width: `280px !important`,
+            width: `330px !important`,
           },
         },
         paper: {
@@ -83,7 +80,7 @@ export default function ShopProductSearch() {
         <CustomTextField
           {...params}
           width={300}
-          placeholder="Search..."
+          placeholder="Tìm kiếm..."
           onKeyUp={handleKeyUp}
           InputProps={{
             ...params.InputProps,

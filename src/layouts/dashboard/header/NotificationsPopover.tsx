@@ -30,11 +30,11 @@ import { IconButtonAnimate } from '../../../components/animate';
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(_notifications);
+  const [notifications, setNotifications] = useState([]);
 
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  // const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
     setOpenPopover(event.currentTarget);
@@ -44,14 +44,14 @@ export default function NotificationsPopover() {
     setOpenPopover(null);
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
-    );
-  };
+  // const handleMarkAllAsRead = () => {
+  //   setNotifications(
+  //     notifications.map((notification) => ({
+  //       ...notification,
+  //       isUnRead: false,
+  //     }))
+  //   );
+  // };
 
   return (
     <>
@@ -60,12 +60,12 @@ export default function NotificationsPopover() {
         onClick={handleOpenPopover}
         sx={{ width: 40, height: 40 }}
       >
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={0} color="error">
           <Iconify icon="eva:bell-fill" />
         </Badge>
       </IconButtonAnimate>
 
-      <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 360, p: 0 }}>
+      {/* <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 360, p: 0 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
@@ -121,7 +121,7 @@ export default function NotificationsPopover() {
             View All
           </Button>
         </Box>
-      </MenuPopover>
+      </MenuPopover> */}
     </>
   );
 }

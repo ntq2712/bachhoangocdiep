@@ -194,7 +194,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     []
   );
 
-  //Verify
+  // Verify
   const verify = useCallback(
     async (code: string) => {
       const response = await axios.post('/v1/auth/verify-register', {
@@ -235,7 +235,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       logout,
       initialize
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, login, logout, register, verify]
+    [state.isAuthenticated, state.isInitialized, state.user, login, logout, register, verify, initialize]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

@@ -4,11 +4,11 @@ import { IAddress, IBanner, IBrand, ICategoy, ICategoyGroup } from 'src/@types/p
 import { IUserAccountGeneral } from 'src/@types/user';
 import axios from '../utils/axios';
 
-//PRODUCT
+// PRODUCT
 export function getProductsBestSeller() {
   return axios.get('/v1/products?filter[IsBestSeller][eq]=true');
 }
-//BRAND
+// BRAND
 export function getBran() {
   return axios.get('/v1/brands');
 }
@@ -26,7 +26,7 @@ export function newBrand(data: Partial<IBrand>) {
   };
   return axios.post('v1/brands', body);
 }
-//change passwork
+// change passwork
 export function changePasswork(data: any) {
   return axios.post('v1/auth/change-password', data);
 }
@@ -36,7 +36,7 @@ export function forgotPassword(data: any) {
 export function resetPassword(data: any) {
   return axios.post('v1/auth/reset-password', data);
 }
-//banner
+// banner
 export function newBanner(data: Partial<IBanner>) {
   return axios.post('v1/banners', data);
 }
@@ -47,7 +47,7 @@ export function getBanner(type: string) {
 export function getBannerById(id: string) {
   return axios.get(`v1/banners/${id}`);
 }
-//Category Group
+// Category Group
 export function getCategoryGroup() {
   return axios.get('v1/categoryGroups');
 }
@@ -63,7 +63,7 @@ export function newCategoryGroup(data: Partial<ICategoyGroup>) {
   return axios.post('v1/categoryGroups', body);
 }
 
-//Category
+// Category
 export function getCategory() {
   return axios.get('v1/categories');
 }
@@ -91,7 +91,7 @@ export function updateProfile(data: Partial<IUserAccountGeneral>) {
   };
   return axios.patch('v1/users/profile', body);
 }
-//reviews
+// reviews
 export function newReview(data: any) {
   return axios.post('v1/reviews', data);
 }
@@ -99,12 +99,12 @@ export function newReview(data: any) {
 export function getReviwByProduct(id: any) {
   return axios.get(`/v1/reviews/product/${id}`);
 }
-//file
+// file
 export function upLoadImage(image: any) {
-  var bodyFormData = new FormData();
-  image?.map((e: any) => {
-    bodyFormData.append('image', e);
-  });
+
+  const bodyFormData = new FormData();
+
+  image?.map((e: any) => bodyFormData.append('image', e));
 
   const config = {
     headers: {
@@ -119,7 +119,7 @@ export function getImages(id: string) {
   return axios.get(`/v1/images/product/${id}`);
 }
 
-//card
+// card
 export function addToCard(data: any) {
   const body = {
     ProductId: data?.Id,
@@ -226,7 +226,7 @@ export function deleteAddress(id: string | null | undefined) {
   return axios.delete(`v1/addresses/${id}`);
 }
 
-//oder
+// oder
 export function newOder(data: any) {
   return axios.post('v1/orders', data);
 }

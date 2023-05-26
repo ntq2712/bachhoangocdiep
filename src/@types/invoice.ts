@@ -38,7 +38,7 @@ export type IInvoice = {
   PaidType: string;
   StatusCode: 1;
   Status: string;
-  DeliveryDate?: null;
+  DeliveryDate: null;
   Notes?: null;
   createdAt: string;
   updatedAt?: string;

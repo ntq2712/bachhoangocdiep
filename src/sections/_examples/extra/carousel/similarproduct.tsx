@@ -1,36 +1,31 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 // @mui
+import { Box, CardContent, Link, Paper } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
-import { Box, Paper, Link, CardContent } from '@mui/material';
+import { paramCase } from 'change-case';
+import { IProduct } from 'src/@types/product';
 import { PATH_DASHBOARD } from 'src/routes/paths';
-import { ICarousels } from 'src/pages/components/extra/carousel';
 // utils
 import { bgGradient } from '../../../../utils/cssStyles';
 // components
-import Image from '../../../../components/image';
-import Iconify from '../../../../components/iconify';
-import TextMaxLine from '../../../../components/text-max-line';
 import Carousel, { CarouselArrows } from '../../../../components/carousel';
+import Iconify from '../../../../components/iconify';
+import Image from '../../../../components/image';
+import TextMaxLine from '../../../../components/text-max-line';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  // data: {
-  //   id: string;
-  //   title: string;
-  //   image: string;
-  //   description: string;
-  // }[];
-  data: ICarousels[];
+  data: IProduct[];
 };
 
-export default function CarouselCenterMode({ data }: Props) {
+export default function SimilarProduct({ data }: Props) {
   const carouselRef = useRef<Carousel | null>(null);
 
   const theme = useTheme();
 
   const carouselSettings = {
-    slidesToShow: data?.length > 3 ? 3 : data.length,
+    slidesToShow: data?.length > 3 ? 3 : data?.length,
     centerMode: true,
     centerPadding: '60px',
     rtl: Boolean(theme.direction === 'rtl'),
@@ -73,7 +68,7 @@ export default function CarouselCenterMode({ data }: Props) {
       >
         <Carousel ref={carouselRef} {...carouselSettings}>
           {data.map((item) => (
-            <Box key={item.id} sx={{ px: 1 }}>
+            <Box key={item.Id} sx={{ px: 1 }}>
               <CarouselItem item={item} />
             </Box>
           ))}
@@ -83,18 +78,10 @@ export default function CarouselCenterMode({ data }: Props) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-type CarouselItemProps = {
-  title: string;
-  description: string;
-  image: string;
-};
-
-function CarouselItem({ item }: { item: ICarousels }) {
+function CarouselItem({ item }: { item: IProduct }) {
   const theme = useTheme();
 
-  const { image, title } = item;
+  // const { image, title } = item;
 
   return (
     <Paper
@@ -105,7 +92,7 @@ function CarouselItem({ item }: { item: ICarousels }) {
         maxWidth: 300,
       }}
     >
-      <Image alt={title} src={image} ratio="3/4" sx={{ maxHeight: 100 }} />
+      <Image alt={item.Name} src={item.ImageURL} ratio="3/4" sx={{ maxHeight: 100 }} />
       <CardContent
         sx={{
           bottom: 0,
@@ -122,13 +109,13 @@ function CarouselItem({ item }: { item: ICarousels }) {
         }}
       >
         <TextMaxLine variant="h4" paragraph>
-          {title}
+          {item.Name}
         </TextMaxLine>
 
         <Link
           color="inherit"
           variant="overline"
-          href={PATH_DASHBOARD.eCommerce.shop}
+          href={PATH_DASHBOARD.eCommerce.view(paramCase(item.Id))}
           sx={{
             opacity: 0.72,
             alignItems: 'center',

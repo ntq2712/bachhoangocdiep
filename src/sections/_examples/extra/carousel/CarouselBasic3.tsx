@@ -1,11 +1,9 @@
 import { useRef } from 'react';
-// @mui
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-// components
-import { ICarousels } from 'src/pages/components/extra/carousel';
 import Carousel, { CarouselArrows, CarouselDots } from '../../../../components/carousel';
 import Image from '../../../../components/image';
+import { ICarousels } from './type';
 
 // ----------------------------------------------------------------------
 
@@ -61,12 +59,6 @@ export default function CarouselBasic3({ data }: Props) {
 }
 
 // ----------------------------------------------------------------------
-
-type CarouselItemProps = {
-  title: string;
-  description: string;
-  image: string;
-};
 
 function CarouselItem({ item }: { item: ICarousels }) {
   const { image, title } = item;

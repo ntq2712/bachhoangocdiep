@@ -1,28 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // @mui
 import {
-  Link,
-  Stack,
   Button,
-  Divider,
   Checkbox,
-  TableRow,
-  MenuItem,
-  TableCell,
+  Divider,
   IconButton,
+  Link,
+  MenuItem,
+  Stack,
+  TableCell,
+  TableRow,
   Typography,
 } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
 // @types
 import { IInvoice } from '../../../../@types/invoice';
 // components
-import Label from '../../../../components/label';
-import Iconify from '../../../../components/iconify';
-import { CustomAvatar } from '../../../../components/custom-avatar';
-import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
+import { CustomAvatar } from '../../../../components/custom-avatar';
+import Iconify from '../../../../components/iconify';
+import Label from '../../../../components/label';
+import MenuPopover from '../../../../components/menu-popover';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +42,17 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }: Props) {
-  const {PaidType, InvoiceNumber, ReceiverPhoneNumber, createdAt, Status, ReceiverName, TotalAmount, DeliveryDate, SubAmount } = row;
+  const {
+    PaidType,
+    InvoiceNumber,
+    ReceiverPhoneNumber,
+    createdAt,
+    Status,
+    ReceiverName,
+    TotalAmount,
+    DeliveryDate,
+    SubAmount,
+  } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -64,10 +73,6 @@ export default function InvoiceTableRow({
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
-
-  // useEffect(() => {
-  //   console.log('row: ', row);
-  // }, []);
 
   return (
     <>
@@ -99,7 +104,7 @@ export default function InvoiceTableRow({
 
         <TableCell align="left">{fDate(createdAt)}</TableCell>
 
-        <TableCell align="left">{fDate(DeliveryDate ? DeliveryDate : '')}</TableCell>
+        <TableCell align="left">{fDate(DeliveryDate)}</TableCell>
 
         <TableCell align="center">{TotalAmount}</TableCell>
 

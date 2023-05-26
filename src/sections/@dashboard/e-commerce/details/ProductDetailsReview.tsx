@@ -23,7 +23,6 @@ type Props = {
 };
 
 export default function ProductDetailsReview({ reviewsdata }: Props) {
-  // const { reviews, ratings } = reviewsdata;
 
   const { isAuthenticated } = useAuthContext();
   const { push } = useRouter();
@@ -46,7 +45,8 @@ export default function ProductDetailsReview({ reviewsdata }: Props) {
     let totalRating: number = 0;
     const countReviews = reviewsdata?.reviews ? reviewsdata?.reviews?.length : 0;
     reviewsdata?.reviews?.map((e: any) => {
-      totalRating = totalRating + Number(e.Rate);
+       totalRating += Number(e.Rate)
+       return totalRating
     });
     return Math.round((totalRating / countReviews) * 10) / 10;
   };

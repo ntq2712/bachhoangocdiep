@@ -48,7 +48,7 @@ export default function NavList({ item, isOffset }: NavListProps) {
       <NavItem
         item={item}
         isOffset={isOffset}
-        active={active}
+        active={active} 
         open={openMenu}
         isExternalLink={isExternalLink}
         onMouseEnter={handleOpenMenu}

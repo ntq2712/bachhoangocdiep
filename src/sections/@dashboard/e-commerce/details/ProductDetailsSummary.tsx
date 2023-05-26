@@ -1,41 +1,31 @@
-import { useEffect } from 'react';
-import { sentenceCase } from 'change-case';
+import { useEffect, useMemo } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
 import {
-  Box,
-  Link,
-  Stack,
   Button,
-  Rating,
   Divider,
-  MenuItem,
-  Typography,
   IconButton,
+  Rating,
+  Stack,
+  Typography
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
-import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
+import { fCurrency } from '../../../../utils/formatNumber';
 // @types
-import { IProduct, ICheckoutCartItem, IDataAddCart } from '../../../../@types/product';
+import { ICheckoutCartItem, IDataAddCart, IProduct } from '../../../../@types/product';
 // _mock
 import { _socials } from '../../../../_mock/arrays';
 // components
-import Label from '../../../../components/label';
-import Iconify from '../../../../components/iconify';
 import { IncrementerButton } from '../../../../components/custom-input';
-import { ColorSinglePicker } from '../../../../components/color-utils';
-import FormProvider, { RHFSelect } from '../../../../components/hook-form';
+import FormProvider from '../../../../components/hook-form';
+import Iconify from '../../../../components/iconify';
 
 // ----------------------------------------------------------------------
-
-interface FormValuesProps extends Omit<ICheckoutCartItem, 'colors'> {
-  colors: string;
-}
 
 type Props = {
   product: IProduct;
@@ -53,17 +43,15 @@ export default function ProductDetailsSummary({
 }: Props) {
   const { push } = useRouter();
 
-  const { Id, Name, Price, Quantity, Status, Rate } = product;
-
-  //const alreadyProduct = cart?.map((item: any) => item.Id).includes(Id);
+  const { Id, Name, Price, Quantity, IsBestSeller, Rate } = product;
 
   const isMaxQuantity =
     cart?.filter((item: any) => item.Id === Id).map((item: any) => item.quantity)[0] >= Quantity;
 
-  const defaultValues = {
+  const defaultValues = useMemo(()=>({
     ProductId: Id,
     Quantity: 1,
-  };
+  }),[Id])
 
   const methods = useForm({
     defaultValues,
@@ -74,10 +62,10 @@ export default function ProductDetailsSummary({
   const values = watch();
 
   useEffect(() => {
-    if (product) {
+    if (defaultValues) {
       reset(defaultValues);
     }
-  }, [product]);
+  }, [defaultValues, reset]);
 
   const onSubmit = async (data: IDataAddCart) => {
     try {
@@ -109,32 +97,25 @@ export default function ProductDetailsSummary({
         {...other}
       >
         <Stack spacing={2}>
-          {/* <Label
-            variant="soft"
-            color={inventoryType === 'in_stock' ? 'success' : 'error'}
-            sx={{ textTransform: 'uppercase', mr: 'auto' }}
-          >
-            {sentenceCase(inventoryType || '')}
-          </Label> */}
 
           <Typography
             variant="overline"
             component="div"
             sx={{
-              color: Status === true ? 'error.main' : 'info.main',
+              color: IsBestSeller === true ? 'error.main' : 'info.main',
             }}
           >
-            {Status ? 'sale' : ''}
+            {IsBestSeller ? 'BestSeller' : ''}
           </Typography>
 
           <Typography variant="h5">{Name}</Typography>
 
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Rating value={Number(Rate) > 1 ? Number(Rate) : 5} precision={0.1} readOnly />
+            <Rating value={Number(Rate) > 1 ? Number(Rate) : 0} precision={0.1} readOnly />
 
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              (2 reviews)
-            </Typography>
+            { Number(Rate) < 1 && <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              (chưa có đánh giá)
+            </Typography>}
           </Stack>
 
           <Typography variant="h4">
@@ -270,7 +251,7 @@ export default function ProductDetailsSummary({
 
         <Stack direction="row" alignItems="center" justifyContent="center">
           {_socials.map((social) => (
-            <IconButton key={social.name}>
+            <IconButton key={social.name} href={social.path}>
               <Iconify icon={social.icon} />
             </IconButton>
           ))}

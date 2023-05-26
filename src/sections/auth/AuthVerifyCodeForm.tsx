@@ -13,7 +13,6 @@ import { useAuthContext } from 'src/auth/useAuthContext';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
 import FormProvider, { RHFCodes } from '../../components/hook-form';
-import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +29,7 @@ type FormValuesProps = {
 export default function AuthVerifyCodeForm() {
   const { replace } = useRouter();
   const { verify } = useAuthContext();
-  const { enqueueSnackbar } = useSnackbar();
+  
 
   const VerifyCodeSchema = Yup.object().shape({
     code1: Yup.string().required('Code is required'),

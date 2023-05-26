@@ -1,11 +1,10 @@
 import { useState } from 'react';
 // @mui
-import { Stack, Button, Rating, Avatar, Pagination, Typography } from '@mui/material';
+import { Avatar, Button, Rating, Stack, Typography } from '@mui/material';
 // utils
 import { fDate } from '../../../../utils/formatTime';
-import { fShortenNumber } from '../../../../utils/formatNumber';
 // @types
-import { IProductReview, IReview } from '../../../../@types/product';
+import { IReview } from '../../../../@types/product';
 // components
 import Iconify from '../../../../components/iconify';
 
@@ -124,7 +123,7 @@ function ReviewItem({ review }: ReviewItemProps) {
             }}
           >
             <Iconify icon="ic:round-verified" width={16} sx={{ mr: 0.5 }} />
-            Verified purchase
+            Đã mua hàng
           </Typography>
         )}
 
@@ -145,7 +144,7 @@ function ReviewItem({ review }: ReviewItemProps) {
             startIcon={<Iconify icon={!isHelpful ? 'ic:round-thumb-up' : 'eva:checkmark-fill'} />}
             onClick={() => setIsHelpful(!isHelpful)}
           >
-            {isHelpful ? 'Helpful' : 'Thank'}
+            {isHelpful ? 'Hử ích' : 'Like'}
             {/* ({fShortenNumber(!isHelpful ? helpful : helpful + 1)}) */}
           </Button>
         </Stack>

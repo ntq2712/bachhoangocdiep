@@ -64,8 +64,8 @@ export default function CheckoutCart({
             />
           ) : (
             <EmptyContent
-              title="Cart is empty"
-              description="Look like you have no items in your shopping cart."
+              title="Giỏ hàng trống"
+              description="Có vẻ như bạn không có mặt hàng nào trong giỏ hàng của mình."
               img="/assets/illustrations/illustration_empty_cart.svg"
             />
           )}
@@ -77,7 +77,7 @@ export default function CheckoutCart({
           color="inherit"
           startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
         >
-          Continue Shopping
+          Tiếp tục mua sắm
         </Button>
       </Grid>
 

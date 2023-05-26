@@ -8,12 +8,11 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from 'src/auth/useAuthContext';
-import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
 import { addToCart, getCarts } from 'src/redux/slices/product';
+import { fCurrency } from 'src/utils/formatNumber';
 // routes
 import { PATH_AUTH, PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
-import { fCurrency } from '../../../../utils/formatNumber';
 // redux
 import { useDispatch } from '../../../../redux/store';
 // @types
@@ -35,10 +34,10 @@ type typeCart = {
 };
 
 export default function ShopProductCard({ product }: Props) {
-  const { Id, Name, Price, Status, ImageURL, Rate } = product;
+  const { Id, Name, Price, ImageURL, IsBestSeller } = product;
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const { isAuthenticated, isInitialized } = useAuthContext();
+  const { isAuthenticated } = useAuthContext();
 
   const { pathname, push } = useRouter();
   const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
@@ -54,17 +53,15 @@ export default function ShopProductCard({ product }: Props) {
 
   const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(Id));
 
-  const handleAddCart = async () => {
-    if (!isInitialized) {
-     
-      return <LoadingScreen />;
-    }
+  const handleAddCart = () => {
+    // if (!isInitialized) {
+    //   return <LoadingScreen />;
+    // }
     if (!isAuthenticated) {
-      
       if (pathname !== requestedLocation) {
         setRequestedLocation(pathname);
       }
-      push(PATH_AUTH.login)
+      push(PATH_AUTH.login);
     } else {
       const cart: typeCart = {
         ProductId: Id,
@@ -83,6 +80,7 @@ export default function ShopProductCard({ product }: Props) {
           enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
         });
     }
+    
   };
 
   return (
@@ -94,10 +92,10 @@ export default function ShopProductCard({ product }: Props) {
       }}
     >
       <Box sx={{ position: 'relative', p: 1 }}>
-        {Status && (
+        {IsBestSeller && (
           <Label
             variant="filled"
-            color={(Status === true && 'error') || 'info'}
+            color={(IsBestSeller === true && 'error') || 'info'}
             sx={{
               top: 16,
               right: 16,
@@ -106,10 +104,10 @@ export default function ShopProductCard({ product }: Props) {
               textTransform: 'uppercase',
             }}
           >
-            Sale
-            {/* {Status} */}
+            BestSeller
           </Label>
         )}
+
         <Fab
           color="warning"
           size="medium"
@@ -143,9 +141,9 @@ export default function ShopProductCard({ product }: Props) {
           {/* <ColorPreview colors={colors} /> */}
 
           <Stack direction="row" spacing={0.5} sx={{ typography: 'subtitle1' }}>
-            {/* {priceSale && (
+            {/* {!IsBestSeller && (
               <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                {fCurrency(PriceSale)}
+                {Price + 20}đ
               </Box>
             )} */}
             {/* <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>

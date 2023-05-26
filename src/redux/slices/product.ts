@@ -12,10 +12,11 @@ const initialState: any = {
   TotalPages: 1,
   CurrentPage: 1,
   product: null,
+  similarproduct: null,
   reviews: [],
   reviewState: null,
   checkout: {
-    activeStep: 0, //0 1 2
+    activeStep: 0, // 0 1 2
     Data: [],
     TotalQuantity: 0,
     TotalPrice: 0,
@@ -49,10 +50,13 @@ const slice = createSlice({
       state.CurrentPage = DATA.Pagination.CurrentPage;
       state.TotalPages = DATA.Pagination.TotalPages;
     },
-    //GET REVIEWS
+    // GET REVIEWS
     getReviewSuccess(state, action) {
-      console.log('getReviewSuccess:', action.payload);
       state.reviewState = action.payload;
+    },
+
+    getSimilarProductSuccess(state, action) {
+      state.similarproduct = action.payload;
     },
 
     // GET PRODUCT
@@ -78,10 +82,7 @@ const slice = createSlice({
       state.filter.brand = action.payload;
     },
 
-   
-    deleteCart(state, action) {
-  
-    },
+    deleteCart(state, action) {},
 
     resetCart(state) {
       state.checkout.cart = [];
@@ -124,7 +125,7 @@ const slice = createSlice({
     applyShipping(state, action) {
       const shipping = action.payload;
       state.checkout.shipping = shipping;
-      state.checkout.TotalQuantity = state.checkout.TotalQuantity + shipping;
+      // state.checkout.TotalQuantity = state.checkout.TotalQuantity + shipping;
     },
   },
 });
@@ -169,7 +170,7 @@ export function sortProducts(value: string) {
     try {
       const response = await axios.get('v1/products', {
         params: { sort: query[0], order: query[1] },
-      }); 
+      });
       dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -178,11 +179,11 @@ export function sortProducts(value: string) {
 }
 
 type filter = {
-  brand?: string; 
+  brand?: string;
   categorygroup?: string[];
   category?: string[];
   pricerange: [number, number];
-  rate?: number; 
+  rate?: number;
   sortBy?: string;
   page: number;
 };
@@ -196,18 +197,18 @@ export function sortProductsByFilter(value: filter) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(
-        `v1/products?${value.brand ? 'filter[BrandId][eq]=' + value.brand : ''}&${
+        `v1/products?${value.brand ? `filter[BrandId][eq]=${value.brand}`  : ''}&${
           mapCategory ?? ''
         }&${mapCategorygroup ?? ''}&${
-          value.pricerange[0] !== null ? 'filter[Price][gte]=' + value.pricerange[0] * 1000 : ''
-        }&${value.pricerange[1] ? 'filter[Price][lte]=' + value.pricerange[1] * 1000 : ''}&${
-          value.rate !== undefined ? 'filter[Rate][gte]=' + value.rate : ''
+          value.pricerange[0] !== null ? `filter[Price][gte]=${value.pricerange[0] * 1000}` : ''
+        }&${value.pricerange[1] ? `filter[Price][lte]=${value.pricerange[1] * 1000}` : ''}&${
+          value.rate !== undefined ? `filter[Rate][gte]=${value.rate}`: ''
         }&${
           value.sortBy
-            ? 'sort=' + value.sortBy.split('&')[0] + '&order=' + value.sortBy.split('&')[1]
+            ? `sort=${value.sortBy.split('&')[0]}&order=${value.sortBy.split('&')[1]}`
             : ''
         }&page=${value.page > 0 ? value.page : 1}&limit=12`
-      ); 
+      );
       dispatch(slice.actions.getProductsSuccess(response.data.Products));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -215,25 +216,11 @@ export function sortProductsByFilter(value: filter) {
   };
 }
 
-export const getProductByBrandId = (id: string) => {
-  axios
-    .get(`v1/products?filter[BrandId][eq]=${id}`)
-    .then((res) => {
-      if (res?.data?.success === true) {
-        return res.data.Products.Data;
-      } else {
-        console.log(res?.data);
-      }
-    })
-    .catch((err) => console.log(err));
-};
+export const getProductSame = (id?: string) =>
+  axios.get(`v1/products?filter[CategoryId][eq]=${id}`);
 
-export const getProductSame = (id?: string) => {
-  return axios.get(`v1/products?filter[CategoryId][eq]=${id}`);
-};
-export const getLatestProducts = () => {
-  return axios.get(`v1/products?sort=createdAt&order=desc&page=1&limit=10`);
-};
+export const getLatestProducts = () =>
+  axios.get(`v1/products?sort=createdAt&order=desc&page=1&limit=10`);
 
 export function getCarts() {
   return async (dispatch: Dispatch) => {
@@ -247,7 +234,7 @@ export function getCarts() {
   };
 }
 
-//cart
+// cart
 export function addToCart(data: any) {
   return axios.post('/v1/carts', data);
 }
@@ -260,11 +247,11 @@ export function updateQuantity(id: string, productId: string, quantity: number) 
   return axios.patch(`/v1/carts/${id}`, body);
 }
 
-//bran
+// bran
 export function getBran() {
   return axios.get('/v1/brands');
 }
-//Category Group
+// Category Group
 export function getCategoryGroup() {
   return axios.get('v1/categoryGroups');
 }
@@ -277,8 +264,11 @@ export function getProduct(ProductId: string) {
     try {
       const response = await axios.get(`/v1/products/${ProductId}`);
       await dispatch(slice.actions.getProductSuccess(response.data.product));
+      const similarproduct = await axios.get(
+        `v1/products?filter[CategoryId][eq]=${response.data.product.CategoryId}&page=1&limit=12`
+      );
+      dispatch(slice.actions.getSimilarProductSuccess(similarproduct.data.Products.Data));
       const responseReview = await axios.get(`/v1/reviews/product/${ProductId}`);
-
       dispatch(slice.actions.getReviewSuccess(responseReview.data));
     } catch (error) {
       console.error(error);
@@ -287,7 +277,7 @@ export function getProduct(ProductId: string) {
   };
 }
 
-//new product
+// new product
 export function addProduct(data: Partial<IProduct>) {
   return axios.post('/v1/products', data);
 }

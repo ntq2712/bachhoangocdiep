@@ -82,27 +82,27 @@ export default function ShopFilterDrawer({
     getCategory().then((res)=>{
       if(res.data.success === true){
         const tam:any = []
-        res?.data?.Categories?.Data?.map((e:any)=>{
+        res?.data?.Categories?.Data?.map((e:any)=>
          tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
-        })
+        )
         setCategorys(tam)
       }
     })
     getBran().then((res)=>{
       if(res.data.success === true){
         const tam:any = []
-        res?.data?.Brands?.Data?.map((e:any)=>{
+        res?.data?.Brands?.Data?.map((e:any)=>
          tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
-        })
+        )
         setBrands(tam)
       }
     })
     getCategoryGroup().then((res)=>{
       if(res.data.success === true){
         const tam:any = []
-        res?.data?.CategoryGroups?.Data?.map((e:any)=>{
+        res?.data?.CategoryGroups?.Data?.map((e:any)=>
          tam.push( { label: e.Name, value: `${e.Id}&${e.Name}` })
-        })
+        )
         setCategoryGroups(tam)
       }
     })
@@ -118,11 +118,6 @@ export default function ShopFilterDrawer({
       label: index % 4 ? '' : firstValue,
     };
   });
-
-  const getSelected = (selectedItems: string[], item: string) =>
-    selectedItems.includes(item)
-      ? selectedItems.filter((value) => value !== item)
-      : [...selectedItems, item];
 
   return (
     <>

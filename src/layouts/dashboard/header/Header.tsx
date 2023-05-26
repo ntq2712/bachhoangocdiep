@@ -1,7 +1,7 @@
 // @mui
 import { AppBar, Box, Container, Stack, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { getBranByCategory, getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
 import NavDesktop from 'src/layouts/main/nav/desktop/NavDesktop';
 import { NavItemProps } from 'src/layouts/main/nav/types';
@@ -35,60 +35,59 @@ export default function Header({ onOpenNav }: Props) {
 
   const [datanav, setDatenav] = useState<NavItemProps[]>([]);
 
-  const navBrands = (id: string): [] => {
+  const navBrands = useCallback((id: string): [] => {
     const team: any = [];
     getBranByCategory(id).then((resb) => {
       if (resb.data.success === true) {
-        if (resb?.data?.brands?.length < 1) {
-          return team;
-        } else {
-          resb.data.brands.map((k: any) => {
+        if (resb?.data?.brands?.length > 0) {
+          resb.data.brands.map((k: any) =>
             team.push({
               id: k.Id,
               title: k.Name,
               icon: <Iconify icon="eva:home-fill" />,
               path: PATH_DASHBOARD.eCommerce.shop,
-            });
-          });
+            })
+          );
         }
       }
     });
     return team;
-  };
+  }, []);
 
-  const navcategory = (id: string) => {
-    let tem: any = [];
-    getCategoryById(id).then((resp) => {
-      if (resp.data.success === true) {
-        if (resp?.data?.category?.length < 1) {
-          return;
-        } else {
-          resp.data.category.map((i: any) => {
-            const team: any = navBrands(i.Id);
-            tem.push({
-              subheader: i.Name,
-              items: team,
+  const navcategory = useCallback(
+    (id: string) => {
+      const tem: any = [];
+      getCategoryById(id).then((resp) => {
+        if (resp.data.success === true) {
+          if (resp?.data?.category?.length > 0) {
+            resp.data.category.map((i: any) => {
+              const team: any = navBrands(i.Id);
+              return tem.push({
+                subheader: i.Name,
+                items: team,
+              });
             });
-          });
+          }
         }
-      }
-    });
-    return tem;
-  };
+      });
+      return tem;
+    },
+    [navBrands]
+  );
 
   useLayoutEffect(() => {
     const tam: any = [];
     getCategoryGroup().then((res) => {
       if (res.data.success === true) {
-        res.data.CategoryGroups.Data.map((e: any) => {
+        res.data.CategoryGroups.Data.map((e: any) =>
           tam.push({
             id: e.Id,
             title: e.Name,
             icon: <Iconify icon="eva:home-fill" />,
             path: PATH_DASHBOARD.eCommerce.shop,
             children: navcategory(e.Id),
-          });
-        });
+          })
+        );
         tam.push({
           id: '',
           title: 'Khác',
@@ -98,32 +97,31 @@ export default function Header({ onOpenNav }: Props) {
       }
       setDatenav(tam);
     });
-  }, []);
+  }, [navcategory]);
 
   const isDesktop = useResponsive('up', 'lg');
 
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP);
 
   const renderContent = (
-    <>
-      <Stack
-        flexGrow={1}
-        direction="row"
-        alignItems="center"
-        justifyContent="flex-end"
-        spacing={{ xs: 0.5, sm: 1.5 }}
-      >
-        <LanguagePopover />
+    <Stack
+      flexGrow={1}
+      direction="row"
+      alignItems="center"
+      justifyContent="flex-end"
+      spacing={{ xs: 0.5, sm: 1.5 }}
+    >
+      <LanguagePopover />
 
-        <NotificationsPopover />
+      <NotificationsPopover />
 
-        <ContactsPopover />
+      <ContactsPopover />
 
-        <AccountPopover />
-      </Stack>
-    </>
+      <AccountPopover />
+    </Stack>
   );
 
+  console.log('datanav:', datanav)
   return (
     <AppBar
       sx={{

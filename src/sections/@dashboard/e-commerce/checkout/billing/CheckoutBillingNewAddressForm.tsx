@@ -13,9 +13,6 @@ import {
   DialogTitle,
   Stack,
 } from '@mui/material';
-// @types
-import { IAddress } from '../../../../../@types/product';
-// assets
 import { useEffect, useState } from 'react';
 import { getDistrict, getProvince, getWard } from 'src/api/ortherEcom';
 import FormProvider, {
@@ -24,16 +21,7 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
 } from '../../../../../components/hook-form';
-
-// ----------------------------------------------------------------------
-
-interface FormValuesProps extends IAddress {
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  zipCode: string;
-}
+import { IAddress } from '../../../../../@types/product';
 
 type Props = {
   open: boolean;
@@ -79,16 +67,16 @@ export default function CheckoutBillingNewAddressForm({ open, onClose, onCreateB
     
     const body: IAddress = {
       Name: data?.Name,
-      IsDefault: data?.IsDefault,
+      IsDefault: data?.IsDefault || false,
       City: JSON.parse(data?.City).name,
       District: JSON.parse(data?.District).name,
       Ward: JSON.parse(data?.Ward).name,
       Street: data?.Street,
       ReceiverName: data?.ReceiverName,
       ReceiverPhoneNumber: data?.ReceiverPhoneNumber,
-      CityGHNId: JSON.parse(data?.City).id | 0,
-      DistrictGHNId: JSON.parse(data?.District).id | 0,
-      WardGHNid: JSON.parse(data?.Ward).id |0
+      CityGHNId: JSON.parse(data?.City).id || 0,
+      DistrictGHNId: JSON.parse(data?.District).id || 0,
+      WardGHNid: JSON.parse(data?.Ward).id || 0
     };
     try {
       onCreateBilling(body);

@@ -25,7 +25,7 @@ import {
   ShopFilterDrawer,
   ShopProductList,
   ShopProductSort,
-  ShopTagFiltered
+  ShopTagFiltered,
 } from '../../../sections/@dashboard/e-commerce/shop';
 
 // ----------------------------------------------------------------------
@@ -38,11 +38,11 @@ EcommerceShopPage.getLayout = (page: React.ReactElement) => (
 
 export default function EcommerceShopPage() {
   const { themeStretch } = useSettingsContext();
-  const { isAuthenticated, isInitialized } = useAuthContext();
+  const { isAuthenticated } = useAuthContext();
 
   const dispatch = useDispatch();
 
-  const { products, checkout, CurrentPage, TotalPages } = useSelector((state) => state.product);
+  const { products, checkout, TotalPages } = useSelector((state) => state.product);
 
   const [openFilter, setOpenFilter] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -103,6 +103,7 @@ export default function EcommerceShopPage() {
     pricerangechange,
     ratechange,
     sortBychange,
+    isAuthenticated,
   ]);
 
   const handleResetFilter = () => {
@@ -153,7 +154,7 @@ export default function EcommerceShopPage() {
               <>
                 <Typography variant="body2" gutterBottom>
                   <strong>{products.length}</strong>
-                  &nbsp;Products found
+                  &nbsp;Sản phẩm được tìm thấy
                 </Typography>
 
                 <ShopTagFiltered isFiltered={!isDefault} onResetFilter={handleResetFilter} />
@@ -178,7 +179,7 @@ export default function EcommerceShopPage() {
                 count={TotalPages}
                 variant="outlined"
                 shape="rounded"
-                onChange={(e, page: number) => {
+                onChange={(e, pageCuren: number) => {
                   const f: any = {
                     brand: brandchange,
                     categorygroup: categorygroupchange,
@@ -186,7 +187,7 @@ export default function EcommerceShopPage() {
                     pricerange: pricerangechange,
                     rate: ratechange,
                     sortBy: sortBychange,
-                    page: page,
+                    page: pageCuren,
                   };
                   dispatch(sortProductsByFilter(f));
                   setPage(page);
@@ -203,7 +204,7 @@ export default function EcommerceShopPage() {
           mb: 2,
         }}
       />
-      <Footer/>
+      <Footer />
     </>
   );
 }

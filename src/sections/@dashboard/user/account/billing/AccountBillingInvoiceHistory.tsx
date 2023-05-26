@@ -18,7 +18,7 @@ export default function AccountBillingInvoiceHistory({ invoices }: Props) {
   return (
     <Stack spacing={3} alignItems="flex-end">
       <Typography variant="overline" sx={{ width: 1, color: 'text.secondary' }}>
-        Invoice History
+        Lịch sữ mua hàng
       </Typography>
 
       <Stack spacing={2} sx={{ width: 1 }}>
@@ -36,7 +36,7 @@ export default function AccountBillingInvoiceHistory({ invoices }: Props) {
       </Stack>
 
       <Button size="small" color="inherit" endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}>
-        All invoices
+       Tất cả đơn hàng
       </Button>
     </Stack>
   );

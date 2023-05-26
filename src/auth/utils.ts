@@ -48,7 +48,7 @@ export const tokenExpired = (exp: number) => {
   clearTimeout(expiredTimer);
 
   expiredTimer = setTimeout(async () => {
-    //alert('Phiên bản đăng nhập đã hết hạn vui lòng đăng nhập lại!');
+    
     const response = await axios.post('/v1/auth/refresh-tokens', {
       refreshToken: token,
     });

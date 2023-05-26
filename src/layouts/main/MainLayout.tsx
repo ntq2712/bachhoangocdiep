@@ -1,11 +1,10 @@
-// next
+import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-// @mui
-import { AppBar, Box } from '@mui/material';
+import { useState } from 'react';
+
 import { useAuthContext } from 'src/auth/useAuthContext';
 import Header from '../dashboard/header/Header';
-import { useState } from 'react';
 //
 const HeaderNoneLOgin = dynamic(() => import('./Header'), { ssr: false });
 const Footer = dynamic(() => import('./Footer'), { ssr: false });
@@ -19,7 +18,7 @@ type Props = {
 export default function MainLayout({ children }: Props) {
   const { pathname } = useRouter();
 
-  const { isAuthenticated, isInitialized } = useAuthContext();
+  const { isAuthenticated } = useAuthContext();
 
   const isHome = pathname === '/';
 

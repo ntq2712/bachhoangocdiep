@@ -34,20 +34,20 @@ export default function CheckoutOrderComplete({ open, onReset, onDownloadPDF }: 
           px: { xs: 2, sm: 0 },
         }}
       >
-        <Typography variant="h4">Thank you for your purchase!</Typography>
+        <Typography variant="h4">Cám ơn bạn vì đã mua hàng!</Typography>
 
         <OrderCompleteIllustration sx={{ height: 260 }} />
 
         <Typography>
-          Thanks for placing order
+          Cảm ơn đã đặt hàng
           <br />
           <br />
-          <Link>01dc1370-3df6-11eb-b378-0242ac130002</Link>
+          <Link>INV-254687112</Link>
           <br />
           <br />
-          We will send you a notification within 5 days when it ships.
-          <br /> If you have any question or queries then fell to get in contact us. <br /> <br />
-          All the best,
+          Chúng tôi sẽ gửi thông báo cho bạn trong vòng 5 ngày khi hàng được giao.
+          <br /> Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào thì hãy liên hệ với chúng tôi.<br /> <br />
+         Chúc bạn một ngày tốt lành.
         </Typography>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -65,7 +65,7 @@ export default function CheckoutOrderComplete({ open, onReset, onDownloadPDF }: 
             onClick={onReset}
             startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
           >
-            Continue Shopping
+            Tiếp tục mua sắm
           </Button>
 
           <Button
@@ -75,7 +75,7 @@ export default function CheckoutOrderComplete({ open, onReset, onDownloadPDF }: 
             startIcon={<Iconify icon="ant-design:file-pdf-filled" />}
             onClick={onDownloadPDF}
           >
-            Download as PDF
+          Tải file PDF
           </Button>
         </Stack>
       </Stack>

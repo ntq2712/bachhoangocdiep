@@ -14,19 +14,19 @@ import FormProvider, { RHFSwitch } from '../../../../components/hook-form';
 const ACTIVITY_OPTIONS = [
   {
     value: 'activityComments',
-    label: 'Email me when someone comments onmy article',
+    label: 'Gửi email cho tôi khi ai đó nhận xét về bài viết của tôi',
   },
   {
     value: 'activityAnswers',
-    label: 'Email me when someone answers on my form',
+    label: 'Gửi email cho tôi khi ai đó trả lời trên biểu mẫu của tôi',
   },
-  { value: 'activityFollows', label: 'Email me hen someone follows me' },
+  { value: 'activityFollows', label: 'Gửi email cho tôi khi ai đó theo dõi tôi' },
 ] as const;
 
 const APPLICATION_OPTIONS = [
-  { value: 'applicationNews', label: 'News and announcements' },
-  { value: 'applicationProduct', label: 'Weekly product updates' },
-  { value: 'applicationBlog', label: 'Weekly blog digest' },
+  { value: 'applicationNews', label: 'Tin tức và thông báo' },
+  { value: 'applicationProduct', label: 'Cập nhật sản phẩm hàng tuần' },
+  { value: 'applicationBlog', label: 'Thông báo blog hàng tuần' },
 ] as const;
 
 const NOTIFICATION_SETTINGS = {
@@ -77,7 +77,7 @@ export default function AccountNotifications() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Card sx={{ p: 3 }}>
         <Typography variant="overline" component="div" sx={{ color: 'text.secondary' }}>
-          Activity
+        Hoạt động
         </Typography>
 
         <Stack alignItems="flex-start" spacing={1} sx={{ mt: 2 }}>
@@ -92,7 +92,7 @@ export default function AccountNotifications() {
         </Stack>
 
         <Typography variant="overline" component="div" sx={{ color: 'text.secondary', mt: 5 }}>
-          Application
+        Ứng dụng
         </Typography>
 
         <Stack alignItems="flex-start" spacing={1} sx={{ mt: 2, mb: 5 }}>

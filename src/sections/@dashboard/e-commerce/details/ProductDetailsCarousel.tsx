@@ -92,11 +92,11 @@ export default function ProductDetailsCarousel({ productId }: any) {
 
   useEffect(()=>{
     getImages(productId).then((res)=>{
-      if(res?.data?.success==true){
+      if(res?.data?.success===true){
         setImages(res?.data?.image);
       }
     })
-  },[])
+  },[productId])
 
   const handleOpenLightbox = (imageUrl: string) => {
     const imageIndex = imagesLightbox.findIndex((image:any) => image.src === imageUrl);

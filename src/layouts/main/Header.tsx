@@ -1,15 +1,14 @@
 // @mui
 import { AppBar, Box, BoxProps, Button, Container, Link, Toolbar } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-
+import dynamic from 'next/dynamic'
 //
 import NextLink from 'next/link';
-import { useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { getBranByCategory, getCategoryById, getCategoryGroup } from 'src/api/ortherEcom';
 import Iconify from 'src/components/iconify/Iconify';
 import { ShopProductSearch } from 'src/sections/@dashboard/e-commerce/shop';
 import navConfig from './nav/config-navigation';
-import NavDesktop from './nav/desktop';
 import NavMobile from './nav/mobile';
 import { NavItemProps } from './nav/types';
 // hooks
@@ -23,6 +22,9 @@ import { HEADER } from '../../config-global';
 import { PATH_AUTH, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Logo from '../../components/logo';
+
+    
+const NavDesktop = dynamic(() => import('./nav/desktop'), { ssr: false });
 // ----------------------------------------------------------------------
 
 export default function Header() {
@@ -34,70 +36,69 @@ export default function Header() {
 
   const [datanav, setDatenav] = useState<NavItemProps[]>([]);
 
-  const navBrands = (id: string): [] => {
+  const navBrands = useCallback((id: string): [] => {
     const team: any = [];
     getBranByCategory(id).then((resb) => {
       if (resb.data.success === true) {
-        if (resb?.data?.brands?.length < 1) {
-          return team;
-        } else {
-          resb.data.brands.map((k: any) => {
+        if (resb?.data?.brands?.length > 0) {
+          resb.data.brands.map((k: any) =>
             team.push({
               id: k.Id,
               title: k.Name,
               icon: <Iconify icon="eva:home-fill" />,
               path: PATH_DASHBOARD.eCommerce.shop,
-            });
-          });
+            })
+          );
         }
       }
     });
     return team;
-  };
+  }, []);
 
-  const navcategory = (id: string) => {
-    let tem: any = [];
-    getCategoryById(id).then((resp) => {
-      if (resp.data.success === true) {
-        if (resp?.data?.category?.length < 1) {
-          return;
-        } else {
-          resp.data.category.map((i: any) => {
-            const team: any = navBrands(i.Id);
-            tem.push({
-              subheader: i.Name,
-              items: team,
+  const navcategory = useCallback(
+    (id: string) => {
+      const tem: any = [];
+      getCategoryById(id).then((resp) => {
+        if (resp.data.success === true) {
+          if (resp?.data?.category?.length > 0) {
+            resp.data.category.map((i: any) => {
+              const team: any = navBrands(i.Id);
+              return tem.push({
+                subheader: i.Name,
+                items: team,
+              });
             });
-          });
+          }
         }
-      }
-    });
-    return tem;
-  };
+      });
+      return tem;
+    },
+    [navBrands]
+  );
 
   useLayoutEffect(() => {
     const tam: any = [];
     getCategoryGroup().then((res) => {
       if (res.data.success === true) {
-        res.data.CategoryGroups.Data.map((e: any) => {
+        res.data.CategoryGroups.Data.map((e: any) =>
           tam.push({
             id: e.Id,
             title: e.Name,
             icon: <Iconify icon="eva:home-fill" />,
             path: PATH_DASHBOARD.eCommerce.shop,
             children: navcategory(e.Id),
-          });
-        });
+          })
+        );
         tam.push({
           id: '',
           title: 'Khác',
           icon: <Iconify icon="eva:home-fill" />,
           path: PATH_DASHBOARD.eCommerce.shop,
-        });
+        })
       }
       setDatenav(tam);
     });
-  }, []);
+  }, [navcategory]);
 
   return (
     <AppBar color="transparent" sx={{ boxShadow: 0 }}>
@@ -134,7 +135,7 @@ export default function Header() {
             <Iconify
               icon="eva:shopping-cart-fill"
               width={24}
-              color={'#333'}
+              color="#333"
               sx={{ ml: 5, mr: -10 }}
             />
           </Link>

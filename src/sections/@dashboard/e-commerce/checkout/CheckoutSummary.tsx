@@ -100,7 +100,7 @@ export default function CheckoutSummary({
                 {fCurrency(total+shipping)}
               </Typography>
               <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
-                (VAT included if applicable)
+                (chưa bao gồm VAT )
               </Typography>
             </Box>
           </Stack>

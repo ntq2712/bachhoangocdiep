@@ -18,45 +18,30 @@ VerifyCodePage.getLayout = (page: React.ReactElement) => <CompactLayout>{page}</
 // ----------------------------------------------------------------------
 
 export default function VerifyCodePage() {
-
   return (
     <>
       <Head>
-        <title> Verify Code | Minimal UI</title>
+        <title> Verify Code | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <EmailInboxIcon sx={{ mb: 5, height: 96 }} />
 
       <Typography variant="h3" paragraph>
-        Please check your email!
+        Vui lòng kiểm tra email hoặc điện thoại của bạn!
       </Typography>
 
       <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-        We have emailed a 6-digit confirmation code to acb@domain, please enter the code in below
-        box to verify your email.
+        Chúng tôi đã gửi email mã xác nhận gồm 6 chữ số, vui lòng nhập mã vào bên dưới hộp để xác
+        minh email của bạn.
       </Typography>
 
       <AuthVerifyCodeForm />
 
       <Typography variant="body2" sx={{ my: 3 }}>
-        Don’t have a code? &nbsp;
+        Bạn không có mã? &nbsp;
         <Link variant="subtitle2">Gửi lại</Link>
       </Typography>
 
-      {/* <Link
-        component={NextLink}
-        href={PATH_AUTH.login}
-        color="inherit"
-        variant="subtitle2"
-        sx={{
-          mx: 'auto',
-          alignItems: 'center',
-          display: 'inline-flex',
-        }}
-      >
-        <Iconify icon="eva:chevron-left-fill" width={16} />
-        Return to sign in
-      </Link> */}
     </>
   );
 }

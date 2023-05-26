@@ -1,16 +1,15 @@
 import { m } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 // @mui
-import { useTheme, alpha } from '@mui/material/styles';
-import { Box, Stack, Card, Button, Container, Typography, IconButton } from '@mui/material';
+import { Box, Button, Card, Container, IconButton, Stack, Typography } from '@mui/material';
+import { alpha, useTheme } from '@mui/material/styles';
 // _mock_
-import { _carouselsMembers, _socials } from '../../_mock/arrays';
+import { _socials } from '../../_mock/arrays';
 // components
-import Image from '../../components/image';
-import Iconify from '../../components/iconify';
-import Carousel, { CarouselArrows } from '../../components/carousel';
 import { MotionViewport, varFade } from '../../components/animate';
-import _mock from 'src/_mock/_mock';
+import Carousel, { CarouselArrows } from '../../components/carousel';
+import Iconify from '../../components/iconify';
+import Image from '../../components/image';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +18,7 @@ export default function AboutTeam() {
 
   const theme = useTheme();
 
-  const [carouselsMembers, setCarouselsMembers] = useState<any>([
+  const carouselsMembers = [
     {
       id: 'carouselsMembers1',
       name: 'Nguyễn Thị Ngọc Diệp',
@@ -38,7 +37,7 @@ export default function AboutTeam() {
       role: 'Backend Devoloper',
       avatar: `https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/313970749_909537283765408_3978847381433871275_n.jpg?stp=cp6_dst-jpg&_nc_cat=108&ccb=1-7&_nc_sid=0debeb&_nc_ohc=3b8hX-B1RVcAX__DgqW&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfAS27_CUsHB8crAn_EPtsm6ndDFfpPBj19r4Y2MqBa0SQ&oe=6465338B`,
     },
-  ]);
+  ];
 
   const carouselSettings = {
     infinite: false,
@@ -91,8 +90,9 @@ export default function AboutTeam() {
             color: 'text.secondary',
           }}
         >
-          Bách hóa Ngọc Diệp sẻ luôn dỗi theo và hổ trợ bạn mội lúc mội nơi nếu bạn gặp khó khăn cần chúng tôi,
-          chúng tối sẻ không ngừng nâng cấp để đem đến cho các bạn sự trải nghiệm mua hàng tốt nhất.
+          Bách hóa Ngọc Diệp sẻ luôn dỗi theo và hổ trợ bạn mội lúc mội nơi nếu bạn gặp khó khăn cần
+          chúng tôi, chúng tối sẻ không ngừng nâng cấp để đem đến cho các bạn sự trải nghiệm mua
+          hàng tốt nhất.
         </Typography>
       </m.div>
 

@@ -139,9 +139,9 @@ export default function EcommerceCheckoutPage() {
     addAddress(address)
       .then((res) => {
         if (res?.data?.success === true) {
-          CalculateFee(Number(address.DistrictGHNId), Number(address.WardGHNid)).then((res) => {
-            if (res.data.message === 'Success') {
-              dispatch(updateShipping(res.data.data.total));
+          CalculateFee(Number(address.DistrictGHNId), Number(address.WardGHNid)).then((r) => {
+            if (r.data.message === 'Success') {
+              dispatch(updateShipping(r.data.data.total));
             }
           });
           dispatch(createBilling(address));
@@ -180,19 +180,19 @@ export default function EcommerceCheckoutPage() {
   return (
     <>
       <Head>
-        <title> Ecommerce: Checkout | Minimal UI</title>
+        <title> Đơn hàng | Bách hóa Ngọc Diệp</title>
       </Head>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Giỏ hàng"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
+              name: 'Cử hàng',
               href: PATH_DASHBOARD.eCommerce.root,
             },
-            { name: 'Checkout' },
+            { name: 'Giỏ hàng' },
           ]}
         />
 

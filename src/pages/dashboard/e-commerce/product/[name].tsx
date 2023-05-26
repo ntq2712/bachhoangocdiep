@@ -3,21 +3,25 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // @mui
-import { Box, Card, Container, Divider, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  Divider,
+  Grid,
+  Tab,
+  Tabs
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { IDataAddCart } from 'src/@types/product';
 import DashboardLayoutNoneLogin from 'src/layouts/dashboard/DashboardLayoutNoneLogin';
-// redux
+import SimilarProduct from 'src/sections/_examples/extra/carousel/similarproduct';
 import { addToCart, getCarts, getProduct, gotoStep } from '../../../../redux/slices/product';
 import { useDispatch, useSelector } from '../../../../redux/store';
-// routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
-// @types
-// layouts
-// components
 import CustomBreadcrumbs from '../../../../components/custom-breadcrumbs';
-import Iconify from '../../../../components/iconify';
 import Markdown from '../../../../components/markdown';
 import { useSettingsContext } from '../../../../components/settings';
 import { SkeletonProductDetails } from '../../../../components/skeleton';
@@ -29,28 +33,6 @@ import {
   ProductDetailsReview,
   ProductDetailsSummary,
 } from '../../../../sections/@dashboard/e-commerce/details';
-
-// ----------------------------------------------------------------------
-
-const SUMMARY = [
-  {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
-    icon: 'ic:round-verified',
-  },
-  {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
-    icon: 'eva:clock-fill',
-  },
-  {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
-    icon: 'ic:round-verified-user',
-  },
-];
-
-// ----------------------------------------------------------------------
 
 EcommerceProductDetailsPage.getLayout = (page: React.ReactElement) => (
   <DashboardLayoutNoneLogin>{page}</DashboardLayoutNoneLogin>
@@ -67,7 +49,7 @@ export default function EcommerceProductDetailsPage() {
 
   const dispatch = useDispatch();
 
-  const { product, isLoading, checkout, reviews, reviewState } = useSelector(
+  const { product, isLoading, checkout, reviewState, similarproduct } = useSelector(
     (state) => state.product
   );
 
@@ -148,40 +130,13 @@ export default function EcommerceProductDetailsPage() {
               </Grid>
             </Grid>
 
-            <Box
-              gap={5}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                md: 'repeat(3, 1fr)',
-              }}
-              sx={{ my: 10 }}
-            >
-              {SUMMARY.map((item) => (
-                <Box key={item.title} sx={{ textAlign: 'center' }}>
-                  <Stack
-                    alignItems="center"
-                    justifyContent="center"
-                    sx={{
-                      width: 64,
-                      height: 64,
-                      mx: 'auto',
-                      borderRadius: '50%',
-                      color: 'primary.main',
-                      bgcolor: (theme) => `${alpha(theme.palette.primary.main, 0.08)}`,
-                    }}
-                  >
-                    <Iconify icon={item.icon} width={36} />
-                  </Stack>
-
-                  <Typography variant="h6" sx={{ mb: 1, mt: 3 }}>
-                    {item.title}
-                  </Typography>
-
-                  <Typography sx={{ color: 'text.secondary' }}>{item.description}</Typography>
-                </Box>
-              ))}
-            </Box>
+            { similarproduct && <Card sx={{mt: 5, mb: 3}}>
+              <CardHeader title="Sản phẩm liên quan" subheader="Bán chạy & chất lượng" />
+              <CardContent>
+                <SimilarProduct data={similarproduct} />
+              </CardContent>
+            </Card>
+            }
 
             <Card>
               <Tabs

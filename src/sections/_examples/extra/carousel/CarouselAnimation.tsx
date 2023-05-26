@@ -1,26 +1,21 @@
 import { m } from 'framer-motion';
 import { useRef, useState } from 'react';
-// @mui
+
 import { Box, Button, Card, CardContent, Paper, Typography } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
-import { ICarousels } from 'src/pages/components/extra/carousel';
-// utils
+
+
 import { bgGradient } from '../../../../utils/cssStyles';
-// components
+
 
 import { MotionContainer, varFade } from '../../../../components/animate';
 import Carousel, { CarouselArrowIndex } from '../../../../components/carousel';
 import Image from '../../../../components/image';
+import { ICarousels } from './type';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  // data: {
-  //   id: string;
-  //   title: string;
-  //   image: string;
-  //   description: string;
-  // }[];
   data: ICarousels[];
 };
 
@@ -72,15 +67,11 @@ export default function CarouselAnimation({ data }: Props) {
 
 type CarouselItemProps = {
   item: ICarousels;
-  // item: {
-  //   title: string;
-  //   description: string;
-  //   image: string;
-  // };
   isActive: boolean;
 };
 
 function CarouselItem({ item, isActive }: CarouselItemProps) {
+
   const theme = useTheme();
 
   const { image, title } = item;
@@ -130,7 +121,7 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
 
         <m.div variants={varFade().inRight}>
           <Button variant="contained" sx={{ mt: 3 }}>
-            <a target="_blank" href="https://www.facebook.com/trongqui2712">
+            <a target="_blank"  rel="noreferrer" href="https://www.facebook.com/trongqui2712">
               Xem thêm
             </a>
           </Button>

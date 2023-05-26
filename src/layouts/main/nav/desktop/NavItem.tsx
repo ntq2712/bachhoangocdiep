@@ -29,7 +29,7 @@ export const NavItem = forwardRef<HTMLDivElement, NavItemDesktopProps>(
       >
         {title}
 
-        {!!children && <Iconify width={16} icon="eva:arrow-ios-downward-fill" sx={{ ml: 1 }} />}
+        {!!children && children?.length > 0 && <Iconify width={16} icon="eva:arrow-ios-downward-fill" sx={{ ml: 1 }} />}
       </ListItem>
     );
 
@@ -51,7 +51,7 @@ export const NavItem = forwardRef<HTMLDivElement, NavItemDesktopProps>(
     return (
       <Link component={NextLink} href={path} underline="none">
         {renderContent}
-      </Link>
+      </Link> 
     );
   }
 );

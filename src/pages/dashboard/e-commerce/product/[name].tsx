@@ -71,8 +71,8 @@ export default function EcommerceProductDetailsPage() {
           enqueueSnackbar(res.data.message , { variant: 'error' });
         }
       })
-      .catch(() => {
-        enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+      .catch((err) => {
+        enqueueSnackbar(err.message, { variant: 'error' });
       });
   };
 

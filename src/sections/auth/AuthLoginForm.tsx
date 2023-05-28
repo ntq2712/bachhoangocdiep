@@ -37,8 +37,8 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    email: 'admin@gmail.com',
-    password: 'admin2001@gmail.com',
+    email: 'abc@gmail.com',
+    password: 'demo123',
   };
 
   const methods = useForm<FormValuesProps>({

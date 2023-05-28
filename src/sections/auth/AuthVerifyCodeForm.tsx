@@ -29,7 +29,6 @@ type FormValuesProps = {
 export default function AuthVerifyCodeForm() {
   const { replace } = useRouter();
   const { verify } = useAuthContext();
-  
 
   const VerifyCodeSchema = Yup.object().shape({
     code1: Yup.string().required('Code is required'),
@@ -70,7 +69,7 @@ export default function AuthVerifyCodeForm() {
           `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`
         );
         if (res?.IsVerified) {
-          replace(PATH_DASHBOARD.general.app);
+          replace(PATH_DASHBOARD.eCommerce.shop);
         }
       }
     } catch (error) {

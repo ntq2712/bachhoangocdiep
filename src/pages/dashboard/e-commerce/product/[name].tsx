@@ -68,7 +68,7 @@ export default function EcommerceProductDetailsPage() {
           dispatch(getCarts());
           enqueueSnackbar('Thêm vào giỏ hàng thành công!');
         } else {
-          enqueueSnackbar('Thêm vào giỏ hàng không thành công!');
+          enqueueSnackbar(res.data.message , { variant: 'error' });
         }
       })
       .catch(() => {

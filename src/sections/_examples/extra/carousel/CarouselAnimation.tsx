@@ -121,7 +121,7 @@ function CarouselItem({ item, isActive }: CarouselItemProps) {
 
         <m.div variants={varFade().inRight}>
           <Button variant="contained" sx={{ mt: 3 }}>
-            <a target="_blank"  rel="noreferrer" href="https://www.facebook.com/trongqui2712">
+            <a target="_blank"  rel="noreferrer" href="https://www.facebook.com/profile.php?id=100074081858455">
               Xem thêm
             </a>
           </Button>
